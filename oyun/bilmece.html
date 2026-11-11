@@ -1,0 +1,58 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bilmece Kahvehanesi</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 30%,#5a3a22,#2a180d 70%);color:#fff;font-family:Nunito,Segoe UI,Arial,sans-serif}
+#masa{position:fixed;left:5vw;right:5vw;top:15vh;padding:3vh 3vh 2.4vh;background:linear-gradient(180deg,#f7ead2,#e8d3ab);color:#3b2412;border-radius:2.4vh;box-shadow:0 2vh 5vh rgba(0,0,0,.45);text-align:center}
+#masa .ust{display:flex;justify-content:space-between;font:800 1.6vh Nunito;color:#8a5a2b}
+#soru{font:800 3vh/1.3 'Baloo 2',Nunito;margin:1.6vh 0 2vh;min-height:12vh;display:grid;place-items:center}
+#kutular{display:flex;justify-content:center;gap:.8vh;flex-wrap:wrap}
+.h{width:4.6vh;height:5.6vh;border-radius:1vh;background:#3b2412;color:#ffd166;font:900 3vh/5.6vh 'Baloo 2',Nunito;transition:transform .3s}
+.h.ac{background:#c0662b;color:#fff;transform:rotateY(360deg)}
+#sure{height:.9vh;background:rgba(59,36,18,.2);border-radius:1vh;margin-top:2vh;overflow:hidden}#sure div{height:100%;background:#c0662b;transition:width .2s linear}
+#cevap{position:fixed;left:5vw;right:5vw;top:52vh;text-align:center;font:900 3vh 'Baloo 2',Nunito;color:#9dff9d;min-height:4vh;text-shadow:0 .3vh 1vh #000}
+#denemeler{position:fixed;left:5vw;right:5vw;top:58vh;display:flex;flex-wrap:wrap;gap:.8vh;justify-content:center}
+#denemeler div{background:rgba(0,0,0,.45);border-radius:2vh;padding:.4vh 1.2vh;font:700 1.5vh Nunito;animation:dg .3s}@keyframes dg{from{transform:scale(.6);opacity:0}}
+#denemeler .y{color:#ff9b9b}#denemeler .d{background:#2f8f46;color:#fff}
+.h-vit{top:47vh!important}
+</style></head><body>
+<div id="masa"><div class="ust"><span id="kat">☕ Bilmece</span><span id="no">1. soru</span></div><div id="soru">Hazırlanıyor…</div><div id="kutular"></div><div id="sure"><div></div></div></div>
+<div id="cevap"></div><div id="denemeler"></div>
+<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
+<script>
+OY.hud({baslik:'BİLMECE KAHVEHANESİ',alt:'Cevabı yorum olarak yaz · ilk bilen kazanır · harf açıldıkça puan azalır',renk:'#ffd166',hediyeler:[['🌹','Gül','harf aç'],...OY.REKABET_HED.slice(1)]});
+// kendi yazdigimiz bilmeceler (cevap: tek kelime)
+const SB=[['Dişleri var ama ısırmaz, saçları tarar.','tarak'],['Gece gelir, sabah gider; gökte gümüş bir tabak.','ay'],['Yağmurdan sonra gökte belirir, yedi rengi vardır.','gökkuşağı'],
+['Akrebi var ama sokmaz, durmadan tıklar.','saat'],['Ayağı yok yürür, ağzı yok konuşur, her eve gelir.','mektup'],['Ne kadar çok alırsan o kadar büyür, toprağı kazarsın.','çukur'],
+['Kanadı yok uçar, gözü yok ağlar.','bulut'],['Bir evim var, kapısı yok; içinde sarı bir hazine saklı.','yumurta'],['Sabah dört, öğlen iki, akşam üç ayakla yürür.','insan'],
+['Benim bir kardeşim var, ben nereye o oraya; ışık olmadan kaybolur.','gölge'],['Suya girer ıslanmaz, yere düşer kırılmaz.','gölge'],['Boynu var başı yok, kolu var eli yok.','şişe'],
+['Çaydanlığın kardeşi, bardakları doldurur, ince belli.','çay'],['Simidin kardeşi, susamlı ve yuvarlak; vapurda martılar bayılır.','simit'],['Kırmızı başlı, beyaz sakallı, kökü toprakta.','turp'],
+['Ağzı var dili yok, sırtında ev taşır, yavaş yürür.','kaplumbağa'],['Gökten iner yağar, beyaz örtü serer, kardan adam yapılır.','kar'],['İçi kırmızı, dışı yeşil, çekirdekli yaz meyvesi.','karpuz'],
+['Sarı sarı salkım, kışın tatlı pekmez olur.','üzüm'],['Uzun boylu, yeşil kulaklı, tepesinde sarı püsküllü.','mısır'],['Bir ağaç düşün on iki dalı var, her dalda dört yuva.','yıl'],
+['Uçar ama kuş değil, bal yapar, iğnesi var.','arı'],['Aynaya bakar seni gösterir, kendisi yoktur.','yansıma'],['Delik deşik ama suyu tutar.','sünger'],['Göz açıp kapayıncaya kadar geçer, ama geri gelmez.','zaman'],
+['Her sabah öter, köyü uyandırır.','horoz'],['Ayakkabının arkadaşı, ayağı ısıtır, eşi hep kaybolur.','çorap'],['Tuşları var piyano değil, harf yazar.','klavye'],
+['Çiçekten çiçeğe konar, kanatları renkli.','kelebek'],['Bütün gün çalışır, gece dinlenir; ışık verir, ısıtır.','güneş'],['Elle tutulmaz, gözle görülmez, uçurtmayı uçurur.','rüzgar'],
+['Dört bacağı var yürüyemez, üstünde yemek yenir.','masa'],['Vapurdan iner, köprüyü geçer; iki kıtayı birleştiren şehir.','istanbul'],['Peri bacaları ve balonlarıyla ünlü bölge.','kapadokya']];
+const norm=s=>String(s||'').toLocaleLowerCase('tr').replace(/[^a-zçğıöşü]/g,'');
+const U={};let soru=null,acik=[],bas=0,bitis=0,no=0,sira=[...SB].sort(()=>Math.random()-.5),bilen=null;const SURE=40000,now=()=>performance.now();
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,son:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
+function yeniSoru(){soru=sira[no%sira.length];no++;acik=[];bas=now();bilen=null;document.getElementById('soru').textContent=soru[0];document.getElementById('no').textContent=no+'. soru';
+ document.getElementById('cevap').textContent='';document.getElementById('denemeler').innerHTML='';kutuCiz()}
+function kutuCiz(){document.getElementById('kutular').innerHTML=[...soru[1]].map((h,i)=>`<div class="h ${acik.includes(i)?'ac':''}">${acik.includes(i)||bilen?h.toLocaleUpperCase('tr'):''}</div>`).join('')}
+function harfAc(n=1){for(let k=0;k<n;k++){const kapali=[...soru[1]].map((_,i)=>i).filter(i=>!acik.includes(i));if(kapali.length<=1)return;acik.push(kapali[Math.random()*kapali.length|0])}kutuCiz();OY.ses.tik()}
+function deneme(u,metin,dogru){const d=document.createElement('div');d.className=dogru?'d':'y';d.textContent=`${OY.kisaAd(u.ad,10)}: ${String(metin).slice(0,18)}`;const D=document.getElementById('denemeler');D.prepend(d);while(D.children.length>10)D.lastChild.remove()}
+OY.rekabetKur({liste:()=>Object.values(U),skor:u=>u.puan,ayarla:(u,v)=>{u.puan=Math.max(0,Math.round(v))}});
+OY.basla({muzik:'sakin',olay:e=>{
+ if(!e.id||!soru)return;const u=kul(e);u.son=now();
+ if(e.t==='yorum'&&!bilen){const c=norm(e.metin);if(!c)return;if(OY.donuk(u)){deneme(u,'❄ donuk',0);return}
+  if(c===norm(soru[1])){const p=Math.max(10,(soru[1].length-acik.length)*10)*OY.ikiKat(u);u.puan+=p;bilen=u;kutuCiz();deneme(u,e.metin,1);OY.ses.dogru();
+   document.getElementById('cevap').textContent=`✅ ${u.ad} bildi! +${p} puan`;OY.akis(`🧠 ${u.ad} "${soru[1]}" dedi · +${p}`,'#9f9');setTimeout(yeniSoru,4500)}
+  else deneme(u,e.metin,0)}
+ else if(e.t==='begeni'){u.puan+=0}
+ else if(e.t==='hediye'){const h=OY.hediye(e);OY.ses.para();if(h.sinif==='gul'&&!bilen)harfAc(1);const et=h.sinif==='gul'?'bir harf açtı':OY.rekabetHediye(u,h);OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
+}});
+OY.demoYorum=()=>{if(soru&&Math.random()<.18)return soru[1];return['bilmem','çay','saat','bulut','güneş','kalem','ay','kar'][Math.random()*8|0]};
+yeniSoru();
+setInterval(()=>{const t=now(),gecen=t-bas;if(!bilen){if(gecen>SURE){bilen={ad:'kimse'};kutuCiz();document.getElementById('cevap').textContent=`⌛ Cevap: ${soru[1].toLocaleUpperCase('tr')}`;OY.ses.yanlis();setTimeout(yeniSoru,4500)}
+ else if(gecen>SURE*(acik.length+1)/(soru[1].length+1)&&acik.length<soru[1].length-1)harfAc(1)}
+ document.querySelector('#sure div').style.width=Math.max(0,100-gecen/SURE*100)+'%';
+ const s=Object.values(U).filter(u=>u.puan>0).sort((a,b)=>b.puan-a.puan);OY.bilgi(`❓ ${no}. soru`,`👥 ${Object.keys(U).length}`);OY.ilk3(s.slice(0,3))},250);
+</script></body></html>
