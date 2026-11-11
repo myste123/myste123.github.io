@@ -518,4 +518,16 @@ document.addEventListener('pointerout',e=>{const c=e.target.closest&&e.target.cl
 const IK=['🌹','💖','🎈','💐','🍩','🎩','🌌','👑','🎁'];setInterval(()=>{if(document.hidden)return;const d=document.createElement('div');d.className='ucan';d.textContent=IK[Math.random()*IK.length|0];
  d.style.left=(Math.random()*96)+'vw';d.style.top='100vh';d.style.animationDuration=(9+Math.random()*7)+'s';d.style.fontSize=(16+Math.random()*16)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),17000)},1400)})();
 </script>
+<script>
+/* anonim site analizi: ziyaret, oyun acma, tiklamalar (IP saklanmaz) */
+(()=>{let sid;try{sid=localStorage.getItem('msid')||Math.random().toString(36).slice(2,12);localStorage.setItem('msid',sid)}catch(e){sid=Math.random().toString(36).slice(2,12)}
+let adres=null;const kuyruk=[];fetch('arena/adres.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(d=>{adres=d.adres.replace(/\/$/,'');kuyruk.splice(0).forEach(gonder)}).catch(()=>{});
+const cihaz=/Mobi|Android|iPhone/i.test(navigator.userAgent)?'mobil':'masaüstü';
+function gonder(o){if(!adres){kuyruk.push(o);return}try{navigator.sendBeacon(adres+'/api/olay',JSON.stringify(o))}catch(e){}}
+window.MA=(t,d)=>gonder({t,d,sid,cihaz,ref:document.referrer?new URL(document.referrer).hostname:''});
+MA('giris',location.hash||'/');
+document.addEventListener('click',e=>{const o=e.target.closest('.oyun[data-id]');if(o){MA('oyun',o.dataset.id);return}
+ const b=e.target.closest('a,button');if(!b)return;const ad=(b.getAttribute('aria-label')||b.textContent||'').trim().replace(/\s+/g,' ').slice(0,28);if(ad)MA('tik',ad)},true);
+const fe=window.fetch;window.fetch=function(u,o){const s=String(u);if(s.includes('/api/demo'))MA('demo','');if(s.includes('/api/siparis'))MA('siparis','');return fe.apply(this,arguments)};})();
+</script>
 </body></html>
