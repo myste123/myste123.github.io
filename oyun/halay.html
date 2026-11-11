@@ -12,7 +12,7 @@ OY.hud({baslik:'HALAY MEYDANI',alt:'Beğen ya da yorum yaz, halaya katıl · En 
  hediyeler:[['🌹','Gül','+10 coşku'],['💐','20+','dalga'],['🎩','99+','mendil senin'],['🌌','1000+','fişek · 2x']]});
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;R.outputEncoding=THREE.sRGBEncoding;
 const S=new THREE.Scene();S.fog=new THREE.Fog(0x141a45,40,95);
-const K=new THREE.PerspectiveCamera(42,1,.1,300);function boyut(){R.setSize(W(),H());K.aspect=W()/H();K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
+const KF0=42;const K=new THREE.PerspectiveCamera(42,1,.1,300);function boyut(){R.setSize(W(),H());K.aspect=W()/H();const yf=2*Math.atan(Math.tan(58*Math.PI/360)/K.aspect)*180/Math.PI;K.fov=Math.max(KF0,Math.min(80,yf));K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
 const gk=document.createElement('canvas');gk.width=4;gk.height=256;{const g=gk.getContext('2d'),gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#060824');gr.addColorStop(.55,'#1d1a5c');gr.addColorStop(1,'#5a3270');g.fillStyle=gr;g.fillRect(0,0,4,256)}
 S.background=new THREE.CanvasTexture(gk);
 S.add(new THREE.HemisphereLight(0x9aa8ff,0x4a2a18,.7));

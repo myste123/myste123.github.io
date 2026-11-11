@@ -9,7 +9,7 @@ const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
 OY.hud({baslik:'BALON FESTİVALİ',alt:'Kapadokya · Beğen → brülörü yak, en yükseğe çık 🎈',renk:'#ffb347',
  hediyeler:[['🌹','Gül','alev patlaması'],['🍩','20+','kum torbası at'],['🎩','99+','jet brülör'],['🌌','1000+','fırtına!']]});
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.outputEncoding=THREE.sRGBEncoding;R.shadowMap.enabled=true;
-const S=new THREE.Scene();const K=new THREE.PerspectiveCamera(50,1,.5,900);function boyut(){R.setSize(W(),H());K.aspect=W()/H();K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
+const S=new THREE.Scene();const KF0=50;const K=new THREE.PerspectiveCamera(50,1,.5,900);function boyut(){R.setSize(W(),H());K.aspect=W()/H();const yf=2*Math.atan(Math.tan(62*Math.PI/360)/K.aspect)*180/Math.PI;K.fov=Math.max(KF0,Math.min(80,yf));K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
 // gun dogumu gokyuzu
 const gc=document.createElement('canvas');gc.width=8;gc.height=512;{const g=gc.getContext('2d'),gr=g.createLinearGradient(0,0,0,512);
  gr.addColorStop(0,'#3d5a9e');gr.addColorStop(.45,'#9fb7e0');gr.addColorStop(.72,'#ffc996');gr.addColorStop(1,'#ff9a6b');g.fillStyle=gr;g.fillRect(0,0,8,512)}
