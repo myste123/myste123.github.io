@@ -58,3 +58,30 @@
     setTimeout(vSonraki, VQ.length ? 1800 : 3700) }
   OY.sure = sn => `⏱ ${Math.floor(sn / 60)}:${String(Math.floor(sn % 60)).padStart(2, '0')}`;
 })();
+/* Ortak rekabet hediyeleri: oyun OY.rekabetKur({liste, skor, ayarla, dondur?}) ile baglar */
+(function () {
+  let R = null; const now = () => performance.now();
+  OY.rekabetKur = r => { R = r };
+  OY.korunuyor = u => u.kalkan > now();
+  OY.donuk = u => u.donuk > now();
+  OY.ikiKat = u => u.x2bit > now() ? 2 : 1;
+  OY.rekabetHediye = (u, h) => {
+    if (!R) return 'güç';
+    const liste = R.liste().filter(x => x !== u), lider = liste.sort((a, b) => R.skor(b) - R.skor(a))[0];
+    const hedefOk = lider && !OY.korunuyor(lider);
+    switch (h.sinif) {
+      case 'gul': return 'güç kazandı';
+      case 'kalp': u.kalkan = now() + 20000; return '20 sn KALKAN 🛡';
+      case 'parfum': if (!lider) return 'güç kazandı'; if (!hedefOk) return `${OY.kisaAd(lider.ad, 10)} kalkanlı, donmadı!`;
+        lider.donuk = now() + 8000; R.dondur && R.dondur(lider); return `${OY.kisaAd(lider.ad, 10)} 8 sn DONDU ❄`;
+      case 'donut': { if (!lider) return 'güç kazandı'; if (!hedefOk) return `${OY.kisaAd(lider.ad, 10)} kalkanlı!`;
+        const c = R.skor(lider) * .15; R.ayarla(lider, R.skor(lider) - c); R.ayarla(u, R.skor(u) + c); return `${OY.kisaAd(lider.ad, 10)}'den ${Math.round(c)} çaldı 🦹` }
+      case 'sapka': { if (!lider || R.skor(lider) <= R.skor(u)) return 'zaten lider 👑'; if (!hedefOk) return `${OY.kisaAd(lider.ad, 10)} kalkanlı!`;
+        const a = R.skor(u); R.ayarla(u, R.skor(lider)); R.ayarla(lider, a); return `${OY.kisaAd(lider.ad, 10)} ile YER DEĞİŞTİ 🔄` }
+      case 'galaksi': for (const x of liste) if (!OY.korunuyor(x)) R.ayarla(x, R.skor(x) * .75); u.x2bit = now() + 20000; OY.ses && OY.ses.patla(); return 'BOMBA 💣 herkes -%25 · 20 sn 2x';
+    }
+    return 'güç';
+  };
+  OY.REKABET_HED = [['🌹', 'Gül', 'güç'], ['💖', 'Kalp', 'kalkan'], ['💐', 'Parfüm', 'lideri dondur'], ['🍩', 'Donut', 'liderden çal'], ['🎩', 'Şapka', 'liderle yer değiş'], ['🌌', 'Galaksi', 'bomba · 2x']];
+})();
+OY.durum=u=>(OY.donuk(u)?'❄':'')+(OY.korunuyor(u)?'🛡':'')+(OY.ikiKat(u)>1?'2x ':'');

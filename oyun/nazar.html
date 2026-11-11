@@ -5,7 +5,7 @@
 <script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
 OY.hud({baslik:'NAZAR SAVUNMASI',alt:'Kem gözler yayına saldırıyor! Beğen ve yorum yaz, nazar boncuğun ateş etsin 🧿',renk:'#5ec8ff',
- hediyeler:[['🌹','Gül','boncuk yağmuru'],['💖','Kalp','bereket +8'],['💐','Parfüm','tütsü halkası'],['🍩','Donut','gözler yavaşlar'],['🎩','Şapka','üzerlik dumanı'],['🌌','Galaksi','DEV NAZAR']]});
+ hediyeler:OY.REKABET_HED});
 const C=document.getElementById('c'),g=C.getContext('2d');let W,H,cx,cy,M;
 function boyut(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*d;C.height=H*d;g.setTransform(d,0,0,d,0,0);cx=W/2;cy=H*.5;M=Math.min(W,H*.62)}boyut();addEventListener('resize',boyut);
 const now=()=>performance.now();
@@ -23,8 +23,9 @@ function ates(k,n=1,guc=1){k.sarj+=n;k.u.son=now()}
 function kpos(k){return[cx+Math.cos(k.a)*M*k.r,cy+Math.sin(k.a)*M*k.r]}
 function gozDog(){const a=Math.random()*6.28,d=Math.max(W,H)*.62,tip=Math.random()<Math.min(.3,dalga*.03)?1:0;
  GOZ.push({x:cx+Math.cos(a)*d,y:cy+Math.sin(a)*d,can:tip?6+dalga:2+dalga*.5,max:tip?6+dalga:2+dalga*.5,h:(tip?.035:.06)*(1+dalga*.04),r:tip?M*.075:M*.045,tip,kirp:Math.random()*5})}
-function vur(gz,hasar,u){gz.can-=hasar;if(gz.can<=0&&!gz.ol){gz.ol=1;if(u){u.puan+=gz.tip?5:1};patla(gz.x,gz.y,gz.tip?40:16,'#b066ff');OY.ses.pop()}}
+function vur(gz,hasar,u){gz.can-=hasar;if(gz.can<=0&&!gz.ol){gz.ol=1;if(u){u.puan+=(gz.tip?5:1)*OY.ikiKat(u)};patla(gz.x,gz.y,gz.tip?40:16,'#b066ff');OY.ses.pop()}}
 function patla(x,y,n,c){for(let i=0;i<n;i++)PAR.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,o:40+Math.random()*20,r:2+Math.random()*3,c})}
+OY.rekabetKur({liste:()=>Object.values(U),skor:u=>u.puan,ayarla:(u,v)=>{u.puan=Math.max(0,Math.round(v))}});
 OY.basla({muzik:'elektro',olay:e=>{
  if(e.t==='kalici'&&e.veri&&e.veri.rekor){KAL=e.veri;return}
  if(!e.id)return;const u=kul(e);const k=kule(u);if(!k)return;
@@ -32,10 +33,9 @@ OY.basla({muzik:'elektro',olay:e=>{
  else if(e.t==='yorum'){ates(k,3);YAZI.push({k,m:String(e.metin||'').slice(0,40),t:now()})}
  else if(e.t==='takip'){ates(k,10);OY.akis(`➕ ${u.ad} takip etti · +10 atış`,'#bdf')}
  else if(e.t==='paylasim')ates(k,8);
- else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;ates(k,8+Math.min(40,n));OY.ses.para();
-  const E={gul:['boncuk yağmuru',()=>ates(k,10)],kalp:['bereket +8',()=>{can=Math.min(100,can+8)}],parfum:['tütsü halkası',()=>halka.push({x:kpos(k)[0],y:kpos(k)[1],r:0,u})],
-   donut:['kem gözler 10 sn yavaşladı',()=>{yavas=now()+10000}],sapka:['üzerlik dumanı · bereket +15',()=>{halka.push({x:cx,y:cy,r:0,u,buyuk:1});can=Math.min(100,can+15)}],
-   galaksi:['DEV NAZAR! bütün gözler patladı',()=>{for(const z of GOZ)vur(z,999,u);kalkan=now()+15000;can=100;OY.ses.patla()}]}[h.sinif];E[1]();OY.vitrin(u,h.ikon,h.ad,E[0]);OY.akis(`${h.ikon} ${u.ad} → ${E[0]}`,'#ffd84a')}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;ates(k,8+Math.min(40,n));OY.ses.para();const et=OY.rekabetHediye(u,h);
+  if(h.sinif==='gul')halka.push({x:kpos(k)[0],y:kpos(k)[1],r:0,u});if(h.sinif==='galaksi'){for(const z of GOZ)vur(z,999,u);can=Math.min(100,can+20)}
+  OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
 }});
 OY.demoYorum=()=>['Maşallah','Nazar değmesin!','Tü tü tü','Vur vur!','Kem gözlere şiş','Ben de buradayım'][Math.random()*6|0];
 // ---- cizim yardimcilari ----
@@ -65,9 +65,9 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  g.fillStyle='#fff';g.font=`800 ${M*.032}px Segoe UI`;g.textAlign='center';g.fillText(`Bereket ${Math.round(can)}`,cx,cy+nb*1.35+M*.05);
  // kuleler
  KULE.forEach((k,i)=>{k.a+=dt*.25;const[x,y]=kpos(k);k.isik=Math.max(0,k.isik-dt*3);
-  if(k.sarj>0&&t-k.atis>140&&GOZ.length){let hedef=null,en=1e9;for(const z of GOZ){if(z.ol)continue;const d=(z.x-x)**2+(z.y-y)**2;if(d<en){en=d;hedef=z}}
+  if(k.sarj>0&&!OY.donuk(k.u)&&t-k.atis>140&&GOZ.length){let hedef=null,en=1e9;for(const z of GOZ){if(z.ol)continue;const d=(z.x-x)**2+(z.y-y)**2;if(d<en){en=d;hedef=z}}
    if(hedef){k.sarj-=1;k.atis=t;k.isik=1;MERMI.push({x,y,z:hedef,u:k.u,h:M*.016})}}
-  boncuk(x,y,M*.042,k.u,k.isik)});
+  boncuk(x,y,M*.042,k.u,k.isik);if(OY.donuk(k.u)||OY.korunuyor(k.u)){g.strokeStyle=OY.donuk(k.u)?'#bff':'#ffd84a';g.lineWidth=3;g.beginPath();g.arc(x,y,M*.055,0,7);g.stroke()}g.fillStyle='#fff';g.font=`800 ${M*.024}px Segoe UI`;g.textAlign='center';g.fillText(k.u.puan,x,y+M*.07)});
  // mermiler
  for(let i=MERMI.length-1;i>=0;i--){const m=MERMI[i],dx=m.z.x-m.x,dy=m.z.y-m.y,d=Math.hypot(dx,dy);if(m.z.ol&&d>5){m.z={x:m.z.x,y:m.z.y,ol:1}}
   if(d<m.z.r||d<6){if(!m.z.ol)vur(m.z,1,m.u);MERMI.splice(i,1);continue}m.x+=dx/d*M*.02;m.y+=dy/d*M*.02;

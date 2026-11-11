@@ -5,7 +5,7 @@
 <script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
 OY.hud({baslik:'SOKAK KEDİLERİ',alt:'Beğen → mama dök · Kediler en çok besleyeni takip eder 🐈',renk:'#ff9f43',
- hediyeler:[['🌹','Gül','mama kabı'],['💖','Kalp','kediler sever'],['💐','Parfüm','balık ziyafeti'],['🍩','Donut','mama çuvalı'],['🎩','Şapka','kedi evi'],['🌌','Galaksi','kediler kralı']]});
+ hediyeler:OY.REKABET_HED});
 const C=document.getElementById('c'),g=C.getContext('2d');let W,H;
 function boyut(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*d;C.height=H*d;g.setTransform(d,0,0,d,0,0);arka()}addEventListener('resize',boyut);
 const now=()=>performance.now();
@@ -24,21 +24,21 @@ boyut();
 const KEDI_RENK=[['#f4a261','#e76f51'],['#3d3d3d','#1a1a1a'],['#fff','#d9d9d9'],['#c9b79c','#8d7b62'],['#f6d7a7','#e0a96d'],['#8d99ae','#5c677d']];
 const U={},KEDI=[],MAMA=[],PAR=[],BAL=[];let bitis=0,kral=null,kralBit=0;
 const hash=s=>[...String(s)].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7);
-function kul(e){let u=U[e.id];if(!u){const n=Object.keys(U).length;u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,son:0,x:W*(.12+Math.random()*.76),y:H*(.45+Math.random()*.32),ev:0};}if(e.foto&&!u.foto)u.foto=e.foto;return u}
+function kul(e){let u=U[e.id];if(!u){const n=Object.keys(U).length;const sl=n%12;u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,son:0,x:W*(.14+(sl%4)*.24),y:H*(.47+(sl/4|0)*.12)+(sl%2)*H*.03,ev:0};}if(e.foto&&!u.foto)u.foto=e.foto;return u}
 function kediYap(){if(KEDI.length>=60)return;const r=KEDI_RENK[Math.random()*KEDI_RENK.length|0];KEDI.push({x:Math.random()<.5?-30:W+30,y:H*(.4+Math.random()*.45),vx:0,vy:0,r,sahip:null,boy:.8+Math.random()*.4,faz:Math.random()*6,mutlu:0})}
 for(let i=0;i<12;i++)kediYap();
-function besle(u,n,tur='mama'){u.puan+=n;u.son=now();for(let i=0;i<Math.min(8,1+n/3);i++)MAMA.push({x:u.x+(Math.random()-.5)*W*.08,y:u.y+H*.03+(Math.random()-.5)*H*.02,u,tur,o:600});
+function besle(u,n,tur='mama'){if(OY.donuk(u))return;n*=OY.ikiKat(u);u.puan+=n;u.son=now();for(let i=0;i<Math.min(8,1+n/3);i++)MAMA.push({x:u.x+(Math.random()-.5)*W*.08,y:u.y+H*.03+(Math.random()-.5)*H*.02,u,tur,o:600});
  if(Math.random()<Math.min(.9,n*.08))kediYap()}
+OY.rekabetKur({liste:()=>Object.values(U),skor:u=>u.puan,ayarla:(u,v)=>{u.puan=Math.max(0,v);for(const k of KEDI)if(k.sahip&&Math.random()<.5){const s=Object.values(U).sort((a,b)=>b.puan-a.puan)[0];if(s)k.sahip=s}}});
 OY.basla({muzik:'sakin',olay:e=>{
  if(!e.id)return;const u=kul(e);
  if(e.t==='begeni')besle(u,(e.adet||1)*.5);
  else if(e.t==='yorum'){besle(u,2);BAL.push({u,m:String(e.metin||'').slice(0,40),t:now()})}
  else if(e.t==='takip'){besle(u,8);OY.akis(`➕ ${u.ad} takip etti · mama dağıttı`,'#ffd')}
  else if(e.t==='paylasim')besle(u,6);
- else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;OY.ses.para();
-  const E={gul:['mama kabı',()=>besle(u,10)],kalp:['kediler ona âşık oldu',()=>{besle(u,6);for(const k of KEDI)if(k.sahip===u)k.mutlu=2;for(let i=0;i<3;i++)kediYap()}],
-   parfum:['balık ziyafeti',()=>{besle(u,20,'balik');for(let i=0;i<4;i++)kediYap()}],donut:['mama çuvalı · 6 yeni kedi',()=>{besle(u,30);for(let i=0;i<6;i++)kediYap()}],
-   sapka:['kedi evi kurdu',()=>{u.ev=now()+60000;besle(u,20)}],galaksi:['KEDİLER KRALI!',()=>{kral=u;kralBit=now()+30000;for(const k of KEDI)k.sahip=u;OY.ses.zafer()}]}[h.sinif];E[1]();OY.vitrin(u,h.ikon,h.ad,E[0]);OY.akis(`${h.ikon} ${u.ad} → ${E[0]}`,'#ffd84a')}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;OY.ses.para();besle(u,10+n,h.seviye>=2?'balik':'mama');const et=OY.rekabetHediye(u,h);
+  for(let i=0;i<Math.min(6,1+h.seviye);i++)kediYap();if(h.sinif==='galaksi'){kral=u;kralBit=now()+20000;for(const k of KEDI)k.sahip=u}
+  OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
 }});
 OY.demoYorum=()=>['Pisi pisi','Miyav','Ne tatlılar','Kediler bende!','Mama geldi','Benim kediye dokunmayın'][Math.random()*6|0];
 function kediCiz(k,t){const s=W*.045*k.boy,yuru=Math.hypot(k.vx,k.vy)>.3,ad=t/120+k.faz;g.save();g.translate(k.x,k.y);if(k.vx<0)g.scale(-1,1);
@@ -64,7 +64,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  for(const u of oy){const r=W*.045;if(u.ev>t){g.font=`${W*.09}px Segoe UI`;g.textAlign='center';g.fillText('🏠',u.x,u.y+r*.4)}
   g.save();g.beginPath();g.arc(u.x,u.y-r,r,0,7);g.clip();g.drawImage(OY.foto(u,96),u.x-r,u.y-2*r,2*r,2*r);g.restore();
   g.strokeStyle=u===kral?'#ffd84a':'#fff';g.lineWidth=3;g.beginPath();g.arc(u.x,u.y-r,r,0,7);g.stroke();if(u===kral){g.font=`${r}px Segoe UI`;g.fillText('👑',u.x,u.y-r*2.1)}
-  g.fillStyle='rgba(0,0,0,.55)';g.font=`700 ${W*.026}px Segoe UI`;const ad=OY.kisaAd(u.ad,10),w=g.measureText(ad).width+12;g.fillRect(u.x-w/2,u.y+r*.15,w,W*.036);g.fillStyle='#fff';g.fillText(ad,u.x,u.y+r*.15+W*.027)}
+  g.fillStyle='rgba(0,0,0,.55)';g.font=`700 ${W*.026}px Segoe UI`;const ad=OY.durum(u)+OY.kisaAd(u.ad,10),w=g.measureText(ad).width+12;g.fillRect(u.x-w/2,u.y+r*.15,w,W*.036);g.fillStyle='#fff';g.fillText(ad,u.x,u.y+r*.15+W*.027)}
  // kediler: en cok mama olan oyuncuya gider; evi olan kedi tutar
  const sayac={};for(const k of KEDI){if(k.sahip&&k.sahip.ev<t&&k.sahip!==kral&&Math.random()<.002)k.sahip=null;
   let hx,hy;const yakinMama=MAMA.length?MAMA.reduce((a,m)=>{const d=(m.x-k.x)**2+(m.y-k.y)**2;return!a||d<a.d?{m,d}:a},null):null;

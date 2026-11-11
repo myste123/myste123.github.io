@@ -7,7 +7,7 @@
 <script>
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
 OY.hud({baslik:'BALON FESTİVALİ',alt:'Kapadokya · Beğen → brülörü yak, en yükseğe çık 🎈',renk:'#ffb347',
- hediyeler:[['🌹','Gül','alev patlaması'],['💖','Kalp','kalp balonu · +8 m'],['💐','Parfüm','kum torbası · +12 m'],['🍩','Donut','arka rüzgâr · +25 m'],['🎩','Şapka','jet brülör'],['🌌','Galaksi','fırtına!']]});
+ hediyeler:OY.REKABET_HED});
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1.2:1.5));R.outputEncoding=THREE.sRGBEncoding;R.shadowMap.enabled=true;
 const S=new THREE.Scene();const KF0=50;const K=new THREE.PerspectiveCamera(50,1,.5,900);function boyut(){R.setSize(W(),H());K.aspect=W()/H();const yf=2*Math.atan(Math.tan(62*Math.PI/360)/K.aspect)*180/Math.PI;K.fov=Math.max(KF0,Math.min(80,yf));K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
 // gun dogumu gokyuzu
@@ -50,18 +50,18 @@ function katil(u){if(u.o)return;if(BAL.length>=22){const e=BAL.reduce((a,b)=>a.s
  const ec=document.createElement('canvas');ec.width=256;ec.height=48;u.etc=ec;const et=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(ec),transparent:true}));et.scale.set(6,1.1,1);et.position.y=14.4;u.o.add(et);u.et=et;yaz(u);
  S.add(u.o);BAL.push(u);OY.akis(`🎈 ${u.ad} balonuyla havalandı`,'#ffe2b8')}
 function yaz(u){const g=u.etc.getContext('2d');g.clearRect(0,0,256,48);g.fillStyle='rgba(0,0,0,.5)';g.fillRect(0,4,256,40);g.fillStyle='#fff';g.font='bold 26px Segoe UI';g.textAlign='center';g.textBaseline='middle';
- g.fillText(`${OY.kisaAd(u.ad,10)} · ${Math.round(u.irt)}m`,128,25);u.et.material.map.needsUpdate=true}
-function yak(u,n){u.hiz+=n;u.alevT=now()+400+n*60;u.son=now()}
+ g.fillText(`${OY.durum(u)}${OY.kisaAd(u.ad,10)} · ${Math.round(u.irt)}m`,128,25);u.et.material.map.needsUpdate=true}
+function yak(u,n){if(OY.donuk(u))return;u.hiz+=n;u.alevT=now()+400+n*60;u.son=now()}
+OY.rekabetKur({liste:()=>BAL,skor:u=>u.irt,ayarla:(u,v)=>{u.irt=Math.max(0,v)}});
 OY.basla({muzik:'sakin',olay:e=>{
  if(!e.id||bitis)return;const u=kul(e);katil(u);
  if(e.t==='begeni')yak(u,(e.adet||1)*.35);
  else if(e.t==='yorum'){yak(u,1.2);u.msj=String(e.metin||'').slice(0,46);u.msjT=now()}
  else if(e.t==='takip'){yak(u,5);OY.akis(`➕ ${u.ad} takip etti · yükseldi`,'#bdf')}
  else if(e.t==='paylasim')yak(u,4);
- else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;yak(u,4+Math.min(12,Math.sqrt(n)*2));OY.ses.guc();
-  const E={gul:['alev patlaması',()=>yak(u,6)],kalp:['kalp balonu · +8 m',()=>{u.irt+=8}],parfum:['kum torbası attı · +12 m',()=>{u.irt+=12}],
-   donut:['arka rüzgâr · +25 m',()=>{u.irt+=25}],sapka:['JET BRÜLÖR · 8 sn',()=>{u.jet=now()+8000}],
-   galaksi:['FIRTINA! herkes düştü',()=>{firtina=now()+4000;for(const b of BAL)if(b!==u)b.irt*=.82;OY.ses.patla()}]}[h.sinif];E[1]();OY.vitrin(u,h.ikon,h.ad,E[0]);OY.akis(`${h.ikon} ${u.ad} → ${E[0]}`,'#ffd84a')}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;yak(u,4+Math.min(12,Math.sqrt(n)*2));OY.ses.guc();const et=OY.rekabetHediye(u,h);
+  if(h.sinif==='gul')u.jet=now()+3000;if(h.sinif==='galaksi')firtina=now()+3000
+  OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
 }});
 const TUR=180;let turBas=now(),son=now(),kamY=20;const dom={};
 function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;
@@ -69,7 +69,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  if(!bitis&&kalan<=0){const s=[...BAL].sort((a,b)=>b.irt-a.irt);bitis=t+7000;if(s[0]){OY.ses.zafer();OY.kazanan(s[0],'🎈 GÖKYÜZÜNÜN HAKİMİ',`${Math.round(s[0].irt)} metreye çıktı`)}}
  if(bitis&&t>bitis){bitis=0;turBas=t;OY.kazanan(null);for(const u of BAL){u.irt=0;u.hiz=0}}
  const ruz=t<firtina?Math.sin(t/60)*1.2:0;let maxI=0,ort=0;
- for(const u of BAL){const jet=t<u.jet;if(!bitis){u.irt+=(u.hiz*(jet?2.2:1)-1.1)*dt*6;u.hiz*=Math.pow(.5,dt);if(u.irt<0)u.irt=0}
+ for(const u of BAL){const jet=t<u.jet;if(!bitis){u.irt+=(OY.donuk(u)?-1.1:u.hiz*(jet?2.2:1)*OY.ikiKat(u)-1.1)*dt*6;u.hiz*=Math.pow(.5,dt);if(u.irt<0)u.irt=0}
   u.puan=u.irt;maxI=Math.max(maxI,u.irt);ort+=u.irt;
   const o=u.o;o.position.y+=(u.irt*.6-o.position.y)*Math.min(1,dt*3);o.position.x=u.x+Math.sin(t/1700+u.x)*1.2+ruz*3;o.rotation.z=Math.sin(t/1300+u.z)*.04+ruz*.08;
   const yan=t<u.alevT||jet;o.userData.alev.visible=yan;o.userData.alev.scale.y=yan?.8+Math.random()*.8:1;o.userData.isik.intensity=yan?2.2:0;
@@ -77,8 +77,8 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
   if((t|0)%400<20)yaz(u)}
  ort=BAL.length?ort/BAL.length:0;
  for(const d of DEKOR){d.position.y+=Math.sin(t/3000+d.position.x)*.01;d.position.x+=.01}
- const hedefY=(ort*.6*.4+maxI*.6*.6);kamY+=(hedefY-kamY)*Math.min(1,dt*1.5);
- K.position.set(Math.sin(t/9000)*10,kamY+12,52+Math.min(40,(maxI-ort)*.25));K.lookAt(0,kamY+6,-18);
+ const hedefY=maxI*.6*.62+ort*.6*.38;kamY+=(hedefY-kamY)*Math.min(1,dt*1.5);
+ const yy=Math.min(160,(maxI-ort)*.6);K.position.set(Math.sin(t/9000)*10,kamY+10,48+yy*.6);K.lookAt(0,kamY+5,-18);
  R.render(S,K);
  for(const u of BAL){let b=dom[u.id];if(u.msj&&t-u.msjT<5000){if(!b){b=dom[u.id]=document.createElement('div');b.className='balon';document.body.appendChild(b)}b.textContent=u.msj;
   const p=u.o.position.clone();p.y+=17;p.project(K);b.style.left=(p.x*.5+.5)*W()+'px';b.style.top=(-p.y*.5+.5)*H()+'px';b.style.display=p.z<1?'block':'none'}else if(b){b.remove();delete dom[u.id]}}
