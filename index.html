@@ -1,0 +1,169 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Myste Medya · TikTok LIVE Oyunları</title>
+<meta name="description" content="TikTok canlı yayınınız için Türkçe etkileşimli oyunlar. İzleyiciler beğeni, yorum ve hediyeyle oyuna katılır. 1 gün ücretsiz deneme.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d22;--kart:#141938;--kart2:#1b2150;--cizgi:#2a3270;--yazi:#eef0ff;--soluk:#a8afd8;--vurgu:#ff3d81;--vurgu2:#ffb02e;--mavi:#3dd6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--yazi);font:500 16px/1.6 Nunito,Segoe UI,Arial,sans-serif;overflow-x:hidden}
+a{color:inherit}h1,h2,h3{font-family:"Baloo 2",Nunito,sans-serif;line-height:1.1;margin:0}
+.kap{max-width:1180px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:50;background:rgba(10,13,34,.82);backdrop-filter:blur(12px);border-bottom:1px solid #1d2350}
+nav .kap{display:flex;align-items:center;gap:18px;height:64px}
+.logo{font:800 22px "Baloo 2";display:flex;align-items:center;gap:8px;text-decoration:none}.logo i{font-style:normal;background:linear-gradient(90deg,var(--vurgu),var(--vurgu2));-webkit-background-clip:text;color:transparent}
+nav .bag{display:flex;gap:18px;margin-left:auto;font-weight:700;font-size:15px}nav .bag a{text-decoration:none;color:var(--soluk)}nav .bag a:hover{color:#fff}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:14px;padding:13px 22px;font:800 16px Nunito;cursor:pointer;text-decoration:none;color:#fff;background:linear-gradient(90deg,var(--vurgu),#ff6a3d);box-shadow:0 8px 24px rgba(255,61,129,.35);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}.btn.ikinci{background:var(--kart2);box-shadow:none;border:1px solid var(--cizgi)}
+@media(max-width:760px){nav .bag{display:none}}
+/* hero */
+.hero{padding:56px 0 40px;position:relative}
+.hero:before{content:'';position:absolute;inset:-200px 0 auto;height:700px;background:radial-gradient(600px 300px at 20% 30%,rgba(255,61,129,.25),transparent),radial-gradient(500px 300px at 80% 20%,rgba(61,214,255,.18),transparent);pointer-events:none}
+.hero .kap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;position:relative}
+.hero h1{font-size:clamp(36px,5.4vw,62px)}.hero h1 span{background:linear-gradient(90deg,var(--vurgu),var(--vurgu2));-webkit-background-clip:text;color:transparent}
+.hero p{color:var(--soluk);font-size:19px;margin:18px 0 26px}.rozetler{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.rozetler span{background:var(--kart);border:1px solid var(--cizgi);padding:6px 12px;border-radius:30px;font-weight:700;font-size:14px}
+@media(max-width:860px){.hero .kap{grid-template-columns:1fr}}
+/* telefon + akis */
+.telefon{position:relative;width:min(340px,82vw);aspect-ratio:9/18.5;margin:0 auto;border-radius:42px;background:#000;border:10px solid #1a1d33;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 2px #2b3060;overflow:hidden}
+.telefon iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.canli{position:absolute;top:14px;left:14px;z-index:3;background:#ff2d55;color:#fff;font:900 12px Nunito;padding:3px 8px;border-radius:6px;letter-spacing:.06em}
+.izl{position:absolute;top:14px;left:66px;z-index:3;background:rgba(0,0,0,.45);font:800 12px Nunito;padding:3px 8px;border-radius:6px}
+.akis-kayan{display:flex;gap:16px;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);margin:30px 0 0}
+.akis-kayan .serit{display:flex;gap:16px;animation:kay 40s linear infinite}
+@keyframes kay{to{transform:translateX(-50%)}}
+.mini{width:150px;height:266px;border-radius:18px;overflow:hidden;position:relative;flex:none;border:2px solid #232a5e;background:#000}
+.mini iframe{width:540px;height:960px;transform:scale(.278);transform-origin:0 0;border:0;pointer-events:none}
+/* bolumler */
+section{padding:70px 0}section h2{font-size:clamp(28px,3.6vw,42px);text-align:center}.alt-baslik{color:var(--soluk);text-align:center;max-width:680px;margin:10px auto 34px}
+.sekme{display:flex;justify-content:center;gap:10px;margin-bottom:26px}.sekme button{background:var(--kart);border:1px solid var(--cizgi);color:var(--yazi);padding:10px 20px;border-radius:30px;font:800 15px Nunito;cursor:pointer}
+.sekme button.aktif{background:linear-gradient(90deg,var(--vurgu),#ff6a3d);border-color:transparent}
+.izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.oyun{background:var(--kart);border:1px solid var(--cizgi);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
+.oyun:hover{transform:translateY(-4px);border-color:#4a53a8}
+.onizle{position:relative;height:300px;overflow:hidden;background:#000;cursor:pointer}
+.onizle iframe{width:540px;height:960px;transform:scale(.52);transform-origin:50% 0;position:absolute;left:50%;margin-left:-270px;border:0;pointer-events:none}
+.onizle .oynat{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(transparent 50%,rgba(10,13,34,.9));font:800 15px Nunito}
+.onizle .gorsel{position:absolute;inset:0;display:grid;place-items:center;font-size:80px;background:var(--grad)}
+.oyun .ic{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}.oyun h3{font-size:22px}.oyun p{margin:0;color:var(--soluk);font-size:14.5px}
+.etiket{display:flex;gap:6px;flex-wrap:wrap}.etiket span{font:800 12px Nunito;padding:3px 9px;border-radius:20px;background:var(--kart2);color:var(--mavi)}
+.etiket span.y{color:#ffd166;background:rgba(255,209,102,.12)}
+.oyun .alt{margin-top:auto;display:flex;gap:8px;padding-top:6px}.oyun .alt .btn{padding:9px 14px;font-size:14px;border-radius:11px;flex:1;justify-content:center}
+.yakinda{opacity:.75}.yakinda .onizle{cursor:default}
+/* simulator */
+.sim{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center}
+@media(max-width:860px){.sim{grid-template-columns:1fr}}
+.panel{background:var(--kart);border:1px solid var(--cizgi);border-radius:22px;padding:24px}
+.panel label{display:block;font-weight:800;margin:14px 0 6px;font-size:14px;color:var(--soluk)}
+input,select,textarea{width:100%;background:#0d1130;border:1px solid var(--cizgi);color:#fff;border-radius:12px;padding:12px 14px;font:600 15px Nunito}
+.dugmeler{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.dugmeler button{background:var(--kart2);border:1px solid var(--cizgi);color:#fff;border-radius:14px;padding:12px 6px;font:800 14px Nunito;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.dugmeler button b{font-size:26px}.dugmeler button:active{transform:scale(.96)}
+/* fiyat */
+.fiyatlar{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.paket{background:var(--kart);border:1px solid var(--cizgi);border-radius:22px;padding:26px;display:flex;flex-direction:column;gap:10px}
+.paket.one{border:2px solid var(--vurgu);background:linear-gradient(180deg,#22183f,var(--kart))}
+.paket h3{font-size:22px}.paket .tl{font:800 40px "Baloo 2"}.paket .tl small{font:700 15px Nunito;color:var(--soluk)}
+.paket ul{margin:0;padding-left:20px;color:var(--soluk)}.paket .btn{margin-top:auto;justify-content:center}
+.not{background:var(--kart);border:1px dashed #4a53a8;border-radius:16px;padding:16px 18px;color:var(--soluk);margin-top:22px;text-align:center}
+/* kurulum */
+.adimlar{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.adimlar .panel h3{font-size:22px;margin-bottom:10px}.adimlar ol{margin:0;padding-left:20px}.adimlar li{margin:6px 0}
+code{background:#0d1130;border:1px solid var(--cizgi);padding:2px 7px;border-radius:7px;color:var(--mavi);font-size:14px;word-break:break-all}
+.form{max-width:620px;margin:0 auto}.sonuc{margin-top:14px;padding:14px;border-radius:12px;background:#0d1130;display:none;word-break:break-all}
+footer{border-top:1px solid #1d2350;padding:34px 0;color:var(--soluk);text-align:center;font-size:14px}
+</style></head><body>
+<nav><div class="kap"><a class="logo" href="#">🎮 <i>Myste</i> Medya</a><div class="bag"><a href="#oyunlar">Oyunlar</a><a href="#dene">Kendin Dene</a><a href="#fiyat">Fiyatlar</a><a href="#kurulum">Kurulum</a></div><a class="btn" href="#demo">1 Gün Ücretsiz Dene</a></div></nav>
+
+<header class="hero"><div class="kap">
+ <div><h1>TikTok yayınını <span>oyuna</span> çevir, izleyicin hediyeyle oynasın</h1>
+ <p>İzleyicilerin beğeni, yorum ve hediyeleriyle oynanan Türkçe canlı yayın oyunları. Hediyeler oyunda süper güce dönüşür, izleyici yayında kalır, hediye geliri artar.</p>
+ <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="#demo">🎁 1 Gün Ücretsiz Dene</a><a class="btn ikinci" href="#dene">🕹 Şimdi kendin oyna</a></div>
+ <div class="rozetler"><span>⚡ 30 saniyede kurulum</span><span>🖥 PC + 📱 Telefon</span><span>🔊 Sesli sunucu</span><span>🎵 Telifsiz müzik</span></div></div>
+ <div class="telefon"><span class="canli">CANLI</span><span class="izl">👁 1.284</span><iframe id="heroOyun" src="oyun/halay.html?sim=1&demo=1&muzik=0&efekt=0" title="Oyun önizleme" loading="lazy"></iframe></div>
+</div>
+<div class="akis-kayan"><div class="serit" id="serit"></div></div></header>
+
+<section id="oyunlar"><div class="kap"><h2>Oyunlar</h2><p class="alt-baslik">Her oyun farklı bir konsept. Önizlemeye dokunun, oyun deneme modunda açılsın.</p>
+ <div class="sekme"><button class="aktif" data-k="3b">🧊 3B Oyunlar</button><button data-k="2b">🎨 2B Oyunlar</button></div>
+ <div class="izgara" id="izgara"></div></div></section>
+
+<section id="dene" style="background:linear-gradient(180deg,transparent,#0f1330 30%,#0f1330 70%,transparent)"><div class="kap"><h2>Kendin dene: izleyici sen ol</h2><p class="alt-baslik">Adını yaz, yorum gönder, hediye at. Canlı yayındaki izleyicilerin gördüğü her şeyi burada görürsün.</p>
+ <div class="sim"><div class="telefon"><span class="canli">CANLI</span><span class="izl">👁 742</span><iframe id="simOyun" src="oyun/halay.html?sim=1&demo=1&muzik=40" title="Simülatör"></iframe></div>
+ <div class="panel"><label>Oyun</label><select id="simSec"></select>
+  <label>Adın</label><input id="simAd" value="Sen" maxlength="20">
+  <label>Yorum yaz</label><div style="display:flex;gap:8px"><input id="simYorum" placeholder="Örn: Ben de varım! (Halat Çekme'de 1 veya 2)"><button class="btn" id="simGonder" style="padding:10px 16px">Gönder</button></div>
+  <div class="dugmeler"><button data-o="begeni"><b>❤️</b>Beğen x10</button><button data-o="takip"><b>➕</b>Takip et</button><button data-o="paylasim"><b>🔁</b>Paylaş</button>
+  <button data-h="Rose" data-e="1"><b>🌹</b>Gül · 1</button><button data-h="Doughnut" data-e="30"><b>🍩</b>Donut · 30</button><button data-h="Hat and Mustache" data-e="99"><b>🎩</b>Şapka · 99</button>
+  <button data-h="Perfume" data-e="20"><b>💐</b>Parfüm · 20</button><button data-h="Corgi" data-e="299"><b>🐶</b>Korgi · 299</button><button data-h="Galaxy" data-e="1000"><b>🌌</b>Galaksi · 1000</button></div>
+  <p style="color:var(--soluk);font-size:13px;margin:14px 0 0">Bu bir simülasyondur; gerçek hediye gönderilmez, ücret alınmaz.</p></div></div></div></section>
+
+<section id="fiyat"><div class="kap"><h2>Fiyatlar</h2><p class="alt-baslik">Tüm paketlerde 1 gün ücretsiz deneme. Komisyonsuz havale/EFT ile ödeme.</p>
+ <div class="fiyatlar">
+  <div class="paket"><h3>🎨 Tek 2B Oyun</h3><div class="tl">250₺ <small>/ ay</small></div><ul><li>Seçtiğin 1 adet 2B oyun</li><li>Sesli veya sessiz</li><li>Kalıcı skor tablosu</li></ul><a class="btn ikinci" href="#siparis" data-p="Tek 2B oyun - 250 TL/ay">Sipariş ver</a></div>
+  <div class="paket"><h3>🧊 Tek 3B Oyun</h3><div class="tl">350₺ <small>/ ay</small></div><ul><li>Seçtiğin 1 adet 3B oyun</li><li>Animasyonlu 3B karakterler</li><li>Sesli veya sessiz</li></ul><a class="btn ikinci" href="#siparis" data-p="Tek 3B oyun - 350 TL/ay">Sipariş ver</a></div>
+  <div class="paket one"><h3>📦 Kategori Paketi</h3><div class="tl">600₺ <small>/ ay</small></div><ul><li>Tüm 2B oyunlar <b>600₺</b></li><li>Tüm 3B oyunlar <b>900₺</b></li><li>Oyunlar arasında serbest geçiş</li></ul><a class="btn" href="#siparis" data-p="Kategori paketi">Sipariş ver</a></div>
+ </div>
+ <div class="not">🛠 <b>Yayınına özel oyun veya otomasyon</b> mı istiyorsun? Logolu sürüm, ajans paketi ve özel geliştirme için sipariş formuna not yaz.</div></div></section>
+
+<section id="kurulum"><div class="kap"><h2>Kurulum</h2><p class="alt-baslik">Program yüklemek yok. Sana verdiğimiz linki yayın programına eklemen yeterli.</p>
+ <div class="adimlar">
+  <div class="panel"><h3>🖥 Bilgisayar (TikTok LIVE Studio)</h3><ol><li>LIVE Studio'yu aç, yayın yönünü <b>Dikey</b> yap.</li><li><b>Kaynak ekle → Bağlantı</b> seç.</li><li>Linkini yapıştır, <b>Özel çözünürlük 1080 × 1920</b>.</li><li>Önizlemede <b>Doldur</b> seç, <b>CANLI Yayın Yap</b>'a bas.</li></ol><p style="color:var(--soluk);font-size:14px">OBS / Streamlabs: Tarayıcı kaynağı → aynı link, 1080×1920.</p></div>
+  <div class="panel"><h3>📱 Telefon / Tablet (Android)</h3><ol><li>Linkini <b>Chrome</b>'da aç, ekrana bir kez dokun (ses açılır).</li><li>Ekran zaman aşımını en uzuna al, Rahatsız Etmeyin'i aç.</li><li>TikTok → <b>+ → CANLI → Mobil oyun</b> → yayını başlat.</li><li>Chrome'a geri dön, yayın boyunca oyunda kal.</li></ol></div>
+  <div class="panel"><h3>🔊 Ses ve Müzik</h3><ol><li><b>Sesli sunucu:</b> hediye ve takiplere sesli teşekkür eder, yorumlara cevap verir.</li><li><b>Sessiz:</b> sadece oyun efektleri ve müzik.</li><li>Müzik sesi: linkin sonuna <code>&muzik=30</code> (kapatmak: <code>&muzik=0</code>).</li><li>Kendi müziğin: <code>&muzikurl=https://...mp3</code> ekle.</li></ol>
+   <p style="color:var(--soluk);font-size:14px">⚠️ Oyunun müzikleri telifsizdir. TikTok, canlı yayında telifli şarkıları algılayıp sesi kısabilir; kendi müziğini eklerken telif hakkına sahip olduğundan emin ol.</p></div>
+ </div></div></section>
+
+<section id="demo"><div class="kap form"><h2>🎁 1 Gün Ücretsiz Deneme</h2><p class="alt-baslik">TikTok kullanıcı adını yaz, deneme linkin anında oluşsun. Kart bilgisi istemiyoruz.</p>
+ <div class="panel"><label>TikTok kullanıcı adın</label><input id="dTik" placeholder="@kullaniciadi"><label>Denemek istediğin oyun</label><select id="dOyun"></select>
+ <button class="btn" id="dBtn" style="margin-top:16px;width:100%;justify-content:center">Deneme linkimi oluştur</button><div class="sonuc" id="dSonuc"></div></div></div></section>
+
+<section id="siparis"><div class="kap form"><h2>🛒 Sipariş</h2><p class="alt-baslik">Formu gönder, ödeme bilgilerini (havale/EFT, komisyonsuz) sana iletelim. Ödeme sonrası lisansın hemen açılır.</p>
+ <div class="panel"><label>Adın</label><input id="sAd"><label>TikTok kullanıcı adın</label><input id="sTik" placeholder="@kullaniciadi"><label>Paket</label><select id="sPaket">
+ <option>Tüm 3B oyunlar - 900 TL/ay</option><option>Tüm 2B oyunlar - 600 TL/ay</option><option>Tek 3B oyun - 350 TL/ay</option><option>Tek 2B oyun - 250 TL/ay</option><option>Özel oyun / otomasyon</option></select>
+ <label>İletişim (TikTok DM, Instagram, e-posta veya telefon)</label><input id="sIlet"><label>Not (hangi oyun, özel istek)</label><textarea id="sNot" rows="3"></textarea>
+ <button class="btn" id="sBtn" style="margin-top:16px;width:100%;justify-content:center">Siparişi gönder</button><div class="sonuc" id="sSonuc"></div></div></div></section>
+
+<footer><div class="kap">🎮 Myste Medya · TikTok LIVE oyunları ve yayın otomasyonu · 📩 bilesikyatirim@gmail.com · TikTok: @bilesikyatirim<br>
+<span style="font-size:12px">3B modeller: Kenney (CC0). TikTok, ByteDance Ltd.'nin markasıdır; bu site TikTok ile bağlantılı değildir.</span></div></footer>
+<script>
+const OYUNLAR=[
+ {id:'halay',k:'3b',ad:'Halay Meydanı',ik:'💃',d:'Köy meydanında dev halay halkası. İzleyiciler 3B karakter olarak halaya katılır, en coşkulu olan mendili kapar.',e:['Takım ruhu','Kalıcı skor']},
+ {id:'konvoy',k:'3b',ad:'Düğün Konvoyu',ik:'🚗',d:'Her izleyicinin bir arabası var. Beğeni gaz verir, hediye nitro yakar. Salona ilk varan gelin arabası olur.',e:['Yarış','Nitro']},
+ {id:'kapadokya',k:'3b',ad:'Balon Festivali',ik:'🎈',d:'Kapadokya üzerinde fotoğraflı sıcak hava balonları. Beğeni brülörü yakar, fırtına hediyesi rakipleri düşürür.',e:['Yeni','Manzaralı']},
+ {id:'martilar',k:'3b',ad:'Boğaz Martıları',ik:'🕊',d:'Vapurun peşindeki martılar izleyiciler. Hediye atan güverteden simit fırlatır.',y:1},
+ {id:'cayocagi',k:'3b',ad:'Çay Ocağı Kulesi',ik:'🫖',d:'Çay bardağı, simit ve semaverden fizikli kule. Devirmeden en yükseğe koyan kazanır.',y:1},
+ {id:'mangal',k:'3b',ad:'Mangal Ustası',ik:'🍢',d:'Ortak mangal: yorum şiş ekler, beğeni közü harlar, yanan şiş puan kaybettirir.',y:1},
+ {id:'nazar',k:'2b',ad:'Nazar Savunması',ik:'🧿',d:'Kem gözler yayına saldırıyor! Her izleyici bir nazar boncuğu olur ve ateş eder. Ortak savunma, dalga dalga zorlaşır.',e:['Yeni','Ortak oyun']},
+ {id:'kediler',k:'2b',ad:'Sokak Kedileri',ik:'🐈',d:'Beğeniyle mama dök, kediler en çok besleyeni takip etsin. En büyük kedi ordusu kazanır.',e:['Yeni','Sevimli']},
+ {id:'halat',k:'2b',ad:'Halat Çekme',ik:'🪢',d:'Kırmızı ve Mavi takım. Yorumda 1 veya 2 yaz, beğeniyle çek, deprem hediyesiyle ipi kaydır.',e:['Takım']},
+ {id:'balon',k:'2b',ad:'Balon Arenası',ik:'🎈',d:'Fotoğraflı balonlar arenada büyüyüp birbirini ısırır. Hediyeler bomba, mıknatıs, vampir gücü verir.',e:['Klasik'],resim:1},
+ {id:'muhtar',k:'2b',ad:'Muhtarlık Seçimi',ik:'🗳',d:'İzleyiciler aday olur, yorumla oy toplar, hediye miting yaptırır. Canlı seçim grafiği.',y:1},
+ {id:'bilmece',k:'2b',ad:'Bilmece Kahvehanesi',ik:'☕',d:'Türkçe bilmeceler, ilk doğru cevabı yazan kazanır. Hediye ipucu açar.',y:1}];
+const sim=OYUNLAR.filter(o=>!o.y&&!o.resim);
+// kayan yayinlar
+document.getElementById('serit').innerHTML=[...sim,...sim].map(o=>`<div class="mini"><iframe loading="lazy" src="oyun/${o.id}.html?sim=1&demo=1&muzik=0&efekt=0" title="${o.ad}"></iframe></div>`).join('');
+// oyun kartlari
+function kartlar(k){document.getElementById('izgara').innerHTML=OYUNLAR.filter(o=>o.k===k).map(o=>`<div class="oyun ${o.y?'yakinda':''}">
+ <div class="onizle" data-id="${o.id}" style="--grad:linear-gradient(135deg,#2a2f6a,#14183a)">${o.y||o.resim?`<div class="gorsel">${o.resim?'<img src="arena/oyun.jpg" style="width:100%;height:100%;object-fit:cover" alt="">':o.ik}</div>`:'<div class="oynat">▶ Önizlemek için dokun</div>'}</div>
+ <div class="ic"><h3>${o.ik} ${o.ad}</h3><p>${o.d}</p><div class="etiket"><span>${o.k.toUpperCase()}</span>${o.y?'<span class="y">Yakında</span>':(o.e||[]).map(x=>`<span>${x}</span>`).join('')}</div>
+ ${o.y?'':`<div class="alt"><a class="btn ikinci" href="#dene" data-sim="${o.id}">Kendin dene</a><a class="btn" href="#demo" data-demo="${o.id}">Ücretsiz dene</a></div>`}</div></div>`).join('')}
+kartlar('3b');
+document.querySelectorAll('.sekme button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.sekme button').forEach(x=>x.classList.remove('aktif'));b.classList.add('aktif');kartlar(b.dataset.k)});
+document.getElementById('izgara').addEventListener('click',e=>{const p=e.target.closest('.onizle');if(p&&!p.querySelector('iframe,.gorsel'))p.innerHTML=`<iframe src="oyun/${p.dataset.id}.html?sim=1&demo=1&muzik=0" title="önizleme"></iframe>`;
+ const s=e.target.closest('[data-sim]');if(s)simAc(s.dataset.sim);const d=e.target.closest('[data-demo]');if(d)document.getElementById('dOyun').value=d.dataset.demo});
+// simulator
+const SS=document.getElementById('simSec'),SF=document.getElementById('simOyun');SS.innerHTML=sim.map(o=>`<option value="${o.id}">${o.ik} ${o.ad}</option>`).join('');
+function simAc(id){SS.value=id;SF.src=`oyun/${id}.html?sim=1&demo=1&muzik=40`}SS.onchange=()=>simAc(SS.value);
+const ben=()=>({id:'site-'+(document.getElementById('simAd').value||'Sen'),ad:document.getElementById('simAd').value||'Sen',foto:''});
+const yolla=o=>SF.contentWindow.postMessage({oy:1,...ben(),...o},'*');
+document.getElementById('simGonder').onclick=()=>{const y=document.getElementById('simYorum');if(y.value.trim()){yolla({t:'yorum',metin:y.value.trim()});y.value=''}};
+document.getElementById('simYorum').onkeydown=e=>{if(e.key==='Enter')document.getElementById('simGonder').click()};
+document.querySelectorAll('.dugmeler button').forEach(b=>b.onclick=()=>{if(b.dataset.h)yolla({t:'hediye',hediye:b.dataset.h,elmas:+b.dataset.e,adet:1});else yolla({t:b.dataset.o,adet:10})});
+// demo + siparis (sunucu adresi kalici dosyadan)
+document.getElementById('dOyun').innerHTML=OYUNLAR.filter(o=>!o.y).map(o=>`<option value="${o.id}">${o.ik} ${o.ad}</option>`).join('');
+async function sunucu(){const r=await fetch('arena/adres.json?t='+Date.now(),{cache:'no-store'});return(await r.json()).adres.replace(/\/$/,'')}
+async function gonder(yol,veri,kutu){kutu.style.display='block';kutu.textContent='Gönderiliyor…';try{const a=await sunucu();const r=await fetch(a+yol,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(veri)});return await r.json()}catch(x){return{hata:'Sunucuya şu an ulaşılamıyor. TikTok @bilesikyatirim veya e-posta ile yazabilirsiniz.'}}}
+document.getElementById('dBtn').onclick=async()=>{const k=document.getElementById('dSonuc'),j=await gonder('/api/demo',{tiktok:document.getElementById('dTik').value,oyun:document.getElementById('dOyun').value},k);
+ k.innerHTML=j.link?`✅ Deneme linkin hazır (bitiş: ${j.bitis}):<br><code>${j.link}</code><br><br>Kurulum için <a href="#kurulum">Kurulum</a> bölümüne bak. Oyunu değiştirmek için linkin sonundaki <code>o=</code> değerini değiştirebilirsin.`:'⚠️ '+j.hata};
+document.getElementById('sBtn').onclick=async()=>{const k=document.getElementById('sSonuc'),v=id=>document.getElementById(id).value;
+ const j=await gonder('/api/siparis',{ad:v('sAd'),tiktok:v('sTik'),paket:v('sPaket'),iletisim:v('sIlet'),not:v('sNot')},k);k.textContent=j.ok?'✅ Siparişin alındı! En kısa sürede ödeme bilgileriyle sana dönüş yapacağız.':'⚠️ '+j.hata};
+document.querySelectorAll('[data-p]').forEach(a=>a.addEventListener('click',()=>{const s=document.getElementById('sPaket');[...s.options].forEach(o=>{if(a.dataset.p.startsWith(o.text.split(' - ')[0]))s.value=o.text})}));
+</script></body></html>

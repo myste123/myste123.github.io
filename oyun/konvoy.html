@@ -1,0 +1,87 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Düğün Konvoyu</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#9cc8f0;color:#fff;font-family:Segoe UI,Arial,sans-serif}#sahne{position:fixed;inset:0}
+#yolbar{position:fixed;top:13.2vh;left:3vw;right:3vw;height:3vh;z-index:20;pointer-events:none}
+#yolbar .c{position:absolute;left:0;right:3vh;top:1.3vh;height:.5vh;border-radius:1vh;background:rgba(0,0,0,.35)}
+#yolbar .s{position:absolute;right:0;top:-.2vh;font-size:3vh}
+#yolbar img{position:absolute;top:0;width:3vh;height:3vh;border-radius:50%;border:.25vh solid #fff;transform:translateX(-50%);transition:left .4s}</style></head><body>
+<canvas id="sahne"></canvas><div id="yolbar"><div class="c"></div><div class="s">💒</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
+<script src="core.js"></script><script src="uc.js"></script><script src="hud.js"></script>
+<script>
+const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
+OY.hud({baslik:'DÜĞÜN KONVOYU',alt:'Beğen → arabana gaz ver · Salona ilk varan gelin arabası olur 💍',renk:'#ff8fc7',
+ hediyeler:[['🌹','Gül','korna + hız'],['🍩','20+','NİTRO'],['🎩','99+','gelin arabası'],['🌌','1000+','davul-zurna']]});
+const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;R.outputEncoding=THREE.sRGBEncoding;
+const S=new THREE.Scene();S.background=new THREE.Color(0xa9d3f5);S.fog=new THREE.Fog(0xa9d3f5,70,190);
+const K=new THREE.PerspectiveCamera(45,1,.1,400);function boyut(){R.setSize(W(),H());K.aspect=W()/H();K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
+S.add(new THREE.HemisphereLight(0xffffff,0x5c7a3a,.85));const gun=new THREE.DirectionalLight(0xfff2dd,.85);gun.castShadow=true;gun.shadow.mapSize.set(2048,2048);
+Object.assign(gun.shadow.camera,{left:-35,right:35,top:45,bottom:-45,far:120});S.add(gun);S.add(gun.target);
+const YOL=600,SERIT=5,SG=3.4;
+const cim=new THREE.Mesh(new THREE.PlaneGeometry(500,YOL+400),new THREE.MeshStandardMaterial({color:0x79b85a}));cim.rotation.x=-Math.PI/2;cim.position.z=-YOL/2;cim.receiveShadow=true;S.add(cim);
+const yc=document.createElement('canvas');yc.width=256;yc.height=128;{const g=yc.getContext('2d');g.fillStyle='#45464f';g.fillRect(0,0,256,128);g.fillStyle='rgba(255,255,255,.9)';
+ for(let i=1;i<SERIT;i++)g.fillRect(i*256/SERIT-2,0,4,64);g.fillStyle='#f4d35e';g.fillRect(2,0,5,128);g.fillRect(249,0,5,128)}
+const ytx=new THREE.CanvasTexture(yc);ytx.wrapT=THREE.RepeatWrapping;ytx.repeat.set(1,(YOL+400)/6);ytx.encoding=THREE.sRGBEncoding;
+const yol=new THREE.Mesh(new THREE.PlaneGeometry(SERIT*SG,YOL+400),new THREE.MeshStandardMaterial({map:ytx,roughness:.9}));yol.rotation.x=-Math.PI/2;yol.position.set(0,.02,-YOL/2);yol.receiveShadow=true;S.add(yol);
+const EVL='abcdefghijklmnopqrstu'.split('');let ei=0;
+for(let z=30;z>-YOL-60;z-=11){for(const s of[-1,1]){const kx=s*(SERIT*SG/2+2.5);
+ UC.yerlestir(`model/sehir/tree-${Math.random()<.5?'large':'small'}.glb`,kx+s*Math.random()*2,0,z+Math.random()*4,Math.random()*6,6.5,S);
+ if(Math.random()<.7)UC.yerlestir(`model/sehir/building-type-${EVL[(ei++*5)%EVL.length]}.glb`,s*(SERIT*SG/2+13+Math.random()*4),0,z,s>0?-Math.PI/2:Math.PI/2,8,S)}
+ if((z|0)%33===0)UC.yerlestir('model/tatil/lights-colored.glb',0,6,z,0,SERIT*SG*.95,S)}
+const salon=new THREE.Group();{const b=new THREE.Mesh(new THREE.BoxGeometry(34,11,9),new THREE.MeshStandardMaterial({color:0xfff2f7}));b.position.y=5.5;b.castShadow=true;salon.add(b);
+ const k=new THREE.Mesh(new THREE.TorusGeometry(6,.7,10,30,Math.PI),new THREE.MeshStandardMaterial({color:0xff6fa5}));k.position.set(0,0,4.8);salon.add(k);
+ const lc=document.createElement('canvas');lc.width=512;lc.height=128;const g=lc.getContext('2d');g.fillStyle='#ff4d8d';g.fillRect(0,0,512,128);g.fillStyle='#fff';g.font='bold 62px Segoe UI';g.textAlign='center';g.fillText('💍 DÜĞÜN SALONU',256,86);
+ const tx=new THREE.CanvasTexture(lc);tx.encoding=THREE.sRGBEncoding;const lv=new THREE.Mesh(new THREE.PlaneGeometry(16,4),new THREE.MeshBasicMaterial({map:tx}));lv.position.set(0,13,4.6);salon.add(lv)}
+salon.position.z=-YOL-8;S.add(salon);
+const U={},ARAC=[];let davulBit=0,bitis=0,kazananU=null;
+const hash=s=>[...String(s)].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7);
+function araba(u){const g=new THREE.Group(),o={g,model:null};
+ UC.yerlestir(UC.ARABA[hash(u.id)%10],0,0,0,Math.PI,1.6,g).then(m=>{o.model=m;m.position.y=.48});
+ o.rozet=UC.rozet(u,1.1);o.rozet.position.y=3.3;g.add(o.rozet);o.et=UC.etiket(2.6);o.et.position.y=4.25;g.add(o.et);
+ o.sus=new THREE.Group();for(let i=0;i<6;i++){const b=new THREE.Mesh(new THREE.SphereGeometry(.32,10,10),new THREE.MeshStandardMaterial({color:[0xff4d8d,0xffffff,0xffd166][i%3]}));b.position.set(-1+i*.4,2.6+Math.sin(i*2)*.3,1.8);o.sus.add(b)}
+ const kd=new THREE.Mesh(new THREE.BoxGeometry(.3,.06,4.2),new THREE.MeshStandardMaterial({color:0xff4d8d}));kd.position.y=2.05;o.sus.add(kd);o.sus.visible=false;g.add(o.sus);
+ o.nitro=new THREE.Mesh(new THREE.ConeGeometry(.4,2.4,10),new THREE.MeshBasicMaterial({color:0x4fd1ff,transparent:true,opacity:.75}));o.nitro.rotation.x=-Math.PI/2;o.nitro.position.set(0,.8,3.3);o.nitro.visible=false;g.add(o.nitro);
+ S.add(g);return o}
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,yol:0,hiz:0,nitroBit:0,susBit:0,ucus:0,o:null,son:0,msj:'',msjT:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
+const ort=()=>ARAC.length?ARAC.reduce((a,b)=>a+b.yol,0)/ARAC.length:0;
+function katil(u){if(u.o)return;if(ARAC.length>=25){const e=ARAC.reduce((a,b)=>a.son<b.son?a:b);if(now()-e.son<25000)return;S.remove(e.o.g);e.o=null;ARAC.splice(ARAC.indexOf(e),1)}
+ u.serit=ARAC.length%SERIT;u.yol=Math.max(0,ort()-15);u.o=araba(u);ARAC.push(u);OY.akis(`🚗 ${u.ad} konvoya katıldı`,'#bff');OY.ses.korna()}
+function gaz(u,n){u.hiz=Math.min(18,u.hiz+n);u.son=now()}
+const BAL={};let KAL={kazan:{},tur:0};
+OY.basla({muzik:'dugun',olay:e=>{
+ if(e.t==='kalici'&&e.veri&&e.veri.kazan){KAL=Object.assign({kazan:{},tur:0},e.veri);return}
+ if(!e.id||bitis)return;const u=kul(e);katil(u);
+ if(e.t==='begeni')gaz(u,(e.adet||1)*.9);
+ else if(e.t==='yorum'){gaz(u,2.5);u.msj=String(e.metin||'').slice(0,46);u.msjT=now()}
+ else if(e.t==='takip'){gaz(u,8);OY.akis(`➕ ${u.ad} takip etti · hız!`,'#8cf')}
+ else if(e.t==='paylasim'){gaz(u,6);OY.akis(`🔁 ${u.ad} paylaştı · hız!`,'#8cf')}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;gaz(u,4+Math.min(14,Math.sqrt(n)*2));OY.ses.korna();
+  if(h.seviye>=2){u.nitroBit=now()+6000;OY.ses.guc();OY.akis(`🔥 ${u.ad} · ${h.ad} → NİTRO`,'#6df')}else OY.akis(`🌹 ${u.ad} · ${h.ad} → korna + hız`,'#ffd6ea');
+  if(h.seviye>=3){u.susBit=now()+45000;u.ucus=1;u.yol+=18;OY.akis(`💍 ${u.ad} gelin arabası oldu, uçtu!`,'#f9c')}
+  if(h.seviye>=4){davulBit=now()+15000;OY.akis(`🥁 ${u.ad} davul-zurna getirdi! Herkes hızlandı`,'#fd8')}}
+}});
+const YB=document.getElementById('yolbar'),AV={};
+function cubuk(sr){const ilk=sr.slice(0,5);for(const k in AV)if(!ilk.find(u=>u.id===k)){AV[k].remove();delete AV[k]}
+ ilk.forEach(u=>{let a=AV[u.id];if(!a){a=AV[u.id]=document.createElement('img');a.src=OY.foto(u,64).toDataURL();YB.appendChild(a)}a.style.left=`calc(${Math.min(1,u.yol/YOL)}*(100% - 3vh))`})}
+function bitir(u){bitis=now()+8000;kazananU=u;KAL.kazan[u.ad]=(KAL.kazan[u.ad]||0)+1;KAL.tur++;OY.kaydet(KAL);OY.ses.zafer();OY.kazanan(u,'💍 GELİN ARABASI',`Salona ilk vardı · ${KAL.kazan[u.ad]}. zaferi`)}
+function sifirla(){OY.kazanan(null);bitis=0;kazananU=null;for(const u of ARAC){u.yol=0;u.hiz=0;u.o.g.position.z=0}}
+let son=now();
+function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;if(bitis&&t>bitis)sifirla();const davul=t<davulBit;
+ for(const u of ARAC){const o=u.o;if(!o)continue;const nit=t<u.nitroBit;
+  if(!bitis){u.yol+=(u.hiz*(nit?1.8:1)+(davul?5:0)+1.2)*dt;u.hiz*=Math.pow(.55,dt);if(u.yol>=YOL&&!kazananU)bitir(u)}
+  const x=(u.serit-(SERIT-1)/2)*SG;o.g.position.x+=(x-o.g.position.x)*dt*3;o.g.position.z=-u.yol;
+  if(u.ucus>0){u.ucus-=dt*.6;o.g.position.y=Math.sin(Math.max(0,u.ucus)*Math.PI)*5}else o.g.position.y=0;
+  o.nitro.visible=nit;if(nit)o.nitro.scale.y=.7+Math.random()*.7;o.sus.visible=t<u.susBit||u===kazananU;
+  o.rozet.guncelle();o.et.yaz(OY.kisaAd(u.ad,11),t<u.susBit?'#ffb3d9':'#fff')}
+ const sr=[...ARAC].sort((a,b)=>b.yol-a.yol),lead=sr.length?sr[0].yol:0,med=sr.length?sr[sr.length>>1].yol:0,yay=Math.min(60,lead-med),zc=-(lead*.6+med*.4);
+ const kz=zc+20+yay*.5,ky=12+yay*.35;K.position.x+=(Math.sin(t/8000)*4-K.position.x)*dt;K.position.y+=(ky-K.position.y)*Math.min(1,dt*2);K.position.z+=(kz-K.position.z)*Math.min(1,dt*2);
+ K.lookAt(K.position.x*.3,0,K.position.z-22-yay*.4);gun.position.set(25,45,K.position.z);gun.target.position.set(0,0,K.position.z-25);
+ R.render(S,K);
+ for(const u of ARAC){let b=BAL[u.id];if(u.msj&&t-u.msjT<5000&&u.o){if(!b){b=BAL[u.id]=document.createElement('div');b.className='balon';document.body.appendChild(b)}b.textContent=u.msj;
+  const p=u.o.g.position.clone();p.y+=5;p.project(K);b.style.left=(p.x*.5+.5)*W()+'px';b.style.top=(-p.y*.5+.5)*H()+'px';b.style.display=p.z<1?'block':'none'}else if(b){b.remove();delete BAL[u.id]}}
+ if((t|0)%300<20){cubuk(sr);OY.bilgi(`🏁 ${Math.round(Math.max(0,YOL-lead))} m`,`🚗 ${ARAC.length}`);OY.ilk3(sr.slice(0,3).map(u=>({...u,puan:u.yol})))}
+}
+kare();
+</script></body></html>

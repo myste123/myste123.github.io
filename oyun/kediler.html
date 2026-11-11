@@ -1,0 +1,85 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sokak Kedileri</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#f3d9b1;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}</style></head><body>
+<canvas id="c"></canvas>
+<script src="core.js"></script><script src="hud.js"></script>
+<script>
+OY.hud({baslik:'SOKAK KEDİLERİ',alt:'Beğen → mama dök · Kediler en çok besleyeni takip eder 🐈',renk:'#ff9f43',
+ hediyeler:[['🌹','Gül','mama kabı'],['🍩','20+','balık ziyafeti'],['🎩','99+','kedi evi'],['🌌','1000+','kediler kralı']]});
+const C=document.getElementById('c'),g=C.getContext('2d');let W,H;
+function boyut(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*d;C.height=H*d;g.setTransform(d,0,0,d,0,0);arka()}addEventListener('resize',boyut);
+const now=()=>performance.now();
+// sokak arka plani (onceden cizilir): arnavut kaldirimi + cumbali evler
+const ARK=document.createElement('canvas');
+function arka(){ARK.width=W;ARK.height=H;const a=ARK.getContext('2d');
+ const ev=['#e76f51','#f4a261','#e9c46a','#2a9d8f','#8ab17d','#d4a5a5','#a8dadc'],ust=H*.33;
+ a.fillStyle='#8ecae6';a.fillRect(0,0,W,ust);let x=0,i=0;while(x<W){const w=W*(.2+Math.random()*.12),h=H*(.16+Math.random()*.1);a.fillStyle=ev[i++%ev.length];a.fillRect(x,ust-h,w,h);
+  a.fillStyle='rgba(0,0,0,.18)';a.fillRect(x,ust-h,w,H*.012);a.fillStyle='#fff8e7';for(let k=0;k<2;k++)for(let j=0;j<Math.floor(w/(W*.07));j++){a.fillRect(x+W*.02+j*W*.07,ust-h+H*.025+k*H*.06,W*.04,H*.04)}
+  a.fillStyle='#7a4b2a';a.fillRect(x+w*.4,ust-H*.06,w*.2,H*.06);x+=w}
+ const kh=H-ust;a.fillStyle='#b9a58c';a.fillRect(0,ust,W,kh);const s=W*.06;
+ for(let y=ust;y<H;y+=s*.6)for(let xx=((y-ust)/(s*.6)%2)*s*.5-s;xx<W;xx+=s){a.fillStyle=`hsl(30,${12+Math.random()*10}%,${52+Math.random()*12}%)`;a.beginPath();a.ellipse(xx+s/2,y+s*.3,s*.44,s*.25,0,0,7);a.fill()}
+ // saksilar
+ for(let k=0;k<6;k++){const px=W*(.08+k*.17),py=ust+H*.015;a.fillStyle='#c0583a';a.fillRect(px,py,W*.05,H*.025);a.fillStyle='#3a9a4a';a.beginPath();a.arc(px+W*.025,py,W*.03,Math.PI,0);a.fill();a.fillStyle='#ff5d8f';a.beginPath();a.arc(px+W*.015,py-H*.01,W*.008,0,7);a.arc(px+W*.035,py-H*.012,W*.008,0,7);a.fill()}}
+boyut();
+const KEDI_RENK=[['#f4a261','#e76f51'],['#3d3d3d','#1a1a1a'],['#fff','#d9d9d9'],['#c9b79c','#8d7b62'],['#f6d7a7','#e0a96d'],['#8d99ae','#5c677d']];
+const U={},KEDI=[],MAMA=[],PAR=[],BAL=[];let bitis=0,kral=null,kralBit=0;
+const hash=s=>[...String(s)].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7);
+function kul(e){let u=U[e.id];if(!u){const n=Object.keys(U).length;u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,son:0,x:W*(.12+Math.random()*.76),y:H*(.45+Math.random()*.32),ev:0};}if(e.foto&&!u.foto)u.foto=e.foto;return u}
+function kediYap(){if(KEDI.length>=60)return;const r=KEDI_RENK[Math.random()*KEDI_RENK.length|0];KEDI.push({x:Math.random()<.5?-30:W+30,y:H*(.4+Math.random()*.45),vx:0,vy:0,r,sahip:null,boy:.8+Math.random()*.4,faz:Math.random()*6,mutlu:0})}
+for(let i=0;i<12;i++)kediYap();
+function besle(u,n,tur='mama'){u.puan+=n;u.son=now();for(let i=0;i<Math.min(8,1+n/3);i++)MAMA.push({x:u.x+(Math.random()-.5)*W*.08,y:u.y+H*.03+(Math.random()-.5)*H*.02,u,tur,o:600});
+ if(Math.random()<Math.min(.9,n*.08))kediYap()}
+OY.basla({muzik:'sakin',olay:e=>{
+ if(!e.id)return;const u=kul(e);
+ if(e.t==='begeni')besle(u,(e.adet||1)*.5);
+ else if(e.t==='yorum'){besle(u,2);BAL.push({u,m:String(e.metin||'').slice(0,40),t:now()})}
+ else if(e.t==='takip'){besle(u,8);OY.akis(`➕ ${u.ad} takip etti · mama dağıttı`,'#ffd')}
+ else if(e.t==='paylasim')besle(u,6);
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;OY.ses.para();
+  if(h.seviye>=2){besle(u,15+n,'balik');for(let i=0;i<4;i++)kediYap();OY.akis(`🐟 ${u.ad} balık ziyafeti verdi!`,'#9df')}else{besle(u,10+n);OY.akis(`🥣 ${u.ad} · ${h.ad} → mama kabı`,'#ffd27a')}
+  if(h.seviye>=3){u.ev=now()+60000;OY.akis(`🏠 ${u.ad} kedi evi kurdu, kediler bırakmıyor!`,'#fc9')}
+  if(h.seviye>=4){kral=u;kralBit=now()+30000;for(const k of KEDI)k.sahip=u;OY.ses.zafer();OY.akis(`👑 ${u.ad} KEDİLER KRALI! Bütün kediler onda`,'#ff9')}}
+}});
+OY.demoYorum=()=>['Pisi pisi','Miyav','Ne tatlılar','Kediler bende!','Mama geldi','Benim kediye dokunmayın'][Math.random()*6|0];
+function kediCiz(k,t){const s=W*.045*k.boy,yuru=Math.hypot(k.vx,k.vy)>.3,ad=t/120+k.faz;g.save();g.translate(k.x,k.y);if(k.vx<0)g.scale(-1,1);
+ g.fillStyle='rgba(0,0,0,.15)';g.beginPath();g.ellipse(0,s*.55,s*.8,s*.18,0,0,7);g.fill();
+ // kuyruk
+ g.strokeStyle=k.r[1];g.lineWidth=s*.18;g.lineCap='round';g.beginPath();g.moveTo(-s*.6,0);g.quadraticCurveTo(-s*1.1,-s*.4+Math.sin(ad*.6)*s*.3,-s*.9,-s*.9);g.stroke();
+ // bacaklar
+ g.strokeStyle=k.r[1];g.lineWidth=s*.16;const b=yuru?Math.sin(ad)*s*.18:0;[[-s*.4,b],[-s*.15,-b],[s*.25,-b],[s*.5,b]].forEach(([x,o])=>{g.beginPath();g.moveTo(x,s*.15);g.lineTo(x+o,s*.5);g.stroke()});
+ // govde + bas
+ g.fillStyle=k.r[0];g.beginPath();g.ellipse(0,0,s*.75,s*.38,0,0,7);g.fill();g.beginPath();g.arc(s*.7,-s*.3,s*.36,0,7);g.fill();
+ g.beginPath();g.moveTo(s*.45,-s*.5);g.lineTo(s*.52,-s*.85);g.lineTo(s*.68,-s*.6);g.moveTo(s*.78,-s*.6);g.lineTo(s*.95,-s*.85);g.lineTo(s*.98,-s*.48);g.fill();
+ g.fillStyle='#222';const goz=k.mutlu>0?.08:.12;g.beginPath();g.ellipse(s*.6,-s*.34,s*.05,s*goz,0,0,7);g.ellipse(s*.84,-s*.34,s*.05,s*goz,0,0,7);g.fill();
+ g.fillStyle='#ff8fa3';g.beginPath();g.arc(s*.74,-s*.22,s*.05,0,7);g.fill();
+ g.restore();if(k.mutlu>0){g.fillStyle='#ff5d8f';g.font=`${s*.5}px Segoe UI`;g.fillText('❤',k.x,k.y-s*1.1-k.mutlu*10)}}
+let son=now(),sonDogum=0;
+function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;if(kral&&t>kralBit)kral=null;
+ if(t-sonDogum>2500&&KEDI.length<14){kediYap();sonDogum=t}
+ g.drawImage(ARK,0,0,W,H);
+ // mamalar
+ for(let i=MAMA.length-1;i>=0;i--){const m=MAMA[i];if(--m.o<=0){MAMA.splice(i,1);continue}g.font=`${W*.035}px Segoe UI`;g.textAlign='center';g.fillText(m.tur==='balik'?'🐟':'🟤',m.x,m.y)}
+ // oyuncular (ayakta duran avatar)
+ const oy=Object.values(U).filter(u=>t-u.son<60000||u.puan>0).sort((a,b)=>b.puan-a.puan).slice(0,12);
+ for(const u of oy){const r=W*.045;if(u.ev>t){g.font=`${W*.09}px Segoe UI`;g.textAlign='center';g.fillText('🏠',u.x,u.y+r*.4)}
+  g.save();g.beginPath();g.arc(u.x,u.y-r,r,0,7);g.clip();g.drawImage(OY.foto(u,96),u.x-r,u.y-2*r,2*r,2*r);g.restore();
+  g.strokeStyle=u===kral?'#ffd84a':'#fff';g.lineWidth=3;g.beginPath();g.arc(u.x,u.y-r,r,0,7);g.stroke();if(u===kral){g.font=`${r}px Segoe UI`;g.fillText('👑',u.x,u.y-r*2.1)}
+  g.fillStyle='rgba(0,0,0,.55)';g.font=`700 ${W*.026}px Segoe UI`;const ad=OY.kisaAd(u.ad,10),w=g.measureText(ad).width+12;g.fillRect(u.x-w/2,u.y+r*.15,w,W*.036);g.fillStyle='#fff';g.fillText(ad,u.x,u.y+r*.15+W*.027)}
+ // kediler: en cok mama olan oyuncuya gider; evi olan kedi tutar
+ const sayac={};for(const k of KEDI){if(k.sahip&&k.sahip.ev<t&&k.sahip!==kral&&Math.random()<.002)k.sahip=null;
+  let hx,hy;const yakinMama=MAMA.length?MAMA.reduce((a,m)=>{const d=(m.x-k.x)**2+(m.y-k.y)**2;return!a||d<a.d?{m,d}:a},null):null;
+  if(yakinMama&&yakinMama.d<(W*.35)**2){hx=yakinMama.m.x;hy=yakinMama.m.y;if(yakinMama.d<(W*.03)**2){const m=yakinMama.m;MAMA.splice(MAMA.indexOf(m),1);
+   if(!k.sahip||k.sahip.ev<t||m.u.puan>k.sahip.puan||m.u===kral)k.sahip=kral||m.u;k.mutlu=1;OY.ses.tik()}}
+  else if(k.sahip){const a=(KEDI.indexOf(k)*2.4)%6.28,rr=W*(.07+(KEDI.indexOf(k)%4)*.03);hx=k.sahip.x+Math.cos(a)*rr;hy=k.sahip.y+Math.sin(a)*rr*.5}
+  else{hx=W/2+Math.sin(t/4000+k.faz)*W*.35;hy=H*.62+Math.cos(t/5000+k.faz)*H*.12}
+  const dx=hx-k.x,dy=hy-k.y,d=Math.hypot(dx,dy);const sp=d>8?Math.min(W*.004,d*.05):0;k.vx=dx/(d||1)*sp;k.vy=dy/(d||1)*sp;k.x+=k.vx;k.y+=k.vy;k.mutlu=Math.max(0,k.mutlu-dt);
+  if(k.sahip)sayac[k.sahip.id]=(sayac[k.sahip.id]||0)+1}
+ [...KEDI].sort((a,b)=>a.y-b.y).forEach(k=>kediCiz(k,t));
+ for(const u of Object.values(U))u.kedi=sayac[u.id]||0;
+ // yorum balonlari
+ for(let i=BAL.length-1;i>=0;i--){const b=BAL[i];if(t-b.t>4500){BAL.splice(i,1);continue}const r=W*.045;g.font=`700 ${W*.028}px Segoe UI`;const w=g.measureText(b.m).width+16;
+  g.fillStyle='#fff';g.beginPath();g.roundRect?g.roundRect(b.u.x-w/2,b.u.y-r*3.2,w,W*.045,10):g.rect(b.u.x-w/2,b.u.y-r*3.2,w,W*.045);g.fill();g.fillStyle='#222';g.textAlign='center';g.fillText(b.m,b.u.x,b.u.y-r*3.2+W*.032)}
+ if((t|0)%300<20){const s=Object.values(U).filter(u=>u.kedi>0).sort((a,b)=>b.kedi-a.kedi);OY.bilgi(`🐈 ${KEDI.length} kedi`,`👥 ${Object.keys(U).length}`);OY.ilk3(s.slice(0,3).map(u=>({...u,puan:u.kedi})))}
+}
+kare();
+</script></body></html>
