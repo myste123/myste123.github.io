@@ -15,10 +15,15 @@
   .h-alt{position:fixed;left:3vw;right:3vw;bottom:1.4vh;pointer-events:none;z-index:20}
   .h-akis{display:flex;flex-direction:column;gap:.5vh;margin-bottom:1vh;align-items:flex-start}
   .h-akis div{background:rgba(8,10,25,.6);backdrop-filter:blur(6px);border-radius:1.4vh;padding:.45vh 1.3vh;font:600 1.5vh Segoe UI,Arial;max-width:80vw;animation:hg .35s ease-out}
-  .h-akis div:nth-child(2){opacity:.75}.h-akis div:nth-child(3){opacity:.5}
+  .h-akis div:first-child{border:1px solid var(--r);box-shadow:0 0 1.2vh rgba(0,0,0,.4)}.h-akis div:nth-child(2){opacity:.72}.h-akis div:nth-child(3){opacity:.45}
+  .h-vit{position:fixed;left:50%;top:22vh;transform:translateX(-50%);z-index:25;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:.6vh}
+  .h-vit .kart{display:flex;align-items:center;gap:1.4vh;background:linear-gradient(90deg,rgba(20,10,40,.92),rgba(60,20,80,.92));border:.25vh solid var(--r);border-radius:6vh;padding:.8vh 2.4vh .8vh .8vh;animation:vg .5s cubic-bezier(.2,1.6,.4,1),vc .5s 3.2s forwards;box-shadow:0 1vh 4vh rgba(0,0,0,.5)}
+  .h-vit img{width:6vh;height:6vh;border-radius:50%;border:.3vh solid #fff}.h-vit .ik{font-size:6vh;line-height:1;animation:vz .6s infinite alternate}
+  .h-vit .y b{display:block;font:800 2.1vh Nunito;color:#fff}.h-vit .y span{display:block;font:900 2.5vh 'Baloo 2',Nunito;color:var(--r)}
+  @keyframes vg{from{transform:scale(.3) translateY(-4vh);opacity:0}}@keyframes vc{to{opacity:0;transform:translateY(-3vh)}}@keyframes vz{to{transform:scale(1.15) rotate(8deg)}}
   @keyframes hg{from{transform:translateY(1vh);opacity:0}}
-  .h-hed{display:flex;gap:.7vh}
-  .h-hed div{flex:1;background:rgba(8,10,25,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);border-radius:1.3vh;padding:.6vh .4vh;text-align:center;font:600 1.25vh/1.25 Segoe UI,Arial;color:rgba(255,255,255,.85)}
+  .h-hed{display:grid;grid-template-columns:repeat(3,1fr);gap:.6vh}
+  .h-hed div{background:rgba(8,10,25,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);border-radius:1.3vh;padding:.6vh .4vh;text-align:center;font:600 1.25vh/1.25 Segoe UI,Arial;color:rgba(255,255,255,.85)}
   .h-hed b{display:block;font-size:1.5vh;color:var(--r)}
   .h-rek{text-align:center;font:600 1.15vh Segoe UI,Arial;color:rgba(255,255,255,.55);margin-top:.7vh}
   .h-kaz{position:fixed;inset:0;display:none;place-items:center;background:radial-gradient(rgba(0,0,0,.25),rgba(0,0,0,.7));z-index:30;text-align:center;color:#fff}
@@ -36,7 +41,7 @@
      <div class="h-ilk" id="hIlk"></div>
      <div class="h-alt"><div class="h-akis" id="hAkis"></div><div class="h-hed">${(cfg.hediyeler || []).map(h => `<div><b>${h[0]} ${h[1]}</b>${h[2]}</div>`).join('')}</div>
      <div class="h-rek">🎮 Bu oyunu yayınına kirala · myste123.github.io</div></div>
-     <div class="h-kaz" id="hKaz"><div id="hKazI"></div></div>`;
+     <div class="h-vit" id="hVit"></div><div class="h-kaz" id="hKaz"><div id="hKazI"></div></div>`;
     document.body.appendChild(d); AK = d.querySelector('#hAkis'); IL = d.querySelector('#hIlk'); SOL = d.querySelector('#hSol'); SAG = d.querySelector('#hSag'); KZ = d.querySelector('#hKaz');
   };
   OY.akis = (t, renk = '#fff') => { if (!AK) return; const d = document.createElement('div'); d.style.color = renk; d.textContent = t; AK.prepend(d); while (AK.children.length > 3) AK.lastChild.remove() };
@@ -46,5 +51,10 @@
     IL.innerHTML = liste.slice(0, 3).map((u, i) => `<div><img src="${OY.foto(u, 64).toDataURL()}"><span>${['🥇', '🥈', '🥉'][i]} ${OY.kisaAd(u.ad, 10)}</span><i>${Math.round(u.puan)}</i></div>`).join('') };
   OY.kazanan = (u, baslik, alt) => { if (!KZ) return; if (!u) { KZ.style.display = 'none'; return }
     KZ.querySelector('#hKazI').innerHTML = `<img src="${OY.foto(u, 128).toDataURL()}">${baslik}<br>${u.ad}<small>${alt || ''}</small>`; KZ.style.display = 'grid' };
+  const VQ=[];let vAktif=0;
+  OY.vitrin = (u, ikon, ad, etki) => { VQ.push({ u, ikon, ad, etki }); if (VQ.length > 4) VQ.splice(0, VQ.length - 4); if (!vAktif) vSonraki() };
+  function vSonraki() { const V = document.getElementById('hVit'), v = VQ.shift(); if (!V || !v) { vAktif = 0; return } vAktif = 1;
+    V.innerHTML = `<div class="kart"><img src="${OY.foto(v.u, 96).toDataURL()}"><div class="y"><b>${OY.kisaAd(v.u.ad, 14)} · ${v.ad}</b><span>${v.etki}</span></div><div class="ik">${v.ikon}</div></div>`;
+    setTimeout(vSonraki, VQ.length ? 1800 : 3700) }
   OY.sure = sn => `⏱ ${Math.floor(sn / 60)}:${String(Math.floor(sn % 60)).padStart(2, '0')}`;
 })();

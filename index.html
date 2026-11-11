@@ -32,7 +32,7 @@ section{padding:64px 0;border-top:1px solid var(--cizgi)}
 .oyun .g span{position:absolute;top:10px;left:10px;font:600 11px Inter;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:6px}
 .oyun .i{padding:12px 14px 14px}.oyun h3{font-size:15px}.oyun p{color:var(--soluk);font-size:13px;margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .oyun.y{cursor:default;opacity:.55}.oyun.y .g{display:grid;place-items:center;font-size:42px;background:var(--yuzey2)}
-.fiyatlar{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.fiyatlar{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,340px));gap:16px}
 .paket{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;padding:22px}.paket.o{border-color:var(--vurgu)}
 .paket h3{font-size:15px;color:var(--soluk);font-weight:600}.paket .tl{font-size:32px;font-weight:800;margin:6px 0 12px}.paket .tl small{font-size:14px;color:var(--soluk);font-weight:500}
 .paket ul{margin:0 0 18px;padding:0;list-style:none;font-size:14px;color:var(--soluk)}.paket li{padding:4px 0}.paket li:before{content:'✓  ';color:var(--vurgu2)}
@@ -62,16 +62,14 @@ footer{border-top:1px solid var(--cizgi);padding:28px 0;color:var(--soluk);font-
  <h1>Canlı yayınını <em>izleyicinin oynadığı</em> bir oyuna çevir.</h1>
  <p>Beğeni, yorum ve hediyelerle oynanan Türkçe TikTok LIVE oyunları. Program kurulumu yok; tek link ile 30 saniyede yayında.</p>
  <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#demo">1 gün ücretsiz dene</a><a class="btn k" href="#oyunlar">Oyunları incele</a></div>
- <div class="ozellik"><div><b>7+</b>oyun</div><div><b>2B · 3B</b>kategori</div><div><b>PC + Android</b>kurulum</div><div><b>Telifsiz</b>müzik</div></div></div>
+ <div class="ozellik"><div><b>7+</b>oyun</div><div><b>250₺</b>aylık başlayan</div><div><b>PC + Android</b>kurulum</div><div><b>Telifsiz</b>müzik</div></div></div>
  <div class="kolaj"><img src="img/nazar.jpg" alt=""><img src="img/halay.jpg" alt=""><img src="img/kapadokya.jpg" alt=""></div></div></header>
 <section id="oyunlar"><div class="kap"><div class="baslik"><div><h2>Oyunlar</h2><p>Bir oyuna dokun: deneme modunda açılır, yorum ve hediye göndererek kendin oyna.</p></div>
  <div class="sekme"><button class="a" data-k="3b">3B</button><button data-k="2b">2B</button></div></div><div class="izgara" id="izgara"></div></div></section>
 <section id="fiyat"><div class="kap"><div class="baslik"><div><h2>Fiyatlar</h2><p>Her pakette 1 gün ücretsiz deneme. Ödeme havale/EFT ile, komisyonsuz.</p></div></div>
  <div class="fiyatlar">
   <div class="paket"><h3>Tek 2B oyun</h3><div class="tl">250₺ <small>/ay</small></div><ul><li>Seçtiğin 1 oyun</li><li>Sesli veya sessiz</li><li>Kalıcı skor tablosu</li></ul><a class="btn k" href="#siparis" data-p="Tek 2B oyun - 250 TL/ay">Sipariş ver</a></div>
-  <div class="paket"><h3>Tek 3B oyun</h3><div class="tl">350₺ <small>/ay</small></div><ul><li>Seçtiğin 1 oyun</li><li>Animasyonlu 3B karakterler</li><li>Sesli veya sessiz</li></ul><a class="btn k" href="#siparis" data-p="Tek 3B oyun - 350 TL/ay">Sipariş ver</a></div>
-  <div class="paket o"><h3>Tüm 2B oyunlar</h3><div class="tl">600₺ <small>/ay</small></div><ul><li>Bütün 2B oyunlar</li><li>Yeni 2B oyunlar dahil</li><li>Sesli sunucu dahil</li></ul><a class="btn" href="#siparis" data-p="Tüm 2B oyunlar - 600 TL/ay">Sipariş ver</a></div>
-  <div class="paket"><h3>Tüm 3B oyunlar</h3><div class="tl">900₺ <small>/ay</small></div><ul><li>Bütün 3B oyunlar</li><li>Yeni 3B oyunlar dahil</li><li>Sesli sunucu dahil</li></ul><a class="btn k" href="#siparis" data-p="Tüm 3B oyunlar - 900 TL/ay">Sipariş ver</a></div>
+  <div class="paket o"><h3>Tek 3B oyun</h3><div class="tl">350₺ <small>/ay</small></div><ul><li>Seçtiğin 1 oyun</li><li>Animasyonlu 3B karakterler</li><li>Sesli veya sessiz</li></ul><a class="btn k" href="#siparis" data-p="Tek 3B oyun - 350 TL/ay">Sipariş ver</a></div>
  </div><p style="color:var(--soluk);font-size:14px;margin-top:16px">Yayınına özel oyun, logolu sürüm veya ajans paketi için sipariş formuna not bırak.</p></div></section>
 <section id="kurulum"><div class="kap"><div class="baslik"><div><h2>Kurulum</h2><p>Sana verilen linki yayın programına eklemen yeterli.</p></div></div>
  <div class="ikili">
@@ -87,7 +85,7 @@ footer{border-top:1px solid var(--cizgi);padding:28px 0;color:var(--soluk);font-
 <section id="siparis"><div class="kap ikili">
  <div><h2 style="font-size:28px">Sipariş</h2><p style="color:var(--soluk)">Formu gönder, ödeme bilgilerini sana iletelim. Ödeme sonrası lisansın hemen açılır.</p><p style="color:var(--soluk);font-size:14px">İletişim: bilesikyatirim@gmail.com · TikTok @bilesikyatirim</p></div>
  <div class="kutu"><label>Ad</label><input id="sAd"><label>TikTok kullanıcı adı</label><input id="sTik" placeholder="@kullaniciadi"><label>Paket</label><select id="sPaket">
-  <option>Tek 2B oyun - 250 TL/ay</option><option>Tek 3B oyun - 350 TL/ay</option><option>Tüm 2B oyunlar - 600 TL/ay</option><option>Tüm 3B oyunlar - 900 TL/ay</option><option>Özel oyun / otomasyon</option></select>
+  <option>Tek 2B oyun - 250 TL/ay</option><option>Tek 3B oyun - 350 TL/ay</option><option>Özel oyun / otomasyon</option></select>
   <label>İletişim (TikTok, Instagram, e-posta veya telefon)</label><input id="sIlet"><label>Not</label><textarea id="sNot" rows="2" placeholder="Hangi oyun, sesli/sessiz, özel istek"></textarea>
   <button class="btn" id="sBtn" style="width:100%;margin-top:14px">Siparişi gönder</button><div class="sonuc" id="sSonuc"></div></div></div></section>
 <footer><div class="kap">© Myste Medya · TikTok LIVE oyunları ve yayın otomasyonu. 3B modeller: Kenney (CC0). TikTok, ByteDance Ltd.'nin markasıdır; bu site TikTok ile bağlantılı değildir.</div></footer>
@@ -110,11 +108,11 @@ const O=[{id:'halay',k:'3b',ad:'Halay Meydanı',d:'İzleyiciler 3B karakter olar
  {id:'muhtar',k:'2b',ad:'Muhtarlık Seçimi',d:'İzleyiciler aday olur, yorumla oy toplar.',y:'🗳'}];
 const IZ=document.getElementById('izgara');
 function ciz(k){IZ.innerHTML=O.filter(o=>o.k===k).map(o=>o.y?`<div class="oyun y"><div class="g">${o.y}</div><div class="i"><h3>${o.ad}</h3><p>Yakında · ${o.d}</p></div></div>`:
- `<div class="oyun" data-id="${o.id}"><div class="g"><img loading="lazy" src="img/${o.id}.jpg" alt="${o.ad}"><span>${o.k.toUpperCase()}</span></div><div class="i"><h3>${o.ad}</h3><p>${o.d}</p></div></div>`).join('')}
+ `<div class="oyun" data-id="${o.id}"><div class="g"><img loading="lazy" src="img/${o.id}.jpg?v=3" alt="${o.ad}"><span>${o.k.toUpperCase()}</span></div><div class="i"><h3>${o.ad}</h3><p>${o.d}</p></div></div>`).join('')}
 ciz('3b');document.querySelectorAll('.sekme button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.sekme button').forEach(x=>x.classList.remove('a'));b.classList.add('a');ciz(b.dataset.k)});
 const M=document.getElementById('mod'),F=document.getElementById('oyn');let aktif=null;
 IZ.onclick=e=>{const c=e.target.closest('.oyun[data-id]');if(!c)return;const o=O.find(x=>x.id===c.dataset.id);
- if(o.canliYok){location.hash='demo';document.getElementById('dOyun').value=o.id;return}aktif=o;document.getElementById('mBas').textContent=o.ad;F.src=`oyun/${o.id}.html?sim=1&demo=1&muzik=35`;M.classList.add('ac');document.body.style.overflow='hidden'};
+ if(o.canliYok){location.hash='demo';document.getElementById('dOyun').value=o.id;return}aktif=o;document.getElementById('mBas').textContent=o.ad;F.src=`oyun/${o.id}.html?sim=1&demo=1&muzik=35&v=3`;M.classList.add('ac');document.body.style.overflow='hidden'};
 function kapat(){M.classList.remove('ac');F.src='about:blank';document.body.style.overflow=''}document.getElementById('kapat').onclick=kapat;M.onclick=e=>{if(e.target===M)kapat()};
 document.getElementById('mDemo').onclick=()=>{document.getElementById('dOyun').value=aktif.id;kapat()};
 const ben=()=>{const a=document.getElementById('mAd').value.trim()||'Sen';return{id:'site-'+a,ad:a,foto:''}};const yolla=x=>F.contentWindow.postMessage({oy:1,...ben(),...x},'*');

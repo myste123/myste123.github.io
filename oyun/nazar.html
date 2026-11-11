@@ -2,14 +2,14 @@
 <title>Nazar Savunması</title>
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#0b1640;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}</style></head><body>
 <canvas id="c"></canvas>
-<script src="core.js"></script><script src="hud.js"></script>
+<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
 OY.hud({baslik:'NAZAR SAVUNMASI',alt:'Kem gözler yayına saldırıyor! Beğen ve yorum yaz, nazar boncuğun ateş etsin 🧿',renk:'#5ec8ff',
- hediyeler:[['🌹','Gül','boncuk yağmuru'],['🍩','20+','tütsü halkası'],['🎩','99+','üzerlik dumanı'],['🌌','1000+','DEV NAZAR']]});
+ hediyeler:[['🌹','Gül','boncuk yağmuru'],['💖','Kalp','bereket +8'],['💐','Parfüm','tütsü halkası'],['🍩','Donut','gözler yavaşlar'],['🎩','Şapka','üzerlik dumanı'],['🌌','Galaksi','DEV NAZAR']]});
 const C=document.getElementById('c'),g=C.getContext('2d');let W,H,cx,cy,M;
 function boyut(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*d;C.height=H*d;g.setTransform(d,0,0,d,0,0);cx=W/2;cy=H*.5;M=Math.min(W,H*.62)}boyut();addEventListener('resize',boyut);
 const now=()=>performance.now();
-const U={},KULE=[],GOZ=[],MERMI=[],PAR=[],YAZI=[];let can=100,dalga=1,dalgaKalan=0,sonDogum=0,bitis=0,halka=[],kalkan=0,enIyi=1;
+const U={},KULE=[],GOZ=[],MERMI=[],PAR=[],YAZI=[];let yavas=0,can=100,dalga=1,dalgaKalan=0,sonDogum=0,bitis=0,halka=[],kalkan=0,enIyi=1;
 let KAL={rekor:1};
 // arka plan: cini desen (onceden ciz)
 const ARK=document.createElement('canvas');function arkaCiz(){ARK.width=W;ARK.height=H;const a=ARK.getContext('2d');const gr=a.createRadialGradient(cx,cy,10,cx,cy,Math.max(W,H)*.75);gr.addColorStop(0,'#1b3c86');gr.addColorStop(1,'#060c26');a.fillStyle=gr;a.fillRect(0,0,W,H);
@@ -32,10 +32,10 @@ OY.basla({muzik:'elektro',olay:e=>{
  else if(e.t==='yorum'){ates(k,3);YAZI.push({k,m:String(e.metin||'').slice(0,40),t:now()})}
  else if(e.t==='takip'){ates(k,10);OY.akis(`➕ ${u.ad} takip etti · +10 atış`,'#bdf')}
  else if(e.t==='paylasim')ates(k,8);
- else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;ates(k,8+Math.min(40,n));OY.ses.para();OY.akis(`🎁 ${u.ad} · ${h.ad} → boncuk yağmuru`,'#ffe27a');
-  if(h.seviye>=2){halka.push({x:kpos(k)[0],y:kpos(k)[1],r:0,u});OY.akis(`🔥 ${u.ad} tütsü yaktı!`,'#ffb36b')}
-  if(h.seviye>=3){halka.push({x:cx,y:cy,r:0,u,buyuk:1});can=Math.min(100,can+15);OY.akis(`🌿 ${u.ad} üzerlik tüttürdü · bereket +15`,'#9f9')}
-  if(h.seviye>=4){for(const z of GOZ)vur(z,999,u);kalkan=now()+15000;can=100;OY.ses.patla();OY.akis(`🧿 ${u.ad} DEV NAZAR! Bütün gözler patladı`,'#7fd4ff')}}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;ates(k,8+Math.min(40,n));OY.ses.para();
+  const E={gul:['boncuk yağmuru',()=>ates(k,10)],kalp:['bereket +8',()=>{can=Math.min(100,can+8)}],parfum:['tütsü halkası',()=>halka.push({x:kpos(k)[0],y:kpos(k)[1],r:0,u})],
+   donut:['kem gözler 10 sn yavaşladı',()=>{yavas=now()+10000}],sapka:['üzerlik dumanı · bereket +15',()=>{halka.push({x:cx,y:cy,r:0,u,buyuk:1});can=Math.min(100,can+15)}],
+   galaksi:['DEV NAZAR! bütün gözler patladı',()=>{for(const z of GOZ)vur(z,999,u);kalkan=now()+15000;can=100;OY.ses.patla()}]}[h.sinif];E[1]();OY.vitrin(u,h.ikon,h.ad,E[0]);OY.akis(`${h.ikon} ${u.ad} → ${E[0]}`,'#ffd84a')}
 }});
 OY.demoYorum=()=>['Maşallah','Nazar değmesin!','Tü tü tü','Vur vur!','Kem gözlere şiş','Ben de buradayım'][Math.random()*6|0];
 // ---- cizim yardimcilari ----
@@ -79,7 +79,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  // gozler
  for(let i=GOZ.length-1;i>=0;i--){const z=GOZ[i];if(z.ol){GOZ.splice(i,1);continue}const dx=cx-z.x,dy=cy-z.y,d=Math.hypot(dx,dy);
   if(d<nb*1.2){GOZ.splice(i,1);if(kalkan<t&&!bitis){can-=z.tip?14:6;OY.ses.yanlis();patla(z.x,z.y,20,'#f45')}continue}
-  if(!bitis){z.x+=dx/d*M*z.h*dt;z.y+=dy/d*M*z.h*dt}kemGoz(z,t)}
+  if(!bitis){const yv=t<yavas?.35:1;z.x+=dx/d*M*z.h*dt*yv;z.y+=dy/d*M*z.h*dt*yv}kemGoz(z,t)}
  if(can<=0&&!bitis){bitis=t+7000;OY.ses.patla();const s=Object.values(U).sort((a,b)=>b.puan-a.puan);if(s[0])OY.kazanan(s[0],'🧿 NAZAR DEĞDİ!',`${dalga}. dalgaya kadar dayandınız · en iyi koruyucu`);for(const u of Object.values(U))u.puan=0}
  // parcaciklar
  for(let i=PAR.length-1;i>=0;i--){const p=PAR[i];p.x+=p.vx;p.y+=p.vy;p.vx*=.95;p.vy*=.95;if(--p.o<=0){PAR.splice(i,1);continue}g.globalAlpha=Math.min(1,p.o/30);g.fillStyle=p.c;g.beginPath();g.arc(p.x,p.y,p.r,0,7);g.fill()}g.globalAlpha=1;

@@ -2,10 +2,10 @@
 <title>Sokak Kedileri</title>
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#f3d9b1;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}</style></head><body>
 <canvas id="c"></canvas>
-<script src="core.js"></script><script src="hud.js"></script>
+<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
 OY.hud({baslik:'SOKAK KEDİLERİ',alt:'Beğen → mama dök · Kediler en çok besleyeni takip eder 🐈',renk:'#ff9f43',
- hediyeler:[['🌹','Gül','mama kabı'],['🍩','20+','balık ziyafeti'],['🎩','99+','kedi evi'],['🌌','1000+','kediler kralı']]});
+ hediyeler:[['🌹','Gül','mama kabı'],['💖','Kalp','kediler sever'],['💐','Parfüm','balık ziyafeti'],['🍩','Donut','mama çuvalı'],['🎩','Şapka','kedi evi'],['🌌','Galaksi','kediler kralı']]});
 const C=document.getElementById('c'),g=C.getContext('2d');let W,H;
 function boyut(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*d;C.height=H*d;g.setTransform(d,0,0,d,0,0);arka()}addEventListener('resize',boyut);
 const now=()=>performance.now();
@@ -36,9 +36,9 @@ OY.basla({muzik:'sakin',olay:e=>{
  else if(e.t==='takip'){besle(u,8);OY.akis(`➕ ${u.ad} takip etti · mama dağıttı`,'#ffd')}
  else if(e.t==='paylasim')besle(u,6);
  else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;OY.ses.para();
-  if(h.seviye>=2){besle(u,15+n,'balik');for(let i=0;i<4;i++)kediYap();OY.akis(`🐟 ${u.ad} balık ziyafeti verdi!`,'#9df')}else{besle(u,10+n);OY.akis(`🥣 ${u.ad} · ${h.ad} → mama kabı`,'#ffd27a')}
-  if(h.seviye>=3){u.ev=now()+60000;OY.akis(`🏠 ${u.ad} kedi evi kurdu, kediler bırakmıyor!`,'#fc9')}
-  if(h.seviye>=4){kral=u;kralBit=now()+30000;for(const k of KEDI)k.sahip=u;OY.ses.zafer();OY.akis(`👑 ${u.ad} KEDİLER KRALI! Bütün kediler onda`,'#ff9')}}
+  const E={gul:['mama kabı',()=>besle(u,10)],kalp:['kediler ona âşık oldu',()=>{besle(u,6);for(const k of KEDI)if(k.sahip===u)k.mutlu=2;for(let i=0;i<3;i++)kediYap()}],
+   parfum:['balık ziyafeti',()=>{besle(u,20,'balik');for(let i=0;i<4;i++)kediYap()}],donut:['mama çuvalı · 6 yeni kedi',()=>{besle(u,30);for(let i=0;i<6;i++)kediYap()}],
+   sapka:['kedi evi kurdu',()=>{u.ev=now()+60000;besle(u,20)}],galaksi:['KEDİLER KRALI!',()=>{kral=u;kralBit=now()+30000;for(const k of KEDI)k.sahip=u;OY.ses.zafer()}]}[h.sinif];E[1]();OY.vitrin(u,h.ikon,h.ad,E[0]);OY.akis(`${h.ikon} ${u.ad} → ${E[0]}`,'#ffd84a')}
 }});
 OY.demoYorum=()=>['Pisi pisi','Miyav','Ne tatlılar','Kediler bende!','Mama geldi','Benim kediye dokunmayın'][Math.random()*6|0];
 function kediCiz(k,t){const s=W*.045*k.boy,yuru=Math.hypot(k.vx,k.vy)>.3,ad=t/120+k.faz;g.save();g.translate(k.x,k.y);if(k.vx<0)g.scale(-1,1);

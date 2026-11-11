@@ -14,8 +14,11 @@
   const HED = { 'Rose': ['Gül', 1], 'TikTok': ['TikTok', 1], 'GG': ['GG', 1], 'Ice Cream Cone': ['Dondurma', 1], 'Finger Heart': ['Kalp', 5],
     'Heart Me': ['Kalp', 1], 'Doughnut': ['Donut', 30], 'Hat and Mustache': ['Şapka', 99], 'Perfume': ['Parfüm', 20], 'Hand Hearts': ['Eller', 100],
     'Corgi': ['Korgi', 299], 'Galaxy': ['Galaksi', 1000], 'Lion': ['Aslan', 29999], 'Universe': ['Evren', 34999] };
+  // 6 hediye sinifi: her oyun her sinifa ayri etki verir (gul, kalp, parfum, donut, sapka, galaksi)
+  const SINIF = [['gul', '🌹', 1], ['kalp', '💖', 5], ['parfum', '💐', 20], ['donut', '🍩', 30], ['sapka', '🎩', 99], ['galaksi', '🌌', 1000]];
   OY.hediye = e => { const h = HED[e.hediye] || [e.hediye || 'Hediye', e.elmas || 1]; const el = e.elmas || h[1] || 1;
-    return { ad: h[0], elmas: el, seviye: el >= 1000 ? 4 : el >= 99 ? 3 : el >= 20 ? 2 : 1, adet: e.adet || 1 } };
+    let s = SINIF[0]; for (const x of SINIF) if (el >= x[2]) s = x; if (e.hediye === 'Finger Heart' || e.hediye === 'Heart Me') s = SINIF[1];
+    return { ad: h[0], elmas: el, seviye: el >= 1000 ? 4 : el >= 99 ? 3 : el >= 20 ? 2 : 1, adet: e.adet || 1, sinif: s[0], ikon: s[1] } };
 
   // ---- profil fotografi (yuklenemezse bas harfli renkli daire) ----
   const FOTO = {};
@@ -91,7 +94,7 @@
   // ---- demo / simulasyon ----
   const ADLAR = ['Ayşe', 'Mehmet', 'Zeynep', 'Emre', 'Elif', 'Burak', 'Selin', 'Can', 'Deniz', 'Kerem', 'Ece', 'Mert', 'Derya', 'Oğuz', 'Buse', 'Kaan', 'İrem', 'Yusuf', 'Gizem', 'Arda', 'Nisa', 'Furkan', 'Melis', 'Onur'];
   const YORUM = ['Selam herkese', 'Hadi hadi!', 'Ben de varım', 'Çok iyi oyun', 'Kim kazanır?', 'Bana da gül atın', 'Süpersin', 'Yaşasın', 'Ooo', 'Helal', 'Bir daha!', 'Haydi bakalım'];
-  const HEDL = [['Rose', 1], ['Rose', 1], ['Finger Heart', 5], ['Perfume', 20], ['Doughnut', 30], ['Hat and Mustache', 99], ['Corgi', 299], ['Galaxy', 1000]];
+  const HEDL = [['Rose', 1], ['Rose', 1], ['Rose', 1], ['Finger Heart', 5], ['Finger Heart', 5], ['Perfume', 20], ['Doughnut', 30], ['Hat and Mustache', 99], ['Galaxy', 1000]];
   OY.sahteKisi = i => { const ad = ADLAR[i % ADLAR.length] + (i >= ADLAR.length ? (i / ADLAR.length | 0) : ''); return { id: 'd' + i, ad, foto: '' } };
   function demoDongu() { let n = 0; setInterval(() => { const u = OY.sahteKisi(Math.random() * 30 | 0), r = Math.random();
     if (r < .55) dagit({ t: 'begeni', ...u, adet: 1 + (Math.random() * 15 | 0) }); else if (r < .8) dagit({ t: 'yorum', ...u, metin: OY.demoYorum ? OY.demoYorum() : YORUM[Math.random() * YORUM.length | 0] });

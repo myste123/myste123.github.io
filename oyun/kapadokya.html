@@ -3,12 +3,12 @@
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#f6b27a;color:#fff;font-family:Segoe UI,Arial,sans-serif}#sahne{position:fixed;inset:0}</style></head><body>
 <canvas id="sahne"></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="core.js"></script><script src="hud.js"></script>
+<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
 OY.hud({baslik:'BALON FESTİVALİ',alt:'Kapadokya · Beğen → brülörü yak, en yükseğe çık 🎈',renk:'#ffb347',
- hediyeler:[['🌹','Gül','alev patlaması'],['🍩','20+','kum torbası at'],['🎩','99+','jet brülör'],['🌌','1000+','fırtına!']]});
-const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.outputEncoding=THREE.sRGBEncoding;R.shadowMap.enabled=true;
+ hediyeler:[['🌹','Gül','alev patlaması'],['💖','Kalp','kalp balonu · +8 m'],['💐','Parfüm','kum torbası · +12 m'],['🍩','Donut','arka rüzgâr · +25 m'],['🎩','Şapka','jet brülör'],['🌌','Galaksi','fırtına!']]});
+const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1.2:1.5));R.outputEncoding=THREE.sRGBEncoding;R.shadowMap.enabled=true;
 const S=new THREE.Scene();const KF0=50;const K=new THREE.PerspectiveCamera(50,1,.5,900);function boyut(){R.setSize(W(),H());K.aspect=W()/H();const yf=2*Math.atan(Math.tan(62*Math.PI/360)/K.aspect)*180/Math.PI;K.fov=Math.max(KF0,Math.min(80,yf));K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
 // gun dogumu gokyuzu
 const gc=document.createElement('canvas');gc.width=8;gc.height=512;{const g=gc.getContext('2d'),gr=g.createLinearGradient(0,0,0,512);
@@ -58,11 +58,10 @@ OY.basla({muzik:'sakin',olay:e=>{
  else if(e.t==='yorum'){yak(u,1.2);u.msj=String(e.metin||'').slice(0,46);u.msjT=now()}
  else if(e.t==='takip'){yak(u,5);OY.akis(`➕ ${u.ad} takip etti · yükseldi`,'#bdf')}
  else if(e.t==='paylasim')yak(u,4);
- else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;yak(u,4+Math.min(18,Math.sqrt(n)*2.4));OY.ses.guc();
-  OY.akis(`🔥 ${u.ad} · ${h.ad} → alev patlaması`,'#ffd27a');
-  if(h.seviye>=2){u.irt+=12;OY.akis(`🎒 ${u.ad} kum torbası attı · +12 m`,'#ffe9b0')}
-  if(h.seviye>=3){u.jet=now()+8000;OY.akis(`🚀 ${u.ad} jet brülör açtı!`,'#fff')}
-  if(h.seviye>=4){firtina=now()+4000;for(const b of BAL)if(b!==u)b.irt*=.82;OY.ses.patla();OY.akis(`🌪 ${u.ad} fırtına çıkardı! Herkes düştü`,'#f99')}}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;yak(u,4+Math.min(12,Math.sqrt(n)*2));OY.ses.guc();
+  const E={gul:['alev patlaması',()=>yak(u,6)],kalp:['kalp balonu · +8 m',()=>{u.irt+=8}],parfum:['kum torbası attı · +12 m',()=>{u.irt+=12}],
+   donut:['arka rüzgâr · +25 m',()=>{u.irt+=25}],sapka:['JET BRÜLÖR · 8 sn',()=>{u.jet=now()+8000}],
+   galaksi:['FIRTINA! herkes düştü',()=>{firtina=now()+4000;for(const b of BAL)if(b!==u)b.irt*=.82;OY.ses.patla()}]}[h.sinif];E[1]();OY.vitrin(u,h.ikon,h.ad,E[0]);OY.akis(`${h.ikon} ${u.ad} → ${E[0]}`,'#ffd84a')}
 }});
 const TUR=180;let turBas=now(),son=now(),kamY=20;const dom={};
 function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;

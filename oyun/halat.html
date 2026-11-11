@@ -2,10 +2,10 @@
 <title>Halat Çekme</title>
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#7cc36a;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}</style></head><body>
 <canvas id="c"></canvas>
-<script src="core.js"></script><script src="hud.js"></script>
+<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
 OY.hud({baslik:'HALAT ÇEKME',alt:'Yorumda "1" yaz Kırmızı, "2" yaz Mavi takıma geç · Beğen = çek!',renk:'#ffe066',
- hediyeler:[['🌹','Gül','güçlü çekiş'],['🍩','20+','takıma 2x'],['🎩','99+','DEV ÇEKİŞ'],['🌌','1000+','deprem!']]});
+ hediyeler:[['🌹','Gül','güçlü çekiş'],['💖','Kalp','takım coşkusu'],['💐','Parfüm','takıma 2x güç'],['🍩','Donut','rakip kayar'],['🎩','Şapka','DEV ÇEKİŞ'],['🌌','Galaksi','DEPREM']]});
 const C=document.getElementById('c'),g=C.getContext('2d');let W,H,DPR;
 function boyut(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*DPR;C.height=H*DPR;g.setTransform(DPR,0,0,DPR,0,0)}boyut();addEventListener('resize',boyut);
 const now=()=>performance.now();
@@ -23,11 +23,9 @@ OY.basla({muzik:'pop',olay:e=>{
  else if(e.t==='begeni')cek(u,(e.adet||1)*.6);
  else if(e.t==='takip'){cek(u,10);OY.akis(`➕ ${u.ad} takip etti · çekiş +10`,'#cff')}
  else if(e.t==='paylasim')cek(u,8);
- else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;cek(u,10*h.adet+n*1.5);OY.ses.para();const T=TAK[u.tak];
-  OY.akis(`🎁 ${u.ad} · ${h.ad} → ${T.ad} çekti!`,T.r);patlama(u.tak,20+Math.min(60,n));
-  if(h.seviye>=2){T.x2=now()+12000;OY.akis(`⚡ ${T.ad} takım 12 sn 2x güç!`,'#ffe066')}
-  if(h.seviye>=3){T.guc+=60;OY.ses.guc();OY.akis(`💪 ${u.ad} DEV ÇEKİŞ yaptı!`,'#fff')}
-  if(h.seviye>=4){deprem=now()+1500;ip+=(u.tak?1:-1)*25;OY.ses.patla();OY.akis(`🌋 ${u.ad} DEPREM! İp kaydı`,'#f96')}}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet,T=TAK[u.tak],yon=u.tak?1:-1;cek(u,10*h.adet+n*1.5);OY.ses.para();patlama(u.tak,20+Math.min(60,n));
+  const E={gul:['güçlü çekiş',()=>cek(u,10)],kalp:['takım coşkusu',()=>{T.guc+=25}],parfum:[T.ad+' 12 sn 2x güç',()=>{T.x2=now()+12000}],
+   donut:['rakip çamura kaydı',()=>{ip+=yon*10}],sapka:['DEV ÇEKİŞ',()=>{T.guc+=60;OY.ses.guc()}],galaksi:['DEPREM! ip kaydı',()=>{deprem=now()+1500;ip+=yon*25;OY.ses.patla()}]}[h.sinif];E[1]();OY.vitrin(u,h.ikon,h.ad,E[0]);OY.akis(`${h.ikon} ${u.ad} → ${E[0]}`,'#ffd84a')}
 }});
 OY.demoYorum=()=>Math.random()<.35?(Math.random()<.5?'1':'2'):['Hadi kırmızı!','Mavi kazanır','Çek çek çek!','Bırakmayın!','Yaşasın'][Math.random()*5|0];
 function patlama(t,n){const x=W*(t?.78:.22),y=H*.52;for(let i=0;i<n;i++)parca.push({x,y,vx:(Math.random()-.5)*9,vy:-Math.random()*9-2,r:3+Math.random()*4,c:[TAK[t].r,'#ffe066','#fff'][i%3],o:60})}
