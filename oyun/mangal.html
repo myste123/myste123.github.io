@@ -1,0 +1,67 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mangal Ustası</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#20140c;color:#fff;font-family:Nunito,Segoe UI,Arial,sans-serif}#sahne{position:fixed;inset:0}</style></head><body>
+<canvas id="sahne"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
+<script>
+const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
+OY.hud({baslik:'MANGAL USTASI',alt:'Yorum yaz → şişin mangala gelsin · Beğen → közü harla, piş & servis et! 🍢',renk:'#ff9f43',hediyeler:OY.REKABET_HED});
+const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1.2:1.5));R.outputEncoding=THREE.sRGBEncoding;
+const S=new THREE.Scene();S.background=new THREE.Color(0x1d1410);S.fog=new THREE.Fog(0x1d1410,30,70);
+const KF0=45,K=new THREE.PerspectiveCamera(45,1,.1,200);function boyut(){R.setSize(W(),H());K.aspect=W()/H();K.fov=Math.max(KF0,Math.min(75,2*Math.atan(Math.tan(52*Math.PI/360)/K.aspect)*180/Math.PI));K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
+S.add(new THREE.HemisphereLight(0xffd7b0,0x2a1810,.55));const kor=new THREE.PointLight(0xff6a1a,2.5,25,1.5);kor.position.set(0,2,0);S.add(kor);const ust=new THREE.DirectionalLight(0xfff0dd,.5);ust.position.set(5,20,10);S.add(ust);
+// bahce zemini + masa
+const zem=new THREE.Mesh(new THREE.PlaneGeometry(120,120),new THREE.MeshStandardMaterial({color:0x2c2018}));zem.rotation.x=-Math.PI/2;zem.position.y=-3.2;S.add(zem);
+// mangal
+const demir=new THREE.MeshStandardMaterial({color:0x2b2b30,metalness:.6,roughness:.5});
+const kasa=new THREE.Mesh(new THREE.BoxGeometry(10,1.6,10.5),demir);kasa.position.y=-.8;S.add(kasa);for(const x of[-4.6,4.6])for(const z of[-4.9,4.9]){const a=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,3,6),demir);a.position.set(x,-2.2,z);S.add(a)}
+const korlar=[];for(let i=0;i<70;i++){const k=new THREE.Mesh(new THREE.DodecahedronGeometry(.32+Math.random()*.2,0),new THREE.MeshStandardMaterial({color:0x220a00,emissive:0xff4a00,emissiveIntensity:.15}));
+ k.position.set((Math.random()-.5)*9.2,.05+Math.random()*.2,(Math.random()-.5)*9.8);k.rotation.set(Math.random()*3,Math.random()*3,0);S.add(k);korlar.push(k)}
+// sis (sis) modeli
+const ETR=[0x9e3b3b,0xa34545],BIB=[0x2e9e44,0xd62828,0xf4a261],DUM=new THREE.MeshStandardMaterial({color:0xcfcfd4,metalness:.8,roughness:.3});
+function sis(u){const g=new THREE.Group();const cubuk=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,7,6),DUM);cubuk.rotation.x=Math.PI/2;g.add(cubuk);const et=[];
+ for(let i=0;i<6;i++){const sebze=i%3===2;const m=new THREE.Mesh(sebze?new THREE.CylinderGeometry(.42,.42,.35,10):new THREE.BoxGeometry(.75,.7,.75),new THREE.MeshStandardMaterial({color:sebze?BIB[i%3]:ETR[i%2],roughness:.8}));
+  if(sebze)m.rotation.x=Math.PI/2;m.position.z=-2.4+i*.95;g.add(m);if(!sebze)et.push(m)}
+ const bay=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(OY.foto(u,96))}));bay.scale.set(1.3,1.3,1);bay.position.set(0,.6,4.3);g.add(bay);
+ const ec=document.createElement('canvas');ec.width=256;ec.height=56;const yz=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(ec),transparent:true}));yz.scale.set(2.8,.6,1);yz.position.set(0,.6,6.3);g.add(yz);
+ S.add(g);return{g,et,bay,yz,ec,yazi:''}}
+const U={},SIS=[],DUMAN=[],SLOT=8;let bitis=0,KAL={kazan:{}};
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,pis:0,yan:0,son:0,o:null,servis:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
+function yerles(u){if(u.o)return;if(SIS.length>=SLOT){const e=SIS.reduce((a,b)=>a.son<b.son?a:b);if(now()-e.son<15000)return;S.remove(e.o.g);e.o=null;SIS.splice(SIS.indexOf(e),1)}
+ u.o=sis(u);u.pis=0;SIS.push(u);OY.akis(`🍢 ${u.ad} şişini mangala koydu`,'#ffcf9e')}
+function harla(u,n){if(OY.donuk(u)||!u.o)return;u.pis+=n*OY.ikiKat(u);u.son=now()}
+function servis(u){const kalite=u.pis>=100&&u.pis<=118?'tam kıvamında':u.pis>118?'biraz yanık':'az pişmiş';const p=(u.pis>=100&&u.pis<=118?15:u.pis>118?6:3)*OY.ikiKat(u);
+ u.puan+=p;u.servis++;OY.akis(`🍽 ${u.ad} servis etti: ${kalite} +${p}`,u.pis<=118?'#9f9':'#fc9');OY.ses.dogru();u.pis=0;for(let i=0;i<8;i++)duman(u.o.g.position,0xffffff)}
+function duman(p,c=0x777777){const m=new THREE.Mesh(new THREE.SphereGeometry(.4+Math.random()*.4,8,6),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.35}));m.position.set(p.x+(Math.random()-.5)*2,p.y+.6,p.z+(Math.random()-.5));m.userData.o=1;S.add(m);DUMAN.push(m)}
+OY.rekabetKur({liste:()=>SIS,skor:u=>u.puan,ayarla:(u,v)=>{u.puan=Math.max(0,Math.round(v))}});
+OY.basla({muzik:'halay',olay:e=>{
+ if(e.t==='kalici'&&e.veri&&e.veri.kazan){KAL=e.veri;return}
+ if(!e.id||bitis)return;const u=kul(e);
+ if(e.t==='yorum'){yerles(u);const m=String(e.metin||'').toLowerCase();if(u.o&&/servis|pişti|al/.test(m)&&u.pis>40)servis(u);else harla(u,3);u.msj=String(e.metin||'').slice(0,40);u.msjT=now()}
+ else if(e.t==='begeni'){yerles(u);harla(u,(e.adet||1)*.7)}
+ else if(e.t==='takip'||e.t==='paylasim'){yerles(u);harla(u,10)}
+ else if(e.t==='hediye'){yerles(u);const h=OY.hediye(e);OY.ses.para();harla(u,15+h.seviye*10);const et=OY.rekabetHediye(u,h);OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
+}});
+OY.demoYorum=()=>Math.random()<.3?'servis':['Közü harla!','Adana mı urfa mı','Kokusu geldi','Ayran var mı?','Bana da bir şiş'][Math.random()*5|0];
+const TUR=180;let turBas=now(),son=now();const BL={};
+function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;
+ const top=SIS.reduce((a,u)=>a+(t-u.son<3000?1:0),0);kor.intensity=2+top*.25+Math.sin(t/90)*.3;korlar.forEach((k,i)=>k.material.emissiveIntensity=.12+Math.min(.35,top*.04)+Math.sin(t/200+i)*.08);
+ SIS.forEach((u,i)=>{const o=u.o;o.g.position.set(0,.95,-3.85+i*1.1);o.g.rotation.y=Math.PI/2;o.et.forEach((m,j)=>m.rotation.z=t/(OY.donuk(u)?3000:500)+i+j);
+  if(!bitis&&u.pis>0)u.pis+=dt*1.2;if(u.pis>140){u.puan=Math.max(0,u.puan-5);OY.akis(`🔥 ${u.ad} şişi yaktı! -5`,'#f77');u.pis=0;for(let k=0;k<10;k++)duman(o.g.position,0x222222)}
+  if(u.pis>=100&&!/(servis)/.test('')&&t-u.son>2500)servis(u);
+  const p=Math.min(1,u.pis/100),yanik=Math.max(0,(u.pis-118)/22);o.et.forEach(m=>m.material.color.setRGB(.62*(1-p)+.45*p-.3*yanik,.23*(1-p)+.25*p-.15*yanik,.23*(1-p)+.12*p-.08*yanik));
+  if(Math.random()<.03+p*.05)duman(o.g.position);
+  if(o.bay.material.map.image.surum!==o.rs){o.rs=o.bay.material.map.image.surum;o.bay.material.map.needsUpdate=true}
+  const yaz=`${OY.durum(u)}${OY.kisaAd(u.ad,8)} %${Math.round(u.pis)}`;if(yaz!==o.yazi){o.yazi=yaz;const g=o.ec.getContext('2d');g.clearRect(0,0,256,56);g.fillStyle='rgba(0,0,0,.6)';g.fillRect(2,4,252,48);
+   g.fillStyle=u.pis>118?'#ff7b7b':u.pis>=100?'#8f8':'#ffd27a';g.fillRect(2,46,252*Math.min(1,u.pis/140),6);g.fillStyle='#fff';g.font='bold 26px Segoe UI';g.textAlign='center';g.textBaseline='middle';g.fillText(yaz,128,24);o.yz.material.map.needsUpdate=true}});
+ for(let i=DUMAN.length-1;i>=0;i--){const d=DUMAN[i];d.position.y+=dt*2;d.scale.multiplyScalar(1+dt*.8);d.material.opacity-=dt*.25;if(d.material.opacity<=0){S.remove(d);DUMAN.splice(i,1)}}
+ K.position.set(2.2+Math.sin(t/8000)*1.5,11,10);K.lookAt(1.6,.2,0);R.render(S,K);
+ for(const u of SIS){let b=BL[u.id];if(u.msj&&t-u.msjT<4500){if(!b){b=BL[u.id]=document.createElement('div');b.className='balon';document.body.appendChild(b)}b.textContent=u.msj;const p=u.o.g.position.clone();p.y+=1.6;p.x+=4.3;p.project(K);b.style.left=(p.x*.5+.5)*W()+'px';b.style.top=(-p.y*.5+.5)*H()+'px'}else if(b){b.remove();delete BL[u.id]}}
+ const kalan=Math.max(0,TUR-(t-turBas)/1000);
+ if(!bitis&&kalan<=0){bitis=t+7000;const s=Object.values(U).filter(x=>x.puan>0).sort((a,b)=>b.puan-a.puan)[0];if(s){KAL.kazan[s.ad]=(KAL.kazan[s.ad]||0)+1;OY.kaydet(KAL);OY.ses.zafer();OY.kazanan(s,'🍢 MANGAL USTASI',`${s.puan} puan · ${s.servis} servis`)}}
+ if(bitis&&t>bitis){bitis=0;turBas=t;OY.kazanan(null);Object.values(U).forEach(u=>{u.puan=0;u.servis=0})}
+ if((t|0)%300<20){OY.bilgi(OY.sure(kalan),`🍢 ${SIS.length}/${SLOT}`);OY.ilk3(Object.values(U).filter(u=>u.puan>0).sort((a,b)=>b.puan-a.puan).slice(0,3))}
+}
+kare();
+</script></body></html>
