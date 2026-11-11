@@ -271,7 +271,7 @@ footer b{color:var(--soluk);font-weight:600}
  <div><small>3</small><h3>İzleyiciler oynasın</h3><p>Beğeni, yorum ve hediyeler oyunda anında karşılık bulur; skorlar kalıcıdır.</p></div>
 </div></div></section>
 
-<section id="oyunlar"><div class="kap"><div class="baslik"><div><div class="ust-y">Oyunlar</div><h2>İzleyici gibi dene</h2><p>Bir oyuna dokun: canlı yayın görünümünde açılır. Yorum yaz, beğen, hediye gönder; oyunda anında görürsün.</p></div></div><div id="izgara"><h3 class="kat"><span>🧊</span>3B Oyunlar<small>Animasyonlu 3B karakterler · 350₺/ay</small></h3><div class="izgara" id="iz3"></div><h3 class="kat"><span>🎨</span>2B Oyunlar<small>Hızlı ve hafif · 250₺/ay</small></h3><div class="izgara" id="iz2"></div></div></div></section>
+<section id="oyunlar"><div class="kap"><div class="baslik"><div><div class="ust-y">Oyunlar</div><h2>İzleyici gibi dene</h2><p>Bir oyuna dokun: canlı yayın görünümünde açılır. Yorum yaz, beğen, hediye gönder; oyunda anında görürsün.</p></div></div><div id="izgara"><h3 class="bkat"><span>🧊</span>3B Oyunlar<small>Animasyonlu 3B karakterler · 350₺/ay</small></h3><div class="izgara" id="iz3"></div><h3 class="bkat"><span>🎨</span>2B Oyunlar<small>Hızlı ve hafif · 250₺/ay</small></h3><div class="izgara" id="iz2"></div></div></div></section>
 
 <section id="fiyat"><div class="kap"><div class="baslik"><div><div class="ust-y">Fiyatlar</div><h2>Oyun başına, aylık</h2><p>İstediğin oyunu seç, sadece onu öde. Her oyunda 1 gün ücretsiz deneme. Ödeme havale/EFT ile, komisyonsuz.</p></div></div>
  <div class="fiyatlar">
@@ -485,15 +485,15 @@ $('sBtn').onclick=async()=>{const k=$('sSonuc'),v=i=>$(i).value,o=O.find(x=>x.id
  k.textContent=j.ok?'Siparişin alındı. En kısa sürede ödeme bilgileriyle dönüş yapacağız.':'⚠️ '+(j.hata||'Bir hata oluştu.')};
 document.querySelectorAll('[data-p]').forEach(a=>a.addEventListener('click',()=>{$('sPaket').value=a.dataset.p;const o=O.find(x=>x.id===$('sOyun').value);if(o&&(o.k==='3b')!==a.dataset.p.includes('3B')){const y=O.find(x=>(x.k==='3b')===a.dataset.p.includes('3B')&&!x.canliYok);if(y)$('sOyun').value=y.id}}));
 </script><style id="anim">
-.kat{display:flex;align-items:center;gap:12px;font-size:22px;margin:34px 0 16px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08);position:relative}
-.kat span{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#7c5cff,#c04dff);animation:katz 3s ease-in-out infinite}
-.kat small{font-size:13px;font-weight:500;opacity:.6;margin-left:auto}
-.kat:after{content:'';position:absolute;left:0;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,#7c5cff,#ff4d8d);transition:width 1.2s ease}
-.kat.gor:after{width:100%}
+.bkat{display:flex;align-items:center;gap:12px;font-size:22px;margin:34px 0 16px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08);position:relative}
+.bkat span{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#7c5cff,#c04dff);animation:katz 3s ease-in-out infinite}
+.bkat small{font-size:13px;font-weight:500;opacity:.6;margin-left:auto}
+.bkat:after{content:'';position:absolute;left:0;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,#7c5cff,#ff4d8d);transition:width 1.2s ease}
+.bkat.gor:after{width:100%}
 @keyframes katz{50%{transform:translateY(-4px) rotate(-6deg)}}
 body:before{content:'';position:fixed;inset:-20%;z-index:-1;background:radial-gradient(40% 35% at 20% 25%,rgba(124,92,255,.18),transparent 70%),radial-gradient(35% 30% at 80% 70%,rgba(255,77,141,.12),transparent 70%),radial-gradient(30% 25% at 60% 10%,rgba(37,244,238,.08),transparent 70%);animation:arka 22s ease-in-out infinite alternate;pointer-events:none}
 @keyframes arka{to{transform:translate(4%,-3%) rotate(8deg) scale(1.08)}}
-.belir{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}.belir.gor{opacity:1;transform:none}
+.belir{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}.belir.gor{opacity:1;transform:none}.belir.bitti{transition:none}
 .oyun{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;position:relative;overflow:hidden}
 .oyun:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.18) 50%,transparent 65%);transform:translateX(-120%);animation:parla 5s ease-in-out infinite;pointer-events:none}
 .oyun:nth-child(2):after{animation-delay:1.2s}.oyun:nth-child(3):after{animation-delay:2.4s}
@@ -502,18 +502,18 @@ body:before{content:'';position:fixed;inset:-20%;z-index:-1;background:radial-gr
 .oyun .g img{transition:transform 6s ease}.oyun:hover .g img{transform:scale(1.08)}
 a.btn,button.btn{position:relative}
 .btn-nabiz{animation:nabiz 2.4s ease-in-out infinite}@keyframes nabiz{0%,100%{box-shadow:0 0 0 0 rgba(124,92,255,.55)}50%{box-shadow:0 0 0 12px rgba(124,92,255,0)}}
-.ucan{position:fixed;z-index:0;pointer-events:none;font-size:22px;opacity:.0;animation:ucus linear forwards}
+.ucan{position:fixed;z-index:-1;pointer-events:none;font-size:22px;opacity:.0;animation:ucus linear forwards}
 @keyframes ucus{0%{opacity:0;transform:translateY(0) rotate(0)}10%{opacity:.55}90%{opacity:.4}100%{opacity:0;transform:translateY(-110vh) rotate(40deg)}}
 h1 em,h1 .vurgu{background:linear-gradient(90deg,#7c5cff,#ff4d8d,#25f4ee,#7c5cff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:kay 6s linear infinite}
 @keyframes kay{to{background-position:300% 0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.belir{opacity:1;transform:none}}
 </style>
 <script>
-(()=>{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('gor');io.unobserve(e.target)}}),{threshold:.12});
-const isle=()=>{document.querySelectorAll('section,.kat,.oyun,.paket,.kutu,footer').forEach((el,i)=>{if(el.dataset.anim)return;el.dataset.anim=1;if(!el.classList.contains('kat'))el.classList.add('belir');el.style.transitionDelay=(el.classList.contains('oyun')?(i%6)*70:0)+'ms';io.observe(el)})};
+(()=>{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('gor');io.unobserve(e.target);setTimeout(()=>{e.target.classList.remove('belir','gor');e.target.style.transitionDelay=''},1600)}}),{threshold:.12});
+const isle=()=>{document.querySelectorAll('section,.bkat,.oyun,.paket,.kutu,footer').forEach((el,i)=>{if(el.dataset.anim||el.closest('#mod')||el.querySelector('#mod'))return;el.dataset.anim=1;if(!el.classList.contains('bkat'))el.classList.add('belir');el.style.transitionDelay=(el.classList.contains('oyun')?(i%6)*70:0)+'ms';io.observe(el)})};
 isle();new MutationObserver(isle).observe(document.body,{childList:true,subtree:true});
 document.querySelectorAll('.btn').forEach((b,i)=>{if(i<3)b.classList.add('btn-nabiz')});
-document.addEventListener('pointermove',e=>{const c=e.target.closest&&e.target.closest('.oyun');if(!c)return;const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(700px) rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-4px)`});
+document.addEventListener('pointermove',e=>{const c=e.target.closest&&!e.target.closest('#mod')&&e.target.closest('.oyun');if(!c)return;const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(700px) rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-4px)`});
 document.addEventListener('pointerout',e=>{const c=e.target.closest&&e.target.closest('.oyun');if(c&&!c.contains(e.relatedTarget))c.style.transform=''});
 const IK=['🌹','💖','🎈','💐','🍩','🎩','🌌','👑','🎁'];setInterval(()=>{if(document.hidden)return;const d=document.createElement('div');d.className='ucan';d.textContent=IK[Math.random()*IK.length|0];
  d.style.left=(Math.random()*96)+'vw';d.style.top='100vh';d.style.animationDuration=(9+Math.random()*7)+'s';d.style.fontSize=(16+Math.random()*16)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),17000)},1400)})();
