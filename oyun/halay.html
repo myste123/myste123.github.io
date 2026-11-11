@@ -91,7 +91,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  if(dalga>0){dalga+=dt*.5;if(dalga>1.6)dalga=0}
  const cos=Math.min(1,hiz*1.3);alevler.forEach((a,i)=>{a.scale.set(1,.7+Math.sin(t/90+i)*.3+cos*.8,1)});ates.intensity=1.8+cos*1.8+Math.sin(t/80)*.3;
  for(let i=parca.length-1;i>=0;i--){const m=parca[i],d=m.userData;m.position.add(d.v);d.v.y-=d.yer?.004:.011;d.v.multiplyScalar(.985);m.rotation.x+=.2;m.rotation.y+=.15;if(--d.omur<=0||m.position.y<0){S.remove(m);parca.splice(i,1)}}
- const ka=t/1000*.05,kd=Math.min(36,rad+13);K.position.set(Math.sin(ka)*kd,7+rad*.5,Math.cos(ka)*kd);K.lookAt(0,1,0);
+ const ka=t/1000*.05,kd=Math.min(28,rad+8);K.position.set(Math.sin(ka)*kd,7+rad*.5,Math.cos(ka)*kd);K.lookAt(0,1,0);
  R.render(S,K);
  for(const u of HALKA){let b=BAL[u.id];if(u.msj&&t-u.msjT<5500&&u.o){if(!b){b=BAL[u.id]=document.createElement('div');b.className='balon';document.body.appendChild(b)}b.textContent=u.msj;
   const p=u.o.g.position.clone();p.y+=4.3;p.project(K);b.style.left=(p.x*.5+.5)*W()+'px';b.style.top=(-p.y*.5+.5)*H()+'px'}else if(b){b.remove();delete BAL[u.id]}}
