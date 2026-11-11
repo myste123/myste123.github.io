@@ -1,131 +1,494 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Myste Medya — TikTok LIVE Oyunları</title>
-<meta name="description" content="TikTok canlı yayınınız için Türkçe etkileşimli oyunlar. 1 gün ücretsiz deneme.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Myste Medya — Canlı Yayın Oyunları</title>
+<meta name="description" content="TikTok LIVE yayınınız için Türkçe etkileşimli oyunlar. İzleyiciler beğeni, yorum ve hediyeyle oynar. 1 gün ücretsiz deneme.">
+<meta name="theme-color" content="#0a0b0f">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0c10;--yuzey:#13151c;--yuzey2:#1a1d27;--cizgi:#262a36;--yazi:#e9ebf1;--soluk:#9298a8;--vurgu:#ff2d55;--vurgu2:#25f4ee}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--yazi);font:400 15px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}h1,h2,h3{margin:0;letter-spacing:-.02em;font-weight:700}
-.kap{max-width:1120px;margin:0 auto;padding:0 20px}
-nav{position:sticky;top:0;z-index:40;background:rgba(11,12,16,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--cizgi)}
-nav .kap{display:flex;align-items:center;height:58px;gap:28px}
-.logo{font-weight:800;font-size:17px;display:flex;align-items:center;gap:8px}.logo b{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,var(--vurgu),#ff8a3d);display:inline-block}
-nav .bag{display:flex;gap:22px;font-size:14px;color:var(--soluk)}nav .bag a:hover{color:#fff}
+:root{--bg:#0a0b0f;--y1:#121319;--y2:#191b23;--cz:#24262f;--cz2:#30333e;--yazi:#eceef3;--soluk:#9a9fad;--soluk2:#6e7381;--vurgu:#7b6cff;--vurgu-a:#9488ff;--canli:#ff3b5c;--ok:#4fd18b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--yazi);font:400 15px/1.6 Inter,system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}h1,h2,h3{margin:0;letter-spacing:-.022em;font-weight:700}p{margin:0}
+.kap{max-width:1140px;margin:0 auto;padding:0 20px}
+svg{display:block}
+/* nav */
+nav{position:sticky;top:0;z-index:40;background:rgba(10,11,15,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--cz)}
+nav .kap{display:flex;align-items:center;height:60px;gap:32px}
+.logo{font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px;letter-spacing:-.01em}
+.logo i{width:26px;height:26px;border-radius:8px;background:var(--vurgu);display:grid;place-items:center}
+nav .bag{display:flex;gap:24px;font-size:14px;color:var(--soluk)}nav .bag a:hover{color:#fff}
 nav .sag{margin-left:auto}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:10px 16px;font:600 14px Inter;cursor:pointer;background:var(--vurgu);color:#fff;transition:filter .15s}
-.btn:hover{filter:brightness(1.1)}.btn.k{background:var(--yuzey2);border:1px solid var(--cizgi)}.btn.kucuk{padding:7px 12px;font-size:13px;border-radius:8px}
-@media(max-width:720px){nav .bag{display:none}}
-.hero{padding:72px 0 56px}.hero .kap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
-.hero h1{font-size:clamp(32px,4.4vw,50px);line-height:1.08;font-weight:800}.hero h1 em{font-style:normal;color:var(--vurgu)}
-.hero p{color:var(--soluk);font-size:17px;max-width:480px;margin:18px 0 26px}
-.ozellik{display:flex;gap:22px;flex-wrap:wrap;margin-top:30px;color:var(--soluk);font-size:13px}.ozellik div b{display:block;color:var(--yazi);font-size:20px}
-.kolaj{position:relative;height:440px}.kolaj img{position:absolute;width:200px;border-radius:18px;border:1px solid var(--cizgi);box-shadow:0 24px 60px rgba(0,0,0,.55)}
-.kolaj img:nth-child(1){left:6%;top:40px;transform:rotate(-6deg)}.kolaj img:nth-child(2){left:32%;top:0;z-index:2}.kolaj img:nth-child(3){left:58%;top:50px;transform:rotate(6deg)}
-@media(max-width:860px){.hero .kap{grid-template-columns:1fr}.kolaj{height:330px}.kolaj img{width:150px}}
-section{padding:64px 0;border-top:1px solid var(--cizgi)}
-.baslik{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:26px;flex-wrap:wrap}.baslik h2{font-size:28px}.baslik p{color:var(--soluk);margin:6px 0 0}
-.sekme{display:inline-flex;background:var(--yuzey);border:1px solid var(--cizgi);border-radius:10px;padding:3px}.sekme button{background:none;border:0;color:var(--soluk);padding:7px 14px;border-radius:8px;font:600 13px Inter;cursor:pointer}.sekme button.a{background:var(--yuzey2);color:#fff}
-.izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
-.oyun{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color .15s,transform .15s}
-.oyun:hover{border-color:#3a4052;transform:translateY(-2px)}
-.oyun .g{aspect-ratio:9/12;overflow:hidden;position:relative;background:#000}.oyun .g img{width:100%;height:100%;object-fit:cover;object-position:top}
-.oyun .g span{position:absolute;top:10px;left:10px;font:600 11px Inter;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:6px}
-.oyun .i{padding:12px 14px 14px}.oyun h3{font-size:15px}.oyun p{color:var(--soluk);font-size:13px;margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.oyun.y{cursor:default;opacity:.55}.oyun.y .g{display:grid;place-items:center;font-size:42px;background:var(--yuzey2)}
-.fiyatlar{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,340px));gap:16px}
-.paket{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;padding:22px}.paket.o{border-color:var(--vurgu)}
-.paket h3{font-size:15px;color:var(--soluk);font-weight:600}.paket .tl{font-size:32px;font-weight:800;margin:6px 0 12px}.paket .tl small{font-size:14px;color:var(--soluk);font-weight:500}
-.paket ul{margin:0 0 18px;padding:0;list-style:none;font-size:14px;color:var(--soluk)}.paket li{padding:4px 0}.paket li:before{content:'✓  ';color:var(--vurgu2)}
-.paket .btn{width:100%}
-.ikili{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:760px){.ikili{grid-template-columns:1fr}}
-.kutu{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;padding:22px}.kutu h3{font-size:16px;margin-bottom:10px}.kutu ol{margin:0;padding-left:18px;color:var(--soluk);font-size:14px}.kutu li{padding:3px 0}.kutu li b{color:var(--yazi);font-weight:600}
-code{background:var(--yuzey2);padding:1px 6px;border-radius:5px;font-size:13px;color:var(--vurgu2);word-break:break-all}
-label{display:block;font-size:13px;color:var(--soluk);margin:12px 0 5px}
-input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--cizgi);color:#fff;border-radius:9px;padding:10px 12px;font:500 14px Inter}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#4a5166}
-.sonuc{margin-top:12px;font-size:14px;display:none;word-break:break-all;color:var(--soluk)}.sonuc code{display:block;margin-top:6px;padding:8px}
-footer{border-top:1px solid var(--cizgi);padding:28px 0;color:var(--soluk);font-size:13px}
-/* oynatici penceresi */
-.mod{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:16px}
-.mod.ac{display:flex}.mod .ic{display:flex;gap:18px;align-items:stretch;max-height:100%}
-.ekran{position:relative;height:min(86vh,760px);aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#000;border:1px solid var(--cizgi)}
-.ekran iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.kontrol{width:280px;background:var(--yuzey);border:1px solid var(--cizgi);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:6px;overflow:auto}
-.kontrol h3{font-size:16px}.kontrol .k2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}
-.kontrol .k2 button{background:var(--yuzey2);border:1px solid var(--cizgi);color:#fff;border-radius:9px;padding:8px 2px;font:600 11px Inter;cursor:pointer}.kontrol .k2 button b{display:block;font-size:18px}
-.kapat{position:absolute;top:14px;right:14px;z-index:2;background:rgba(0,0,0,.6);border:0;color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer}
-@media(max-width:760px){.mod{padding:0}.mod .ic{flex-direction:column;gap:0;width:100%;height:100%}.ekran{height:auto;flex:1;width:100%;aspect-ratio:auto;border-radius:0;border:0}
- .kontrol{width:100%;border-radius:0;border:0;border-top:1px solid var(--cizgi);padding:10px 12px;flex:none}.kontrol h3,.kontrol .ac2{display:none}.kontrol label{display:none}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:11px 18px;font:600 14px Inter,sans-serif;cursor:pointer;background:var(--vurgu);color:#fff;transition:background .15s,border-color .15s,transform .1s;white-space:nowrap}
+.btn:hover{background:var(--vurgu-a)}.btn:active{transform:scale(.98)}
+.btn.k{background:var(--y2);border:1px solid var(--cz2);color:var(--yazi)}.btn.k:hover{background:#21232d}
+.btn.kucuk{padding:8px 13px;font-size:13px;border-radius:9px}
+@media(max-width:760px){nav .bag{display:none}}
+/* hero */
+.hero{padding:76px 0 64px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-10%;top:-30%;width:760px;height:760px;background:radial-gradient(closest-side,rgba(123,108,255,.16),transparent);pointer-events:none}
+.hero .kap{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;position:relative}
+.etiket{display:inline-flex;align-items:center;gap:8px;font:600 12px Inter;color:var(--soluk);border:1px solid var(--cz2);border-radius:99px;padding:5px 12px 5px 10px;margin-bottom:20px}
+.etiket i{width:7px;height:7px;border-radius:50%;background:var(--canli);box-shadow:0 0 0 3px rgba(255,59,92,.18)}
+.hero h1{font-size:clamp(34px,4.6vw,54px);line-height:1.06;font-weight:800;letter-spacing:-.035em}
+.hero h1 span{color:var(--vurgu-a)}
+.hero p.l{color:var(--soluk);font-size:17px;max-width:500px;margin:20px 0 28px}
+.hero .dg{display:flex;gap:10px;flex-wrap:wrap}
+.olcu{display:flex;gap:32px;flex-wrap:wrap;margin-top:40px;padding-top:24px;border-top:1px solid var(--cz);color:var(--soluk);font-size:13px}
+.olcu b{display:block;color:var(--yazi);font-size:19px;font-weight:700;letter-spacing:-.01em}
+/* hero telefon (statik) */
+.mock{position:relative;width:min(320px,80vw);aspect-ratio:9/16;margin:0 auto;border-radius:34px;border:8px solid #1b1d24;box-shadow:0 0 0 1px #2c2f3a,0 40px 90px rgba(0,0,0,.6);overflow:hidden;cursor:pointer;background:#000}
+.mock img{width:100%;height:100%;object-fit:cover;transform:scale(1.34);transform-origin:50% 46%}
+.mock .m-ust{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;gap:6px}
+.mock .yy{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.42);border-radius:99px;padding:3px 10px 3px 3px;font:600 11px Inter;color:#fff;backdrop-filter:blur(6px)}
+.mock .yy i{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7b6cff,#c06cff)}
+.mock .m-sag{margin-left:auto;display:flex;gap:5px}
+.rozet{background:var(--canli);color:#fff;font:700 10px/1 Inter;letter-spacing:.06em;border-radius:5px;padding:4px 6px}
+.izs{background:rgba(0,0,0,.42);color:#fff;font:600 10px/1 Inter;border-radius:5px;padding:4px 6px;backdrop-filter:blur(6px)}
+.mock .m-soh{position:absolute;left:10px;bottom:52px;display:flex;flex-direction:column;gap:5px;width:66%}
+.mock .m-soh div{font:500 11px/1.35 Inter;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);background:rgba(0,0,0,.22);border-radius:10px;padding:4px 8px;width:fit-content;max-width:100%}
+.mock .m-soh b{color:#cfd3ff;font-weight:600;margin-right:4px}
+.mock .m-alt{position:absolute;left:10px;right:10px;bottom:12px;display:flex;gap:6px;align-items:center}
+.mock .m-alt span{flex:1;background:rgba(0,0,0,.4);border-radius:99px;padding:7px 12px;font:500 11px Inter;color:rgba(255,255,255,.7)}
+.mock .m-alt em{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.4);display:grid;place-items:center;font-style:normal;font-size:14px}
+.mock .oyna{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;background:rgba(10,11,15,.72);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);color:#fff;font:600 13px Inter;padding:10px 16px;border-radius:99px;transition:transform .15s}
+.mock:hover .oyna{transform:translate(-50%,-50%) scale(1.05)}
+@media(max-width:900px){.hero .kap{grid-template-columns:1fr;gap:44px}.hero{padding:48px 0}}@media(max-width:520px){.olcu{display:grid;grid-template-columns:1fr 1fr;gap:16px}}
+/* adimlar */
+.adim{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.adim div{border:1px solid var(--cz);border-radius:14px;padding:20px;background:var(--y1)}
+.adim small{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--y2);border:1px solid var(--cz2);font:700 12px Inter;color:var(--vurgu-a);margin-bottom:12px}
+.adim h3{font-size:15px;margin-bottom:4px}.adim p{color:var(--soluk);font-size:14px}
+@media(max-width:760px){.adim{grid-template-columns:1fr}}
+section{padding:72px 0;border-top:1px solid var(--cz)}
+.baslik{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.baslik h2{font-size:30px}.baslik p{color:var(--soluk);margin-top:6px;max-width:560px}
+.ust-y{font:600 12px Inter;letter-spacing:.08em;text-transform:uppercase;color:var(--vurgu-a);margin-bottom:8px}
+/* oyun kartlari */
+.sekme{display:inline-flex;background:var(--y1);border:1px solid var(--cz);border-radius:11px;padding:3px}
+.sekme button{background:none;border:0;color:var(--soluk);padding:8px 16px;border-radius:8px;font:600 13px Inter;cursor:pointer}
+.sekme button.a{background:var(--y2);color:#fff;box-shadow:0 0 0 1px var(--cz2)}
+.izgara{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}@media(max-width:1100px){.izgara{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){.izgara{grid-template-columns:repeat(2,1fr);gap:12px}}
+.oyun{background:var(--y1);border:1px solid var(--cz);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .15s,transform .2s;display:flex;flex-direction:column;text-align:left;padding:0;color:inherit;font:inherit}
+.oyun:hover{border-color:var(--cz2);transform:translateY(-3px)}
+.oyun:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px}
+.oyun .g{aspect-ratio:3/4;overflow:hidden;position:relative;background:#000}
+.oyun .g img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .4s}
+.oyun:hover .g img{transform:scale(1.04)}
+.oyun .g .tur{position:absolute;top:10px;left:10px;font:600 11px Inter;background:rgba(10,11,15,.7);backdrop-filter:blur(6px);padding:3px 8px;border-radius:6px}
+.oyun .g .dene{position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;justify-content:center;gap:7px;background:rgba(10,11,15,.78);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px;font:600 13px Inter;opacity:0;transform:translateY(6px);transition:.2s}
+.oyun:hover .g .dene,.oyun:focus-visible .g .dene{opacity:1;transform:none}
+@media(hover:none){.oyun .g .dene{opacity:1;transform:none}}
+.oyun .yer{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(120% 80% at 50% 100%,rgba(255,140,60,.22),transparent 60%),linear-gradient(160deg,#1c1d25,#121319);color:var(--soluk);font:600 13px Inter}
+.oyun .yer b{font-size:46px;line-height:1}
+.oyun .i{padding:14px 16px 16px}.oyun h3{font-size:15px}
+.oyun p{color:var(--soluk);font-size:13px;line-height:1.5;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* fiyat */
+.fiyatlar{display:grid;grid-template-columns:repeat(2,minmax(0,360px));gap:18px}
+@media(max-width:760px){.fiyatlar{grid-template-columns:1fr}}
+.paket{background:var(--y1);border:1px solid var(--cz);border-radius:16px;padding:26px;display:flex;flex-direction:column}
+.paket.o{border-color:rgba(123,108,255,.55);background:linear-gradient(180deg,rgba(123,108,255,.07),transparent 40%),var(--y1)}
+.paket h3{font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:space-between}
+.paket h3 small{font:600 11px Inter;color:var(--vurgu-a);background:rgba(123,108,255,.12);padding:3px 8px;border-radius:6px}
+.paket .tl{font-size:40px;font-weight:800;letter-spacing:-.03em;margin:10px 0 2px}.paket .tl small{font-size:15px;color:var(--soluk);font-weight:500;letter-spacing:0}
+.paket .acik{color:var(--soluk);font-size:14px;margin-bottom:18px}
+.paket ul{margin:0 0 22px;padding:18px 0 0;border-top:1px solid var(--cz);list-style:none;font-size:14px;color:#c9ccd6;flex:1}
+.paket li{padding:5px 0 5px 26px;position:relative}
+.paket li:before{content:"";position:absolute;left:2px;top:10px;width:12px;height:7px;border-left:2px solid var(--ok);border-bottom:2px solid var(--ok);transform:rotate(-45deg)}
+.paket .dg{display:flex;gap:8px}.paket .dg .btn{flex:1}
+/* kurulum */
+.ikili{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:760px){.ikili{grid-template-columns:1fr}}
+.kutu{background:var(--y1);border:1px solid var(--cz);border-radius:16px;padding:24px}
+.kutu h3{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.kutu h3 i{width:30px;height:30px;border-radius:8px;background:var(--y2);border:1px solid var(--cz2);display:grid;place-items:center;color:var(--vurgu-a)}
+.kutu ol{margin:0;padding-left:20px;color:var(--soluk);font-size:14px}.kutu li{padding:3px 0}.kutu li b{color:var(--yazi);font-weight:600}
+.kutu .not{color:var(--soluk2);font-size:13px;margin-top:12px;padding-top:12px;border-top:1px solid var(--cz)}
+code{background:var(--y2);border:1px solid var(--cz);padding:1px 6px;border-radius:5px;font:500 12.5px ui-monospace,Consolas,monospace;color:#c8c2ff;word-break:break-all}
+/* formlar */
+.form-y h2{font-size:30px}.form-y p{color:var(--soluk);margin-top:10px}
+.form-y ul{list-style:none;padding:0;margin:22px 0 0;color:var(--soluk);font-size:14px}.form-y li{padding:5px 0 5px 26px;position:relative}
+.form-y li:before{content:"";position:absolute;left:2px;top:10px;width:12px;height:7px;border-left:2px solid var(--ok);border-bottom:2px solid var(--ok);transform:rotate(-45deg)}
+label{display:block;font-size:13px;font-weight:500;color:var(--soluk);margin:14px 0 6px}label:first-child{margin-top:0}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--cz2);color:#fff;border-radius:10px;padding:11px 12px;font:500 14px Inter,sans-serif}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#9a9fad 50%),linear-gradient(135deg,#9a9fad 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--vurgu);box-shadow:0 0 0 3px rgba(123,108,255,.18)}
+textarea{resize:vertical}
+.sonuc{margin-top:14px;font-size:14px;display:none;word-break:break-word;color:var(--soluk);background:var(--y2);border:1px solid var(--cz);border-radius:10px;padding:12px}.sonuc code{display:block;margin-top:8px;padding:8px}
+footer{border-top:1px solid var(--cz);padding:32px 0 40px;color:var(--soluk2);font-size:13px}
+footer .kap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer b{color:var(--soluk);font-weight:600}
+
+/* ================= CANLI DENEME PENCERESI ================= */
+.mod{position:fixed;inset:0;z-index:60;background:rgba(5,6,9,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px}
+.mod.ac{display:flex;animation:mg .2s ease-out}@keyframes mg{from{opacity:0}}
+.mod .ic{display:flex;gap:36px;align-items:center;max-height:100%}
+.mod .mkapat{position:fixed;top:18px;right:18px;width:40px;height:40px;border-radius:50%;border:1px solid var(--cz2);background:var(--y1);color:#fff;cursor:pointer;display:grid;place-items:center}
+.mod .mkapat:hover{background:var(--y2)}
+.tel{position:relative;height:min(calc(100vh - 40px),860px);aspect-ratio:9/16;border-radius:40px;padding:9px;background:#15161b;box-shadow:0 0 0 1px #2d3039,0 50px 120px rgba(0,0,0,.7);flex:none}
+.ekran{position:relative;width:100%;height:100%;border-radius:32px;overflow:hidden;background:#000;isolation:isolate;container-type:size}
+.ekran iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.ekran .yuk{position:absolute;inset:0;display:grid;place-items:center;background:#0d0e12 center/cover no-repeat;transition:opacity .5s}
+.ekran .yuk:after{content:"";position:absolute;inset:0;background:rgba(5,6,9,.55)}
+.ekran .yuk span{position:relative;z-index:1;width:34px;height:34px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:dn .8s linear infinite}
+@keyframes dn{to{transform:rotate(1turn)}}
+.ekran .yuk.git{opacity:0;pointer-events:none}
+/* katman */
+.kat{position:absolute;inset:0;pointer-events:none;font-family:Inter,sans-serif;color:#fff;z-index:2}
+.kat>*{pointer-events:auto}
+.kat .golge{position:absolute;left:0;right:0;pointer-events:none}
+.kat .golge.u{top:0;height:90px;background:linear-gradient(rgba(0,0,0,.45),transparent)}
+.kat .golge.a{bottom:0;height:46%;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.ust{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;gap:8px;z-index:3}
+.yay{display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.38);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:99px;padding:3px 3px 3px 3px;min-width:0}
+.yay .av{width:32px;height:32px;border-radius:50%;background:#333 center/cover;flex:none;border:1.5px solid rgba(255,255,255,.85)}
+.yay .ad{min-width:0;line-height:1.15}
+.yay .ad b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+.yay .ad span{display:block;font-size:10.5px;color:rgba(255,255,255,.75);white-space:nowrap}
+.takip{border:0;border-radius:99px;background:var(--canli);color:#fff;font:600 12px Inter;padding:6px 11px;cursor:pointer;flex:none;transition:background .2s}
+.takip.ok{background:rgba(255,255,255,.18)}
+.ust .sag{margin-left:auto;display:flex;align-items:center;gap:6px;flex:none}
+.ust .izl{display:flex}.ust .izl i{width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(0,0,0,.4);margin-left:-7px;display:grid;place-items:center;font:700 10px Inter;font-style:normal}
+.sayac{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.38);backdrop-filter:blur(10px);border-radius:7px;padding:4px 7px;font:600 11.5px/1 Inter}
+.sayac .rozet{padding:3px 5px;font-size:9.5px;border-radius:4px;margin:-1px 0}
+.ikapat{width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.38);color:#fff;display:none;place-items:center;cursor:pointer}
+.pin{position:absolute;bottom:64px;right:10px;width:118px;flex-direction:column;align-items:flex-start;gap:4px;display:none;background:rgba(0,0,0,.38);backdrop-filter:blur(10px);border-radius:10px;padding:5px 10px 5px 6px;font:600 11.5px Inter;color:#fff;z-index:3;max-width:70%}
+.pin i{background:var(--vurgu);border-radius:6px;padding:3px 6px;font-style:normal;font-size:10px;flex:none}
+/* sohbet */
+.soh{position:absolute;left:10px;bottom:62px;width:72%;height:min(36%,300px);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;-webkit-mask-image:linear-gradient(transparent,#000 28%);mask-image:linear-gradient(transparent,#000 28%);pointer-events:none;z-index:2}
+.msj{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.35;animation:mj .28s ease-out;flex:none;max-width:100%}
+@keyframes mj{from{transform:translateY(10px);opacity:0}}
+.msj .a{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 10px Inter;color:#fff;margin-top:1px}
+.msj .m{background:rgba(0,0,0,.26);border-radius:12px;padding:3px 9px 4px;text-shadow:0 1px 2px rgba(0,0,0,.45);min-width:0;overflow-wrap:anywhere}
+.msj .m b{font-weight:600;color:rgba(255,255,255,.7);margin-right:5px}
+.msj.sen .m{background:rgba(123,108,255,.42)}
+.msj.sen .m b{color:#fff}
+.msj.hd .m{background:rgba(255,170,60,.22)}.msj.hd .m b{color:#ffd59a}
+.msj.sis .m{background:none;padding-left:0;color:rgba(255,255,255,.72);font-size:12px}
+.msj.sis .m b{color:rgba(255,255,255,.72)}
+.msj.oyn .m{background:rgba(79,209,139,.24);font-size:12px}
+/* alt cubuk */
+.altc{position:absolute;left:10px;right:10px;bottom:12px;display:flex;align-items:center;gap:8px;z-index:4}
+.altc form{flex:1;min-width:0;display:flex;align-items:center;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:99px;padding:3px 3px 3px 14px;border:1px solid rgba(255,255,255,.08)}
+.altc input{flex:1;min-width:0;background:none;border:0;padding:8px 0;font:500 13.5px Inter;color:#fff;box-shadow:none!important}
+.altc input::placeholder{color:rgba(255,255,255,.62)}
+.altc form button{width:32px;height:32px;border-radius:50%;border:0;background:var(--vurgu);color:#fff;display:none;place-items:center;cursor:pointer;flex:none}
+.altc form.dolu button{display:grid}
+.yb{width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none;position:relative;transition:transform .1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.yb:active{transform:scale(.88)}
+.yb.hed{background:linear-gradient(140deg,#ff5d7a,#ff9d4d)}
+.yb.beg{color:#ff4d6d}
+.yb .ip{position:absolute;top:-6px;right:-6px;background:#fff;color:#111;font:700 9.5px/1 Inter;padding:3px 5px;border-radius:99px;display:none}
+/* kalpler */
+.kalp{position:absolute;width:30px;height:30px;pointer-events:none;z-index:5;animation:kl var(--s,1.6s) cubic-bezier(.25,.6,.4,1) forwards}
+@keyframes kl{0%{transform:translate(0,0) scale(.4);opacity:0}12%{opacity:1;transform:translate(calc(var(--x)*.15),-24px) scale(1.05)}55%{transform:translate(var(--x),-150px) scale(.95) rotate(var(--r))}100%{transform:translate(calc(var(--x)*.4),-290px) scale(.75) rotate(calc(var(--r)*-1));opacity:0}}
+/* hediye bandi */
+.hbant{position:absolute;left:10px;top:34%;display:flex;flex-direction:column;gap:8px;z-index:4;pointer-events:none}
+.hb{display:flex;align-items:center;gap:8px;height:42px;padding:0 4px 0 4px;border-radius:99px;background:linear-gradient(90deg,rgba(0,0,0,.6),rgba(0,0,0,.18));animation:hbg .35s cubic-bezier(.2,1.2,.4,1);transition:opacity .4s,transform .4s;width:max-content;max-width:94%}
+.hb.git{opacity:0;transform:translateX(-30px)}
+@keyframes hbg{from{transform:translateX(-110%);opacity:0}}
+.hb .a{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:700 13px Inter;flex:none}
+.hb .y{line-height:1.2;padding-right:4px;min-width:0}.hb .y b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap}.hb .y span{display:block;font-size:11px;color:rgba(255,255,255,.75);white-space:nowrap}
+.hb .e{font-size:34px;line-height:1;margin-right:2px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+.hb .x{font:800 italic 26px/1 Inter;color:#fff;-webkit-text-stroke:1px rgba(0,0,0,.25);text-shadow:0 2px 6px rgba(0,0,0,.4);padding:0 8px 0 2px;min-width:44px}
+.hb .x.pop{animation:xp .25s ease-out}@keyframes xp{50%{transform:scale(1.4)}}
+.hb.sen{background:linear-gradient(90deg,rgba(123,108,255,.75),rgba(123,108,255,.12))}
+/* buyuk hediye */
+.dev{position:absolute;left:50%;top:44%;font-size:110px;line-height:1;z-index:4;pointer-events:none;animation:dv 2.1s cubic-bezier(.2,1.1,.4,1) forwards;filter:drop-shadow(0 10px 24px rgba(0,0,0,.5))}
+@keyframes dv{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}18%{transform:translate(-50%,-50%) scale(1.15);opacity:1}30%{transform:translate(-50%,-50%) scale(1)}75%{transform:translate(-50%,-55%) scale(1);opacity:1}100%{transform:translate(-50%,-90%) scale(.7);opacity:0}}
+.isik{position:absolute;inset:0;z-index:3;pointer-events:none;animation:is 2.6s ease-out forwards}
+@keyframes is{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+.yild{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 10px 2px rgba(200,180,255,.9);z-index:4;pointer-events:none;animation:yl var(--s) ease-out forwards}
+@keyframes yl{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--x),var(--y)) scale(.2);opacity:0}}
+/* hediye paneli */
+.hpan{position:absolute;left:0;right:0;bottom:0;z-index:6;background:rgba(18,19,25,.97);backdrop-filter:blur(14px);border-radius:20px 20px 0 0;padding:14px 12px 14px;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.9,.3,1);box-shadow:0 -10px 40px rgba(0,0,0,.4)}
+.hpan.ac{transform:none}
+.hpan .bas{display:flex;align-items:center;justify-content:space-between;padding:0 4px 10px}
+.hpan .bas b{font-size:15px;font-weight:700}
+.hpan .bas span{font-size:11.5px;color:var(--soluk);display:flex;align-items:center;gap:6px}
+.hpan .bas button{width:28px;height:28px;border-radius:50%;border:0;background:var(--y2);color:#fff;cursor:pointer;display:grid;place-items:center;margin-left:8px}
+.hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.hk{position:relative;background:var(--y2);border:1px solid transparent;border-radius:14px;padding:10px 6px 9px;text-align:center;cursor:pointer;color:#fff;font:inherit;transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.hk:hover{border-color:var(--cz2);background:#20222c}
+.hk.bs{animation:hkb .3s}@keyframes hkb{40%{transform:scale(.92)}}
+.hk .e{font-size:32px;line-height:1.1;display:block}
+.hk b{display:block;font-size:12.5px;font-weight:600;margin-top:4px}
+.hk .j{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:#ffcf6b;font-weight:600}
+.hk .j i{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe9a8,#f2a922);display:inline-block}
+.hk .et{display:block;font-size:10.5px;line-height:1.3;color:#b9b4ff;margin-top:4px;min-height:27px}
+.hpan .dip{margin-top:10px;font-size:11px;color:var(--soluk2);text-align:center}
+/* ipucu */
+.ipucu{position:absolute;left:50%;top:58%;transform:translateX(-50%);background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border-radius:12px;padding:9px 14px;font:500 12.5px/1.4 Inter;text-align:center;z-index:3;pointer-events:none;transition:opacity .5s;width:max-content;max-width:80%}
+.ipucu.git{opacity:0}
+/* yan panel */
+.yan{width:340px;max-height:min(calc(100vh - 40px),860px);overflow:auto;color:var(--yazi)}
+.yan .tur{display:inline-flex;gap:6px;align-items:center;font:600 12px Inter;color:var(--soluk);margin-bottom:12px}
+.yan .tur .rozet{font-size:9.5px}
+.yan h2{font-size:28px;letter-spacing:-.03em}
+.yan .d{color:var(--soluk);font-size:14.5px;margin:10px 0 0}
+.yan h4{margin:24px 0 10px;font:600 12px Inter;letter-spacing:.07em;text-transform:uppercase;color:var(--soluk2)}
+.yan .nas{background:var(--y1);border:1px solid var(--cz);border-radius:12px;padding:12px 14px;font-size:13.5px;color:#cfd2db}
+.yan .hl{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.yan .hl div{background:var(--y1);border:1px solid var(--cz);border-radius:10px;padding:8px 10px;font-size:12.5px;display:flex;align-items:center;gap:8px;min-width:0}
+.yan .hl div span{font-size:18px}.yan .hl div p{min-width:0;line-height:1.3}.yan .hl div b{display:block;font-weight:600;font-size:12.5px}.yan .hl div small{color:var(--soluk);font-size:11.5px}
+.yan .kisa{font-size:13px;color:var(--soluk);display:grid;gap:7px}
+.yan .kisa div{display:flex;gap:10px;align-items:center}
+.yan .kisa kbd{min-width:62px;text-align:center;background:var(--y2);border:1px solid var(--cz2);border-radius:6px;padding:2px 6px;font:600 11.5px Inter;color:var(--yazi)}
+.yan .dg{display:flex;gap:8px;margin-top:24px}.yan .dg .btn{flex:1}
+.yan .sim{font-size:12px;color:var(--soluk2);margin-top:12px}
+@media(max-width:1000px){.yan{width:290px}.mod .ic{gap:26px}}
+/* mobil: tam ekran */
+@media(max-width:760px){
+ .mod{padding:0;background:#000}.mod .ic{width:100%;height:100%}
+ .mod .mkapat,.yan{display:none}
+ .tel{height:100%;width:100%;aspect-ratio:auto;border-radius:0;padding:0;box-shadow:none;background:#000}
+ .ekran{border-radius:0}
+ .ust{top:calc(10px + env(safe-area-inset-top))}
+ .pin{display:flex;bottom:calc(62px + env(safe-area-inset-bottom))}.soh{width:60%;bottom:calc(62px + env(safe-area-inset-bottom))}
+ .altc{bottom:calc(10px + env(safe-area-inset-bottom))}
+ .ikapat{display:grid}
+ .ust .izl{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style></head><body>
-<nav><div class="kap"><a class="logo" href="#"><b></b>Myste Medya</a><div class="bag"><a href="#oyunlar">Oyunlar</a><a href="#fiyat">Fiyatlar</a><a href="#kurulum">Kurulum</a><a href="#siparis">Sipariş</a></div><div class="sag"><a class="btn kucuk" href="#demo">Ücretsiz dene</a></div></div></nav>
+<nav><div class="kap"><a class="logo" href="#"><i><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></i>Myste Medya</a>
+ <div class="bag"><a href="#oyunlar">Oyunlar</a><a href="#fiyat">Fiyatlar</a><a href="#kurulum">Kurulum</a><a href="#siparis">Sipariş</a></div>
+ <div class="sag"><a class="btn kucuk" href="#demo">Ücretsiz dene</a></div></div></nav>
+
 <header class="hero"><div class="kap"><div>
- <h1>Canlı yayınını <em>izleyicinin oynadığı</em> bir oyuna çevir.</h1>
- <p>Beğeni, yorum ve hediyelerle oynanan Türkçe TikTok LIVE oyunları. Program kurulumu yok; tek link ile 30 saniyede yayında.</p>
- <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#demo">1 gün ücretsiz dene</a><a class="btn k" href="#oyunlar">Oyunları incele</a></div>
- <div class="ozellik"><div><b>7+</b>oyun</div><div><b>250₺</b>aylık başlayan</div><div><b>PC + Android</b>kurulum</div><div><b>Telifsiz</b>müzik</div></div></div>
- <div class="kolaj"><img src="img/nazar.jpg" alt=""><img src="img/halay.jpg" alt=""><img src="img/kapadokya.jpg" alt=""></div></div></header>
-<section id="oyunlar"><div class="kap"><div class="baslik"><div><h2>Oyunlar</h2><p>Bir oyuna dokun: deneme modunda açılır, yorum ve hediye göndererek kendin oyna.</p></div>
- <div class="sekme"><button class="a" data-k="3b">3B</button><button data-k="2b">2B</button></div></div><div class="izgara" id="izgara"></div></div></section>
-<section id="fiyat"><div class="kap"><div class="baslik"><div><h2>Fiyatlar</h2><p>Her pakette 1 gün ücretsiz deneme. Ödeme havale/EFT ile, komisyonsuz.</p></div></div>
+ <div class="etiket"><i></i>TikTok LIVE için etkileşimli oyunlar</div>
+ <h1>Canlı yayınını <span>izleyicinin oynadığı</span> bir oyuna çevir.</h1>
+ <p class="l">İzleyicilerin beğeni, yorum ve hediyeleriyle oynanan Türkçe oyunlar. Program kurmadan, tek bir linkle dakikalar içinde yayında.</p>
+ <div class="dg"><button class="btn" data-dene="halay"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Bir oyunu şimdi dene</button><a class="btn k" href="#demo">1 gün ücretsiz kullan</a></div>
+ <div class="olcu"><div><b id="oSay">12</b>oyun</div><div><b>250₺</b>aylık, oyun başına</div><div><b>PC + Android</b>kurulum</div><div><b>1 gün</b>ücretsiz deneme</div></div></div>
+ <div><div class="mock" data-dene="halay" role="button" tabindex="0" aria-label="Halay Meydanı oyununu dene"><img src="img/halay.jpg?v=3" alt="Halay Meydanı oyunundan görüntü">
+  <div class="m-ust"><div class="yy"><i></i>Halay Meydanı</div><div class="m-sag"><span class="rozet">CANLI</span><span class="izs">1,2B</span></div></div>
+  <div class="m-soh"><div><b>Zeynep</b>Ben de halaya!</div><div><b>Mert</b>Gül gönderdi 🌹</div><div><b>Elif</b>Mendil bende 😄</div></div>
+  <div class="m-alt"><span>Yorum yaz…</span><em>🎁</em><em>❤️</em></div>
+  <div class="oyna"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Canlı dene</div></div></div>
+</div></header>
+
+<section style="padding-top:0;border-top:0"><div class="kap"><div class="adim">
+ <div><small>1</small><h3>Oyununu seç</h3><p>Yayınının havasına uyan oyunu seç, aşağıdan izleyici gibi deneyerek gör.</p></div>
+ <div><small>2</small><h3>Linki yayına ekle</h3><p>Sana özel linki LIVE Studio, OBS ya da Android ekran paylaşımına ekle.</p></div>
+ <div><small>3</small><h3>İzleyiciler oynasın</h3><p>Beğeni, yorum ve hediyeler oyunda anında karşılık bulur; skorlar kalıcıdır.</p></div>
+</div></div></section>
+
+<section id="oyunlar"><div class="kap"><div class="baslik"><div><div class="ust-y">Oyunlar</div><h2>İzleyici gibi dene</h2><p>Bir oyuna dokun: canlı yayın görünümünde açılır. Yorum yaz, beğen, hediye gönder; oyunda anında görürsün.</p></div>
+ <div class="sekme" role="tablist"><button class="a" data-k="3b" role="tab">3B oyunlar</button><button data-k="2b" role="tab">2B oyunlar</button></div></div><div class="izgara" id="izgara"></div></div></section>
+
+<section id="fiyat"><div class="kap"><div class="baslik"><div><div class="ust-y">Fiyatlar</div><h2>Oyun başına, aylık</h2><p>İstediğin oyunu seç, sadece onu öde. Her oyunda 1 gün ücretsiz deneme. Ödeme havale/EFT ile, komisyonsuz.</p></div></div>
  <div class="fiyatlar">
-  <div class="paket"><h3>Tek 2B oyun</h3><div class="tl">250₺ <small>/ay</small></div><ul><li>Seçtiğin 1 oyun</li><li>Sesli veya sessiz</li><li>Kalıcı skor tablosu</li></ul><a class="btn k" href="#siparis" data-p="Tek 2B oyun - 250 TL/ay">Sipariş ver</a></div>
-  <div class="paket o"><h3>Tek 3B oyun</h3><div class="tl">350₺ <small>/ay</small></div><ul><li>Seçtiğin 1 oyun</li><li>Animasyonlu 3B karakterler</li><li>Sesli veya sessiz</li></ul><a class="btn k" href="#siparis" data-p="Tek 3B oyun - 350 TL/ay">Sipariş ver</a></div>
- </div><p style="color:var(--soluk);font-size:14px;margin-top:16px">Yayınına özel oyun, logolu sürüm veya ajans paketi için sipariş formuna not bırak.</p></div></section>
-<section id="kurulum"><div class="kap"><div class="baslik"><div><h2>Kurulum</h2><p>Sana verilen linki yayın programına eklemen yeterli.</p></div></div>
- <div class="ikili">
-  <div class="kutu"><h3>Bilgisayar · TikTok LIVE Studio</h3><ol><li>Yayın yönünü <b>Dikey</b> yap.</li><li><b>Kaynak ekle → Bağlantı</b>, linki yapıştır.</li><li><b>Özel çözünürlük:</b> 1080 × 1920.</li><li>Önizlemede <b>Doldur</b> seç ve yayını başlat.</li></ol><p style="color:var(--soluk);font-size:13px;margin:10px 0 0">OBS / Streamlabs: Tarayıcı kaynağı, aynı link, 1080×1920.</p></div>
-  <div class="kutu"><h3>Telefon / Tablet · Android</h3><ol><li>Linki <b>Chrome</b>'da aç, ekrana bir kez dokun.</li><li>Ekran zaman aşımını en uzuna al.</li><li>TikTok → <b>+ → CANLI → Mobil oyun</b> ile başlat.</li><li>Chrome'a dön ve yayın boyunca oyunda kal.</li></ol></div>
-  <div class="kutu"><h3>Sesli / sessiz</h3><ol><li><b>Sesli:</b> sunucu hediye ve takiplere sesli teşekkür eder, yorumlara cevap verir.</li><li><b>Sessiz:</b> yalnızca oyun efektleri ve müzik.</li><li>Sipariş verirken tercihini yaz; sonradan değiştirilebilir.</li></ol></div>
-  <div class="kutu"><h3>Müzik</h3><ol><li>Oyunların kendi telifsiz müzikleri vardır.</li><li>Ses seviyesi: linkin sonuna <code>&muzik=30</code> (kapatmak için <code>&muzik=0</code>).</li><li>Kendi müziğin: <code>&muzikurl=https://…/sarki.mp3</code></li></ol><p style="color:var(--soluk);font-size:13px;margin:10px 0 0">TikTok telifli şarkıları algılayıp yayının sesini kısabilir; kendi müziğini eklerken hakkına sahip olduğundan emin ol.</p></div>
+  <div class="paket"><h3>2B oyun</h3><div class="tl">250₺ <small>/ ay</small></div><div class="acik">Hafif, her cihazda akıcı 2B oyunlar.</div>
+   <ul><li>Seçtiğin 1 oyun</li><li>1 gün ücretsiz deneme</li><li>Sesli veya sessiz sunucu</li><li>Kalıcı skor tablosu</li><li>Telifsiz müzik</li></ul>
+   <div class="dg"><a class="btn k" href="#demo">Ücretsiz dene</a><a class="btn" href="#siparis" data-p="Tek 2B oyun - 250 TL/ay">Sipariş ver</a></div></div>
+  <div class="paket o"><h3>3B oyun <small>Animasyonlu</small></h3><div class="tl">350₺ <small>/ ay</small></div><div class="acik">İzleyicilerin 3B karakter olarak sahneye çıktığı oyunlar.</div>
+   <ul><li>Seçtiğin 1 oyun</li><li>1 gün ücretsiz deneme</li><li>Animasyonlu 3B karakterler</li><li>Sesli veya sessiz sunucu</li><li>Telifsiz müzik</li></ul>
+   <div class="dg"><a class="btn k" href="#demo">Ücretsiz dene</a><a class="btn" href="#siparis" data-p="Tek 3B oyun - 350 TL/ay">Sipariş ver</a></div></div>
  </div></div></section>
+
+<section id="kurulum"><div class="kap"><div class="baslik"><div><div class="ust-y">Kurulum</div><h2>Tek link, birkaç adım</h2><p>Sana verilen linki yayın programına eklemen yeterli. Kurulacak program yok.</p></div></div>
+ <div class="ikili">
+  <div class="kutu"><h3><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></i>Bilgisayar · TikTok LIVE Studio</h3><ol><li>Yayın yönünü <b>Dikey</b> yap.</li><li><b>Kaynak ekle → Bağlantı</b>, linki yapıştır.</li><li><b>Özel çözünürlük:</b> 1080 × 1920.</li><li>Önizlemede <b>Doldur</b> seç ve yayını başlat.</li></ol><div class="not"><b style="color:var(--soluk)">OBS / Streamlabs:</b> Tarayıcı kaynağı ekle, aynı link, 1080 × 1920.</div></div>
+  <div class="kutu"><h3><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg></i>Telefon / Tablet · Android</h3><ol><li>Linki <b>Chrome</b>'da aç, ekrana bir kez dokun.</li><li>Ekran zaman aşımını en uzuna al.</li><li>TikTok → <b>+ → CANLI → Mobil oyun</b> ile ekran paylaşımını başlat.</li><li>Chrome'a dön ve yayın boyunca oyunda kal.</li></ol></div>
+  <div class="kutu"><h3><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></i>Sesli / sessiz</h3><ol><li><b>Sesli:</b> sunucu hediye ve takiplere sesli teşekkür eder, yorumlara cevap verir.</li><li><b>Sessiz:</b> yalnızca oyun efektleri ve müzik.</li><li>Sipariş verirken tercihini yaz; sonradan değiştirilebilir.</li></ol></div>
+  <div class="kutu"><h3><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></i>Müzik</h3><ol><li>Oyunların kendi <b>telifsiz</b> müzikleri vardır.</li><li>Ses seviyesi: linkin sonuna <code>&amp;muzik=30</code> (0–100; kapatmak için <code>&amp;muzik=0</code>).</li><li>Kendi müziğin: <code>&amp;muzikurl=https://…/sarki.mp3</code></li></ol><div class="not">TikTok telifli şarkıları algılayıp yayının sesini kısabilir; kendi müziğini eklerken hakkına sahip olduğundan emin ol.</div></div>
+ </div></div></section>
+
 <section id="demo"><div class="kap ikili">
- <div><h2 style="font-size:28px">1 gün ücretsiz deneme</h2><p style="color:var(--soluk)">TikTok kullanıcı adını yaz, deneme linkin anında oluşsun. Kart veya ödeme bilgisi istenmez. Her hesap için bir kez geçerlidir.</p></div>
- <div class="kutu"><label>TikTok kullanıcı adı</label><input id="dTik" placeholder="@kullaniciadi"><label>Oyun</label><select id="dOyun"></select>
-  <button class="btn" id="dBtn" style="width:100%;margin-top:14px">Deneme linkimi oluştur</button><div class="sonuc" id="dSonuc"></div></div></div></section>
+ <div class="form-y"><div class="ust-y">Ücretsiz deneme</div><h2>1 gün ücretsiz kullan</h2><p>TikTok kullanıcı adını yaz, deneme linkin anında oluşsun. Gerçek yayınında 24 saat boyunca kullan.</p>
+  <ul><li>Kart veya ödeme bilgisi istenmez</li><li>Her hesap için bir kez geçerlidir</li><li>Beğenirsen aynı oyunla devam edersin</li></ul></div>
+ <div class="kutu"><label for="dTik">TikTok kullanıcı adı</label><input id="dTik" placeholder="@kullaniciadi" autocomplete="off"><label for="dOyun">Oyun</label><select id="dOyun"></select>
+  <button class="btn" id="dBtn" style="width:100%;margin-top:16px">Deneme linkimi oluştur</button><div class="sonuc" id="dSonuc"></div></div></div></section>
+
 <section id="siparis"><div class="kap ikili">
- <div><h2 style="font-size:28px">Sipariş</h2><p style="color:var(--soluk)">Formu gönder, ödeme bilgilerini sana iletelim. Ödeme sonrası lisansın hemen açılır.</p><p style="color:var(--soluk);font-size:14px">İletişim: bilesikyatirim@gmail.com · TikTok @bilesikyatirim</p></div>
- <div class="kutu"><label>Ad</label><input id="sAd"><label>TikTok kullanıcı adı</label><input id="sTik" placeholder="@kullaniciadi"><label>Paket</label><select id="sPaket">
-  <option>Tek 2B oyun - 250 TL/ay</option><option>Tek 3B oyun - 350 TL/ay</option><option>Özel oyun / otomasyon</option></select>
-  <label>İletişim (TikTok, Instagram, e-posta veya telefon)</label><input id="sIlet"><label>Not</label><textarea id="sNot" rows="2" placeholder="Hangi oyun, sesli/sessiz, özel istek"></textarea>
-  <button class="btn" id="sBtn" style="width:100%;margin-top:14px">Siparişi gönder</button><div class="sonuc" id="sSonuc"></div></div></div></section>
-<footer><div class="kap">© Myste Medya · TikTok LIVE oyunları ve yayın otomasyonu. 3B modeller: Kenney (CC0). TikTok, ByteDance Ltd.'nin markasıdır; bu site TikTok ile bağlantılı değildir.</div></footer>
-<div class="mod" id="mod"><div class="ic"><div class="ekran"><button class="kapat" id="kapat" aria-label="Kapat">✕</button><iframe id="oyn" title="Oyun"></iframe></div>
- <div class="kontrol"><h3 id="mBas">Oyun</h3><p class="ac2" style="color:var(--soluk);font-size:13px;margin:0">İzleyici sensin. Yorum yaz ya da hediye gönder; oyunda anında görünür. (Simülasyon, ücret alınmaz.)</p>
-  <label>Adın</label><input id="mAd" value="Sen" maxlength="18"><label>Yorum</label><div style="display:flex;gap:6px"><input id="mYorum" placeholder="Yorum yaz…"><button class="btn kucuk" id="mGonder">Gönder</button></div>
-  <div class="k2"><button data-o="begeni"><b>❤️</b>Beğen</button><button data-o="takip"><b>➕</b>Takip</button><button data-h="Rose" data-e="1"><b>🌹</b>Gül</button>
-  <button data-h="Doughnut" data-e="30"><b>🍩</b>Donut</button><button data-h="Hat and Mustache" data-e="99"><b>🎩</b>Şapka</button><button data-h="Galaxy" data-e="1000"><b>🌌</b>Galaksi</button></div>
-  <a class="btn ac2" href="#demo" id="mDemo" style="margin-top:10px">Bu oyunu ücretsiz dene</a></div></div></div>
+ <div class="form-y"><div class="ust-y">Sipariş</div><h2>Oyununu kirala</h2><p>Formu gönder, ödeme bilgilerini sana iletelim. Ödeme sonrası lisansın hemen açılır.</p><p style="font-size:14px;margin-top:18px">İletişim: bilesikyatirim@gmail.com · TikTok @bilesikyatirim</p></div>
+ <div class="kutu"><label for="sAd">Ad</label><input id="sAd" autocomplete="name"><label for="sTik">TikTok kullanıcı adı</label><input id="sTik" placeholder="@kullaniciadi"><label for="sOyun">Oyun</label><select id="sOyun"></select><label for="sPaket">Paket</label><select id="sPaket">
+  <option>Tek 2B oyun - 250 TL/ay</option><option>Tek 3B oyun - 350 TL/ay</option></select>
+  <label for="sIlet">İletişim (TikTok, Instagram, e-posta veya telefon)</label><input id="sIlet"><label for="sNot">Not</label><textarea id="sNot" rows="2" placeholder="Sesli/sessiz tercihi, özel istek"></textarea>
+  <button class="btn" id="sBtn" style="width:100%;margin-top:16px">Siparişi gönder</button><div class="sonuc" id="sSonuc"></div></div></div></section>
+
+<footer><div class="kap"><div><b>© Myste Medya</b> · Canlı yayın oyunları ve yayın otomasyonu.</div><div>3B modeller: Kenney (CC0). TikTok, ByteDance Ltd.'nin markasıdır; bu site TikTok ile bağlantılı değildir.</div></div></footer>
+
+<!-- canli deneme penceresi -->
+<div class="mod" id="mod" role="dialog" aria-modal="true" aria-label="Oyunu dene">
+ <button class="mkapat" id="mKapat" aria-label="Kapat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+ <div class="ic">
+  <div class="tel"><div class="ekran" id="ekran">
+   <iframe id="oyn" title="Oyun" allow="autoplay"></iframe>
+   <div class="yuk" id="yuk"><span></span></div>
+   <div class="kat" id="kat">
+    <div class="golge u"></div><div class="golge a"></div>
+    <div class="ust">
+     <div class="yay"><div class="av" id="yAv"></div><div class="ad"><b id="yAd">Oyun</b><span id="yBeg">0 beğeni</span></div><button class="takip" id="yTakip">Takip et</button></div>
+     <div class="sag"><div class="izl" id="izl"></div><div class="sayac"><span class="rozet">CANLI</span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0z"/></svg><span id="izSay">0</span></div>
+      <button class="ikapat" id="iKapat" aria-label="Kapat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    </div>
+    <div class="pin" id="pin" role="button"><i>Deneme</i><span>Bu oyunu yayınında 1 gün ücretsiz kullan</span></div>
+    <div class="ipucu" id="ipucu">Sen bir izleyicisin.<br>Yorum yaz, beğen ya da hediye gönder.</div>
+    <div class="hbant" id="hbant"></div>
+    <div class="soh" id="soh" aria-live="polite"></div>
+    <div class="altc">
+     <form id="yForm" autocomplete="off"><input id="yIn" maxlength="60" placeholder="Yorum yaz…" enterkeyhint="send"><button aria-label="Gönder"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6 3.3 10l12.6 2-12.6 2z"/></svg></button></form>
+     <button class="yb" id="bPay" aria-label="Paylaş"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M14 4.5V9C7 9.6 3.6 14 3 20c2.4-3.2 5.6-4.8 11-4.9V19.5l7.5-7.5z"/></svg></button>
+     <button class="yb hed" id="bHed" aria-label="Hediye gönder"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5V20h14v-7.5M12 8.5V20M12 8.5C10.5 4 7 4.5 7 6.5S11 8.5 12 8.5zm0 0c1.5-4.5 5-4 5-2s-4 2-5 2z"/></svg></button>
+     <button class="yb beg" id="bBeg" aria-label="Beğen"><svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.4 3 4.5 6.9 4.5c2.2 0 3.7 1.2 5.1 3 1.4-1.8 2.9-3 5.1-3 3.9 0 6 3.9 4.5 7.2C19.5 16.4 12 21 12 21z"/></svg><span class="ip" id="begN"></span></button>
+    </div>
+    <div class="hpan" id="hpan">
+     <div class="bas"><b>Hediye gönder</b><span>Deneme modu · ücret alınmaz<button id="hKapat" aria-label="Kapat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></span></div>
+     <div class="hgrid" id="hgrid"></div>
+     <div class="dip">Aynı hediyeye üst üste dokun: kombo yapar.</div>
+    </div>
+   </div>
+  </div></div>
+  <aside class="yan" id="yan">
+   <div class="tur"><span class="rozet">CANLI</span><span>Deneme görünümü · <span id="ySure">3B oyun</span></span></div>
+   <h2 id="mBas">Oyun</h2>
+   <p class="d" id="mAc"></p>
+   <h4>Nasıl oynanır</h4><div class="nas" id="mNas">Beğen, yorum yaz ya da hediye gönder.</div>
+   <h4>Hediyeler ve etkileri</h4><div class="hl" id="mHl"></div>
+   <h4>Görünen adın</h4><input id="mAd" value="Sen" maxlength="18">
+   <div class="dg"><button class="btn" id="mDemo">1 gün ücretsiz kullan</button><button class="btn k" id="mSip">Sipariş ver</button></div>
+   <p class="sim">Bu bir simülasyondur: diğer izleyiciler ve sohbet örnek amaçlıdır, gönderdiğin hediyelerden ücret alınmaz.</p>
+  </aside>
+ </div>
+</div>
+
 <script>
 const O=[{id:'halay',k:'3b',ad:'Halay Meydanı',d:'İzleyiciler 3B karakter olarak halaya katılır; en coşkulu olan mendili kapıp halaybaşı olur.'},
  {id:'konvoy',k:'3b',ad:'Düğün Konvoyu',d:'Her izleyicinin bir arabası var. Beğeni gaz, hediye nitro. Salona ilk varan kazanır.'},
  {id:'kapadokya',k:'3b',ad:'Balon Festivali',d:'Kapadokya üzerinde fotoğraflı sıcak hava balonları; en yükseğe çıkan kazanır.'},
  {id:'martilar',k:'3b',ad:'Boğaz Martıları',d:'İzleyiciler vapurun peşindeki martılar. Beğeniyle kanat çırp, simitleri kap; hediyeyle rakibi dondur, simit çal.'},
  {id:'cayocagi',k:'3b',ad:'Çay Ocağı Kulesi',d:'Sıran gelince vinçten bardağın düşer; ortalayan puan alır, kuleyi deviren kaybeder. Hediye tepsi ve semaver düşürür.'},
+ {id:'mangal',k:'3b',ad:'Mangal Ustası',d:'Yorum yaz, şişin mangala gelsin. Beğeniyle közü harla, pişir ve servis et; en usta mangalcı kazanır.',gorselYok:'🍢'},
  {id:'nazar',k:'2b',ad:'Nazar Savunması',d:'Kem gözler yayına saldırır; her izleyici ateş eden bir nazar boncuğu olur.'},
  {id:'kediler',k:'2b',ad:'Sokak Kedileri',d:'Mama döken izleyiciyi kediler takip eder; en büyük kedi ordusu kazanır.'},
  {id:'halat',k:'2b',ad:'Halat Çekme',d:'Kırmızı ve Mavi takım. Yorumla takım seç, beğeniyle çek.'},
- {id:'balon',k:'2b',ad:'Balon Arenası',d:'Fotoğraflı balonlar büyüyüp birbirini ısırır; hediyeler süper güç verir.',canliYok:1},
+ {id:'muhtar',k:'2b',ad:'Muhtarlık Seçimi',d:'İzleyiciler aday olur, numarayla oy toplar; hediyeyle rakibi dondur, oy çal, yer değiştir.'},
  {id:'bilmece',k:'2b',ad:'Bilmece Kahvehanesi',d:'Bilmeceler sorulur, ilk bilen puanı alır. Gül harf açar; hediyeyle rakibi dondurup puan çalabilirsin.'},
- {id:'muhtar',k:'2b',ad:'Muhtarlık Seçimi',d:'İzleyiciler aday olur, numarayla oy toplar; hediyeyle rakibi dondur, oy çal, yer değiştir.'}];
-const IZ=document.getElementById('izgara');
-function ciz(k){IZ.innerHTML=O.filter(o=>o.k===k).map(o=>o.y?`<div class="oyun y"><div class="g">${o.y}</div><div class="i"><h3>${o.ad}</h3><p>Yakında · ${o.d}</p></div></div>`:
- `<div class="oyun" data-id="${o.id}"><div class="g"><img loading="lazy" src="img/${o.id}.jpg?v=3" alt="${o.ad}"><span>${o.k.toUpperCase()}</span></div><div class="i"><h3>${o.ad}</h3><p>${o.d}</p></div></div>`).join('')}
+ {id:'balon',k:'2b',ad:'Balon Arenası',d:'Fotoğraflı balonlar büyüyüp birbirini ısırır; hediyeler süper güç verir.',canliYok:1}];
+const $=i=>document.getElementById(i),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('oSay').textContent=O.length;
+/* ---- kartlar ---- */
+const IZ=$('izgara'),OYNA='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+function ciz(k){IZ.innerHTML=O.filter(o=>o.k===k).map(o=>`<button class="oyun" data-id="${o.id}"><div class="g">${o.gorselYok?`<div class="yer"><b>${o.gorselYok}</b>${o.ad}</div>`:`<img loading="lazy" src="img/${o.id}.jpg?v=3" alt="${o.ad}">`}<span class="tur">${o.k.toUpperCase()}</span><span class="dene">${o.canliYok?'Ücretsiz deneme iste':OYNA+'Canlı dene'}</span></div><div class="i"><h3>${o.ad}</h3><p>${o.d}</p></div></button>`).join('')}
 ciz('3b');document.querySelectorAll('.sekme button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.sekme button').forEach(x=>x.classList.remove('a'));b.classList.add('a');ciz(b.dataset.k)});
-const M=document.getElementById('mod'),F=document.getElementById('oyn');let aktif=null;
-IZ.onclick=e=>{const c=e.target.closest('.oyun[data-id]');if(!c)return;const o=O.find(x=>x.id===c.dataset.id);
- if(o.canliYok){location.hash='demo';document.getElementById('dOyun').value=o.id;return}aktif=o;document.getElementById('mBas').textContent=o.ad;F.src=`oyun/${o.id}.html?sim=1&demo=1&muzik=35&v=3`;M.classList.add('ac');document.body.style.overflow='hidden'};
-function kapat(){M.classList.remove('ac');F.src='about:blank';document.body.style.overflow=''}document.getElementById('kapat').onclick=kapat;M.onclick=e=>{if(e.target===M)kapat()};
-document.getElementById('mDemo').onclick=()=>{document.getElementById('dOyun').value=aktif.id;kapat()};
-const ben=()=>{const a=document.getElementById('mAd').value.trim()||'Sen';return{id:'site-'+a,ad:a,foto:''}};const yolla=x=>F.contentWindow.postMessage({oy:1,...ben(),...x},'*');
-document.getElementById('mGonder').onclick=()=>{const y=document.getElementById('mYorum');if(y.value.trim()){yolla({t:'yorum',metin:y.value.trim()});y.value=''}};
-document.getElementById('mYorum').onkeydown=e=>{if(e.key==='Enter')document.getElementById('mGonder').click()};
-document.querySelectorAll('.k2 button').forEach(b=>b.onclick=()=>b.dataset.h?yolla({t:'hediye',hediye:b.dataset.h,elmas:+b.dataset.e,adet:1}):yolla({t:b.dataset.o,adet:10}));
-document.getElementById('dOyun').innerHTML=O.filter(o=>!o.y).map(o=>`<option value="${o.id}">${o.ad}</option>`).join('');
+IZ.onclick=e=>{const c=e.target.closest('.oyun[data-id]');if(c)ac(c.dataset.id)};
+document.querySelectorAll('[data-dene]').forEach(b=>{b.onclick=()=>ac(b.dataset.dene);b.onkeydown=e=>{if(e.key==='Enter')ac(b.dataset.dene)}});
+function demoyaGit(id){$('dOyun').value=id;$('demo').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('dTik').focus({preventScroll:true}),600)}
+
+/* ================= canli deneme ================= */
+const HED=[{h:'Rose',ad:'Gül',e:'🌹',j:1,et:'güç'},{h:'Finger Heart',ad:'Kalp',e:'💖',j:5,et:'kalkan'},{h:'Perfume',ad:'Parfüm',e:'💐',j:20,et:'lideri dondur'},
+ {h:'Doughnut',ad:'Donut',e:'🍩',j:30,et:'liderden çal'},{h:'Hat and Mustache',ad:'Şapka',e:'🎩',j:99,et:'liderle yer değiş'},{h:'Galaxy',ad:'Galaksi',e:'🌌',j:1000,et:'bomba · 2x'}];
+const HADI={};HED.forEach(x=>HADI[x.h]=x);
+const M=$('mod'),F=$('oyn'),SOH=$('soh'),EK=$('ekran');
+let aktif=null,zam=[],begTop=0,begBen=0,izSay=0,oyunOlay=0,gorulen=new Set,sonKatil=0,sonHd={},kapatT=0;
+const RENK=['#e85d75','#e8915d','#d4b34a','#5dbb7a','#4fb3c9','#5d7fe8','#9a6ce8','#d16cc0'];
+const renk=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return RENK[Math.abs(h)%RENK.length]};
+const sayiF=n=>n>=1e6?(n/1e6).toFixed(1).replace('.',',')+'M':n>=1e4?(n/1e3).toFixed(1).replace('.',',')+'B':n.toLocaleString('tr-TR');
+const benAd=()=>($('mAd').value.trim()||'Sen').slice(0,18);
+const zt=(f,ms)=>{const t=setTimeout(f,ms);zam.push(t);return t},zi=(f,ms)=>{const t=setInterval(f,ms);zam.push(t);return t};
+
+function ac(id){const o=O.find(x=>x.id===id);if(!o)return;if(o.canliYok){demoyaGit(o.id);return}
+ aktif=o;oyunOlay=0;gorulen=new Set;begTop=3000+Math.random()*9000|0;begBen=0;izSay=140+Math.random()*260|0;sonHd={};
+ $('mBas').textContent=o.ad;$('mAc').textContent=o.d;$('ySure').textContent=o.k.toUpperCase()+' oyun · '+(o.k==='3b'?'350':'250')+'₺/ay';
+ $('yAd').textContent=o.ad;$('yAv').style.backgroundImage=o.gorselYok?'linear-gradient(135deg,#7b6cff,#c06cff)':`url(img/${o.id}.jpg?v=3)`;
+ $('yuk').style.backgroundImage=o.gorselYok?'none':`url(img/${o.id}.jpg?v=3)`;$('yuk').classList.remove('git');
+ $('yTakip').textContent='Takip et';$('yTakip').classList.remove('ok');$('begN').style.display='none';
+ $('mNas').textContent='Beğen, yorum yaz ya da hediye gönder.';hediyeCiz(HED);
+ SOH.innerHTML='';$('hbant').innerHTML='';$('hpan').classList.remove('ac');$('ipucu').classList.remove('git');
+ izleyiciCiz();sayacGuncel();
+ F.src=`oyun/${o.id}.html?sim=1&demo=1&muzik=35&v=3`;
+ M.classList.add('ac');document.body.style.overflow='hidden';
+ msj({sis:1,ad:'',metin:'Canlı yayına hoş geldin! Topluluk kurallarına uy, saygılı ol.'});
+ zt(()=>$('ipucu').classList.add('git'),5200);
+ zi(()=>{izSay=Math.max(60,izSay+((Math.random()*9|0)-3));sayacGuncel()},2600);
+ zt(()=>{if(!oyunOlay)yedekSohbet()},4500); // oyundan olay gelmezse kendi akisimiz
+}
+function kapat(){if(!M.classList.contains('ac'))return;M.classList.remove('ac');F.src='about:blank';document.body.style.overflow='';zam.forEach(t=>{clearTimeout(t);clearInterval(t)});zam=[];aktif=null}
+$('mKapat').onclick=kapat;$('iKapat').onclick=kapat;M.onclick=e=>{if(e.target===M||e.target.classList.contains('ic'))kapat()};
+addEventListener('keydown',e=>{if(e.key==='Escape'&&M.classList.contains('ac')){if($('hpan').classList.contains('ac'))$('hpan').classList.remove('ac');else kapat()}});
+$('mDemo').onclick=$('pin').onclick=()=>{const id=aktif.id;kapat();demoyaGit(id)};
+$('mSip').onclick=()=>{const o=aktif;kapat();$('sOyun').value=o.id;$('sOyun').onchange();$('siparis').scrollIntoView({behavior:'smooth'})};
+
+function sayacGuncel(){$('izSay').textContent=sayiF(izSay);$('yBeg').textContent=sayiF(begTop)+' beğeni'}
+function izleyiciCiz(){const a=['Ayşe','Mert','Zeynep'];$('izl').innerHTML=a.map(x=>`<i style="background:${renk(x)}">${x[0]}</i>`).join('')}
+
+/* oyun iframe'i yuklendiginde: canli gorunum icin oyunun kendi alt seridini gizle, ust seridi kaydir, olaylari dinle */
+F.addEventListener('load',()=>{if(!aktif)return;setTimeout(()=>$('yuk').classList.add('git'),350);
+ let w;try{w=F.contentWindow;const d=F.contentDocument;if(!d||!d.head)return;
+  const st=d.createElement('style');st.textContent='.h-alt{display:none!important}.h-ust{top:calc(1.6vh + 58px)!important}.h-ilk{top:calc(8.4vh + 58px)!important}.h-vit{top:calc(22vh + 30px)!important}';d.head.appendChild(st);
+  const bagla=(n=0)=>{if(!aktif)return;const OY=w.OY;if(!OY||!OY.on){if(n<20)zt(()=>bagla(n+1),250);return}
+   if(OY.__site)return;OY.__site=1;OY.on(oyunOlayi);
+   const ak=OY.akis;if(ak)OY.akis=(t,r)=>{try{ak(t,r)}catch(x){}const b=benAd();if(String(t).includes(b))msj({oyn:1,ad:'',metin:String(t)})};
+   zt(()=>hudOku(d),900);zt(()=>hudOku(d),2500)};bagla();
+  // oyun alanina cift dokunma = begeni
+  let son=0;d.addEventListener('pointerdown',e=>{const t=performance.now();if(t-son<320){const r=F.getBoundingClientRect(),k=EK.getBoundingClientRect();begen(e.clientX*(r.width/(w.innerWidth||r.width))+r.left-k.left,e.clientY*(r.height/(w.innerHeight||r.height))+r.top-k.top);son=0}else son=t},{passive:true});
+ }catch(x){}});
+function hudOku(d){try{const bas=d.querySelector('.h-bas span');if(bas&&bas.textContent.trim())$('mNas').textContent=bas.textContent.trim();
+ const liste=[...d.querySelectorAll('.h-hed div')].map(x=>{const b=x.querySelector('b');const bt=b?b.textContent:'';return{ad:bt.replace(/^\S+\s/,'').trim(),et:x.textContent.slice(bt.length).trim()}});
+ if(liste.length)hediyeCiz(HED.map(h=>{const m=liste.find(l=>l.ad.toLocaleLowerCase('tr')===h.ad.toLocaleLowerCase('tr'));return m&&m.et?{...h,et:m.et}:h}))}catch(x){}}
+
+/* ---- sohbet ---- */
+function msj(m){const d=document.createElement('div');d.className='msj'+(m.sen?' sen':'')+(m.hd?' hd':'')+(m.sis?' sis':'')+(m.oyn?' oyn':'');
+ const av=m.ad?`<span class="a" style="background:${m.sen?'var(--vurgu)':renk(m.ad)}">${esc(m.ad[0].toLocaleUpperCase('tr'))}</span>`:'';
+ d.innerHTML=av+`<div class="m">${m.ad?`<b>${esc(m.ad)}</b>`:''}${esc(m.metin)}</div>`;SOH.appendChild(d);while(SOH.children.length>30)SOH.firstChild.remove()}
+function oyunOlayi(e){if(!aktif||!e||!e.t)return;if(String(e.id||'').startsWith('site-'))return;oyunOlay++;const ad=e.ad||'izleyici';
+ if(!gorulen.has(ad)&&e.t!=='hediye'){gorulen.add(ad);const t=Date.now();if(t-sonKatil>2400){sonKatil=t;izSay++;msj({sis:1,ad,metin:'katıldı'});return}}
+ if(e.t==='begeni'){begTop+=e.adet||1;sayacGuncel()}
+ else if(e.t==='yorum')msj({ad,metin:e.metin||''});
+ else if(e.t==='hediye'){const h=HADI[e.hediye]||{ad:e.hediye,e:'🎁'};msj({hd:1,ad,metin:`${h.ad} gönderdi ${h.e}`});bant(ad,h,false)}
+ else if(e.t==='takip')msj({sis:1,ad,metin:'yayıncıyı takip etti'});
+ else if(e.t==='paylasim')msj({sis:1,ad,metin:'yayını paylaştı'})}
+function yedekSohbet(){const AD=['Ayşe','Mehmet','Zeynep','Emre','Elif','Burak','Selin','Can','Deniz','Kerem','Ece','Mert'],Y=['Selam herkese','Hadi hadi!','Ben de varım','Çok iyi oyun','Kim kazanır?','Süpersin','Helal','Bir daha!'];
+ zi(()=>{const a=AD[Math.random()*AD.length|0];Math.random()<.75?msj({ad:a,metin:Y[Math.random()*Y.length|0]}):msj({hd:1,ad:a,metin:'Gül gönderdi 🌹'});begTop+=Math.random()*20|0;sayacGuncel()},2200)}
+
+/* ---- oyuna gonder ---- */
+const yolla=x=>{try{F.contentWindow.postMessage({oy:1,id:'site-'+benAd(),ad:benAd(),foto:'',...x},'*')}catch(e){}};
+$('yIn').oninput=()=>$('yForm').classList.toggle('dolu',!!$('yIn').value.trim());
+$('yForm').onsubmit=e=>{e.preventDefault();const v=$('yIn').value.trim();if(!v)return;yolla({t:'yorum',metin:v});msj({sen:1,ad:benAd(),metin:v});$('yIn').value='';$('yForm').classList.remove('dolu')};
+$('yTakip').onclick=()=>{if($('yTakip').classList.contains('ok'))return;yolla({t:'takip'});$('yTakip').textContent='Takipte';$('yTakip').classList.add('ok');msj({sen:1,ad:benAd(),metin:'yayıncıyı takip etti'})};
+$('bPay').onclick=()=>{yolla({t:'paylasim'});msj({sen:1,ad:benAd(),metin:'yayını paylaştı'})};
+
+/* begeni + ucan kalpler */
+const KR=['#ff4d6d','#ff7a59','#ffb02e','#ff5fa2','#a78bfa','#ff3b5c'];let begBek=0,begT=0;
+function kalp(x,y){if(EK.querySelectorAll('.kalp').length>40)return;const k=document.createElement('div');k.className='kalp';
+ k.innerHTML=`<svg viewBox="0 0 24 24" width="30" height="30" fill="${KR[Math.random()*KR.length|0]}"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.4 3 4.5 6.9 4.5c2.2 0 3.7 1.2 5.1 3 1.4-1.8 2.9-3 5.1-3 3.9 0 6 3.9 4.5 7.2C19.5 16.4 12 21 12 21z"/></svg>`;
+ k.style.left=(x-15)+'px';k.style.top=(y-15)+'px';k.style.setProperty('--x',((Math.random()*70)-45)+'px');k.style.setProperty('--r',((Math.random()*40)-20)+'deg');k.style.setProperty('--s',(1.3+Math.random()*.7)+'s');
+ EK.appendChild(k);setTimeout(()=>k.remove(),2200)}
+function begen(x,y){const n=2+Math.random()*2|0;for(let i=0;i<n;i++)setTimeout(()=>kalp(x+(Math.random()*16-8),y),i*70);
+ begBen++;begTop++;sayacGuncel();const b=$('begN');b.textContent='+'+begBen;b.style.display='block';
+ begBek+=3;clearTimeout(begT);begT=setTimeout(()=>{yolla({t:'begeni',adet:begBek});begBek=0},180)}
+$('bBeg').onclick=e=>{const r=$('bBeg').getBoundingClientRect(),k=EK.getBoundingClientRect();begen(r.left-k.left+r.width/2,r.top-k.top)};
+
+/* hediye paneli */
+function hediyeCiz(L){$('hgrid').innerHTML=L.map((h,i)=>`<button class="hk" data-i="${i}"><span class="e">${h.e}</span><b>${h.ad}</b><span class="j"><i></i>${h.j.toLocaleString('tr-TR')}</span><span class="et">${esc(h.et)}</span></button>`).join('');
+ $('mHl').innerHTML=L.map(h=>`<div><span>${h.e}</span><p><b>${h.ad} · ${h.j}</b><small>${esc(h.et)}</small></p></div>`).join('');$('hgrid').__L=L}
+$('bHed').onclick=()=>$('hpan').classList.toggle('ac');$('hKapat').onclick=()=>$('hpan').classList.remove('ac');
+$('hgrid').onclick=e=>{const b=e.target.closest('.hk');if(!b)return;const h=$('hgrid').__L[+b.dataset.i];b.classList.remove('bs');void b.offsetWidth;b.classList.add('bs');
+ yolla({t:'hediye',hediye:h.h,elmas:h.j,adet:1});msj({sen:1,hd:1,ad:benAd(),metin:`${h.ad} gönderdi ${h.e}`});bant(benAd(),h,true);if(h.j>=20)dev(h)};
+EK.addEventListener('pointerdown',e=>{if($('hpan').classList.contains('ac')&&!e.target.closest('.hpan,#bHed'))$('hpan').classList.remove('ac')});
+
+/* hediye bandi (sol, kombo sayacli) */
+function bant(ad,h,sen){const B=$('hbant'),anah=ad+'|'+h.ad,var_=sonHd[anah];
+ if(var_&&var_.el.isConnected&&!var_.el.classList.contains('git')){var_.n++;const x=var_.el.querySelector('.x');x.textContent='x'+var_.n;x.classList.remove('pop');void x.offsetWidth;x.classList.add('pop');clearTimeout(var_.t);var_.t=setTimeout(()=>bitir(var_.el),2600);return}
+ if(!sen&&B.children.length>=2)return;if(B.children.length>=2)bitir(B.firstChild,1);
+ const d=document.createElement('div');d.className='hb'+(sen?' sen':'');d.innerHTML=`<span class="a" style="background:${sen?'#fff;color:#4b3fd1':renk(ad)}">${esc(ad[0].toLocaleUpperCase('tr'))}</span><span class="y"><b>${esc(ad)}</b><span>${h.ad} gönderdi</span></span><span class="e">${h.e}</span><span class="x">x1</span>`;
+ B.appendChild(d);const o={el:d,n:1,t:setTimeout(()=>bitir(d),2600)};sonHd[anah]=o}
+function bitir(el,hemen){if(!el)return;el.classList.add('git');setTimeout(()=>el.remove(),hemen?0:400)}
+/* buyuk hediye animasyonu */
+function dev(h){const d=document.createElement('div');d.className='dev';d.textContent=h.e;EK.appendChild(d);setTimeout(()=>d.remove(),2200);
+ if(h.j>=99){const s=document.createElement('div');s.className='isik';s.style.background=h.j>=1000?'radial-gradient(circle at 50% 44%,rgba(140,110,255,.55),rgba(40,20,90,.35) 45%,transparent 75%)':'radial-gradient(circle at 50% 44%,rgba(255,200,120,.35),transparent 60%)';EK.appendChild(s);setTimeout(()=>s.remove(),2700);
+  const n=h.j>=1000?36:14,w=EK.clientWidth,y0=EK.clientHeight*.44;for(let i=0;i<n;i++){const p=document.createElement('div');p.className='yild';const a=Math.random()*Math.PI*2,r=80+Math.random()*w*.55;
+   p.style.left=w/2+'px';p.style.top=y0+'px';p.style.setProperty('--x',Math.cos(a)*r+'px');p.style.setProperty('--y',Math.sin(a)*r+'px');p.style.setProperty('--s',(1+Math.random()*1.2)+'s');if(h.j<1000)p.style.background='#ffd27a';EK.appendChild(p);setTimeout(()=>p.remove(),2400)}}}
+
+/* ================= formlar ================= */
+$('dOyun').innerHTML=O.map(o=>`<option value="${o.id}">${o.ad} (${o.k.toUpperCase()})</option>`).join('');
+$('sOyun').innerHTML=O.map(o=>`<option value="${o.id}">${o.ad} (${o.k.toUpperCase()})</option>`).join('');
+$('sOyun').onchange=()=>{const o=O.find(x=>x.id===$('sOyun').value);if(o)$('sPaket').value=o.k==='3b'?'Tek 3B oyun - 350 TL/ay':'Tek 2B oyun - 250 TL/ay'};$('sOyun').onchange();
 async function gonder(yol,v,k){k.style.display='block';k.textContent='Gönderiliyor…';try{const a=(await (await fetch('arena/adres.json?t='+Date.now(),{cache:'no-store'})).json()).adres.replace(/\/$/,'');
  return await (await fetch(a+yol,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(v)})).json()}catch(x){return{hata:'Sunucuya şu an ulaşılamıyor. Lütfen TikTok @bilesikyatirim üzerinden yazın.'}}}
-document.getElementById('dBtn').onclick=async()=>{const k=document.getElementById('dSonuc'),j=await gonder('/api/demo',{tiktok:document.getElementById('dTik').value,oyun:document.getElementById('dOyun').value},k);
- k.innerHTML=j.link?`Deneme linkin hazır (bitiş ${j.bitis}). Yayın programına ekle:<code>${j.link}</code>`:'⚠️ '+j.hata};
-document.getElementById('sBtn').onclick=async()=>{const k=document.getElementById('sSonuc'),v=i=>document.getElementById(i).value;const j=await gonder('/api/siparis',{ad:v('sAd'),tiktok:v('sTik'),paket:v('sPaket'),iletisim:v('sIlet'),not:v('sNot')},k);
- k.textContent=j.ok?'Siparişin alındı. En kısa sürede ödeme bilgileriyle dönüş yapacağız.':'⚠️ '+j.hata};
-document.querySelectorAll('[data-p]').forEach(a=>a.addEventListener('click',()=>document.getElementById('sPaket').value=a.dataset.p));
+$('dBtn').onclick=async()=>{const k=$('dSonuc'),j=await gonder('/api/demo',{tiktok:$('dTik').value,oyun:$('dOyun').value},k);
+ k.innerHTML=j.link?`Deneme linkin hazır (bitiş ${esc(j.bitis)}). Yayın programına ekle:<code>${esc(j.link)}</code>`:'⚠️ '+esc(j.hata||'Bir hata oluştu.')};
+$('sBtn').onclick=async()=>{const k=$('sSonuc'),v=i=>$(i).value,o=O.find(x=>x.id===v('sOyun'));
+ const j=await gonder('/api/siparis',{ad:v('sAd'),tiktok:v('sTik'),paket:v('sPaket'),iletisim:v('sIlet'),not:(o?'Oyun: '+o.ad+(v('sNot')?' · ':''):'')+v('sNot')},k);
+ k.textContent=j.ok?'Siparişin alındı. En kısa sürede ödeme bilgileriyle dönüş yapacağız.':'⚠️ '+(j.hata||'Bir hata oluştu.')};
+document.querySelectorAll('[data-p]').forEach(a=>a.addEventListener('click',()=>{$('sPaket').value=a.dataset.p;const o=O.find(x=>x.id===$('sOyun').value);if(o&&(o.k==='3b')!==a.dataset.p.includes('3B')){const y=O.find(x=>(x.k==='3b')===a.dataset.p.includes('3B')&&!x.canliYok);if(y)$('sOyun').value=y.id}}));
 </script></body></html>
