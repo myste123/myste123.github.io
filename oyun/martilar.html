@@ -1,0 +1,85 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Boğaz Martıları</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#8fc9f0;color:#fff;font-family:Nunito,Segoe UI,Arial,sans-serif}#sahne{position:fixed;inset:0}</style></head><body>
+<canvas id="sahne"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
+<script>
+const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
+OY.hud({baslik:'BOĞAZ MARTILARI',alt:'Beğen → kanat çırp, simitleri kap! En çok simit kapan martı kazanır 🥯',renk:'#ffd166',hediyeler:OY.REKABET_HED});
+const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1.2:1.5));R.outputEncoding=THREE.sRGBEncoding;
+const S=new THREE.Scene();S.background=new THREE.Color(0x9fd2f5);S.fog=new THREE.Fog(0x9fd2f5,140,320);
+const KF0=55,K=new THREE.PerspectiveCamera(55,1,.1,500);function boyut(){R.setSize(W(),H());K.aspect=W()/H();K.fov=Math.max(KF0,Math.min(80,2*Math.atan(Math.tan(60*Math.PI/360)/K.aspect)*180/Math.PI));K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);
+S.add(new THREE.HemisphereLight(0xffffff,0x3a6e8f,.9));const gun=new THREE.DirectionalLight(0xfff4e0,.8);gun.position.set(30,60,20);S.add(gun);
+// deniz
+const dg=new THREE.PlaneGeometry(600,600,80,80);dg.rotateX(-Math.PI/2);const deniz=new THREE.Mesh(dg,new THREE.MeshStandardMaterial({color:0x0f4f86,roughness:.3,metalness:.1,flatShading:true}));S.add(deniz);
+const dp=dg.attributes.position,d0=dp.array.slice();
+// istanbul silueti
+const sil=new THREE.MeshStandardMaterial({color:0x7d8fa6,flatShading:true});
+for(let i=0;i<40;i++){const x=-180+i*9+Math.random()*4,h=4+Math.random()*10;const b=new THREE.Mesh(new THREE.BoxGeometry(7,h,6),sil);b.position.set(x,h/2,-150-Math.random()*10);S.add(b)}
+for(const cx of[-90,10,95]){const kub=new THREE.Mesh(new THREE.SphereGeometry(9,16,10,0,Math.PI*2,0,Math.PI/2),sil);kub.position.set(cx,14,-152);S.add(kub);
+ const gv=new THREE.Mesh(new THREE.CylinderGeometry(11,11,14,16),sil);gv.position.set(cx,7,-152);S.add(gv);
+ for(const m of[-16,16]){const mn=new THREE.Mesh(new THREE.CylinderGeometry(.9,1.1,34,8),sil);mn.position.set(cx+m,17,-150);S.add(mn);const uc=new THREE.Mesh(new THREE.ConeGeometry(1.2,5,8),sil);uc.position.set(cx+m,36.5,-150);S.add(uc)}}
+const kule=new THREE.Mesh(new THREE.CylinderGeometry(3,4,26,10),sil);kule.position.set(-40,13,-140);S.add(kule);const kc=new THREE.Mesh(new THREE.ConeGeometry(4.2,8,10),new THREE.MeshStandardMaterial({color:0x5a6a80}));kc.position.set(-40,30,-140);S.add(kc);
+// vapur
+const vapur=new THREE.Group();{const beyaz=new THREE.MeshStandardMaterial({color:0xf4f4f0}),kirmizi=new THREE.MeshStandardMaterial({color:0xc0392b}),siyah=new THREE.MeshStandardMaterial({color:0x222831});
+ const g=new THREE.Mesh(new THREE.BoxGeometry(10,3,26),beyaz);g.position.y=1;vapur.add(g);const alt=new THREE.Mesh(new THREE.BoxGeometry(10.2,1,26.2),siyah);alt.position.y=-.2;vapur.add(alt);
+ const s=new THREE.Mesh(new THREE.BoxGeometry(10.3,.5,26.3),kirmizi);s.position.y=2;vapur.add(s);const k1=new THREE.Mesh(new THREE.BoxGeometry(8,2.4,16),beyaz);k1.position.y=3.6;vapur.add(k1);
+ const k2=new THREE.Mesh(new THREE.BoxGeometry(6,1.8,8),beyaz);k2.position.y=5.7;vapur.add(k2);const bc=new THREE.Mesh(new THREE.CylinderGeometry(1,1.1,4,12),siyah);bc.position.set(0,8,-1);vapur.add(bc);
+ const bb=new THREE.Mesh(new THREE.CylinderGeometry(1.12,1.12,.8,12),kirmizi);bb.position.set(0,7.4,-1);vapur.add(bb);
+ for(let i=0;i<7;i++)for(const sx of[-4.05,4.05]){const p=new THREE.Mesh(new THREE.PlaneGeometry(1.2,.9),new THREE.MeshBasicMaterial({color:0x2c3e50,side:THREE.DoubleSide}));p.position.set(sx,3.7,-6+i*2);p.rotation.y=Math.PI/2;vapur.add(p)}}
+vapur.position.set(0,.6,-6);S.add(vapur);
+// martı modeli
+const tuyM=new THREE.MeshStandardMaterial({color:0xfafafa,roughness:.8}),griM=new THREE.MeshStandardMaterial({color:0x9aa4ad}),gagaM=new THREE.MeshStandardMaterial({color:0xffb703});
+function marti(u){const g=new THREE.Group();const govde=new THREE.Mesh(new THREE.SphereGeometry(.7,12,10),tuyM);govde.scale.set(1,.8,1.7);g.add(govde);
+ const bas=new THREE.Mesh(new THREE.SphereGeometry(.45,10,8),tuyM);bas.position.set(0,.35,1.1);g.add(bas);const gaga=new THREE.Mesh(new THREE.ConeGeometry(.12,.5,6),gagaM);gaga.rotation.x=Math.PI/2;gaga.position.set(0,.3,1.6);g.add(gaga);
+ const kuyruk=new THREE.Mesh(new THREE.ConeGeometry(.35,.8,4),griM);kuyruk.rotation.x=-Math.PI/2;kuyruk.position.z=-1.3;g.add(kuyruk);
+ const kanat=[-1,1].map(s=>{const p=new THREE.Group();const k=new THREE.Mesh(new THREE.BoxGeometry(2.4,.08,.9),tuyM);k.position.x=s*1.2;p.add(k);const uc=new THREE.Mesh(new THREE.BoxGeometry(.8,.09,.7),griM);uc.position.x=s*2.6;p.add(uc);p.position.set(s*.4,.15,0);g.add(p);return p});
+ const roz=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(OY.foto(u,96))}));roz.scale.set(1.5,1.5,1);roz.position.y=1.7;g.add(roz);
+ const ec=document.createElement('canvas');ec.width=256;ec.height=48;const et=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(ec),transparent:true}));et.scale.set(3.4,.64,1);et.position.y=2.9;g.add(et);
+ S.add(g);return{g,kanat,roz,et,ec,yazi:''}}
+const simitTex=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');x.font='54px serif';x.textAlign='center';x.textBaseline='middle';x.fillText('🥯',32,36);const t=new THREE.CanvasTexture(c);return t})();
+// ---- oyun ----
+const U={},MRT=[],SIMIT=[];let bitis=0,KAL={kazan:{}};
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,enerji:0,son:0,o:null,pos:new THREE.Vector3((Math.random()-.5)*30,8+Math.random()*6,30+Math.random()*10)};if(e.foto&&!u.foto)u.foto=e.foto;return u}
+function katil(u){if(u.o)return;if(MRT.length>=24){const e=MRT.reduce((a,b)=>a.son<b.son?a:b);if(now()-e.son<20000)return;S.remove(e.o.g);e.o=null;MRT.splice(MRT.indexOf(e),1)}u.o=marti(u);MRT.push(u);OY.akis(`🕊 ${u.ad} sürüye katıldı`,'#e8f6ff')}
+function cirp(u,n){if(OY.donuk(u))return;u.enerji=Math.min(12,u.enerji+n*OY.ikiKat(u));u.son=now()}
+function simitAt(n,kim){for(let i=0;i<n;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:simitTex}));s.scale.set(1.6,1.6,1);s.position.set((Math.random()-.5)*24,9+Math.random()*4,Math.random()*16);
+ s.userData={v:new THREE.Vector3((Math.random()-.5)*.5,.35+Math.random()*.25,.25+Math.random()*.35),kim};S.add(s);SIMIT.push(s)}}
+OY.rekabetKur({liste:()=>MRT,skor:u=>u.puan,ayarla:(u,v)=>{u.puan=Math.max(0,Math.round(v))}});
+OY.basla({muzik:'pop',olay:e=>{
+ if(e.t==='kalici'&&e.veri&&e.veri.kazan){KAL=e.veri;return}
+ if(!e.id||bitis)return;const u=kul(e);katil(u);
+ if(e.t==='begeni')cirp(u,(e.adet||1)*.4);
+ else if(e.t==='yorum'){cirp(u,1.5);u.msj=String(e.metin||'').slice(0,40);u.msjT=now()}
+ else if(e.t==='takip'){cirp(u,5);simitAt(2)}else if(e.t==='paylasim'){cirp(u,4);simitAt(1)}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;cirp(u,6);simitAt(Math.min(12,2+h.seviye*2));OY.ses.para();const et=OY.rekabetHediye(u,h);
+  OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
+}});
+OY.demoYorum=()=>['Simit bana!','Gak gak','Vapur kalkıyor','Ben kaptım!','Haydi martılar'][Math.random()*5|0];
+const BAL={},TUR=180;let turBas=now(),son=now(),sonSimit=0;
+function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;
+ for(let i=0;i<dp.count;i++){const x=d0[i*3],z=d0[i*3+2];dp.setY(i,Math.sin(x*.08+t/700)*.5+Math.cos(z*.1+t/900)*.4)}dp.needsUpdate=true;
+ vapur.position.y=.6+Math.sin(t/800)*.25;vapur.rotation.z=Math.sin(t/1100)*.03;
+ if(t-sonSimit>1800&&MRT.length){simitAt(1);sonSimit=t}
+ for(let i=SIMIT.length-1;i>=0;i--){const s=SIMIT[i],v=s.userData.v;s.position.add(v);v.y-=.012;if(s.position.y<0){S.remove(s);SIMIT.splice(i,1)}}
+ for(const u of MRT){const o=u.o;u.enerji=Math.max(0,u.enerji-dt*.8);const don=OY.donuk(u);let hedef=null,en=1e9;
+  for(const s of SIMIT){const d=s.position.distanceToSquared(u.pos);if(d<en){en=d;hedef=s}}
+  const hiz=(don?0:2+u.enerji*1.6)*dt;
+  if(hedef){const yon=hedef.position.clone().sub(u.pos);const d=yon.length();if(d<1.4){u.puan+=OY.ikiKat(u);S.remove(hedef);SIMIT.splice(SIMIT.indexOf(hedef),1);OY.ses.tik()}else u.pos.add(yon.multiplyScalar(Math.min(1,hiz/d)))}
+  else{u.pos.lerp(new THREE.Vector3(Math.sin(t/2000+u.puan)*14,10,22),dt*.3)}
+  for(const v of MRT){if(v===u)continue;const d=u.pos.distanceTo(v.pos);if(d<3.2&&d>0)u.pos.add(u.pos.clone().sub(v.pos).multiplyScalar((3.2-d)*.08/d))}u.pos.y=Math.max(4,u.pos.y);o.g.position.copy(u.pos);if(hedef)o.g.lookAt(hedef.position);
+  const fl=Math.sin(t/(don?400:90-u.enerji*3))*(.5+u.enerji*.04);o.kanat[0].rotation.z=fl;o.kanat[1].rotation.z=-fl;
+  if(o.roz.material.map.image.surum!==o.rs){o.rs=o.roz.material.map.image.surum;o.roz.material.map.needsUpdate=true}
+  const y=`${OY.durum(u)}${OY.kisaAd(u.ad,9)} ${u.puan}🥯`;if(y!==o.yazi){o.yazi=y;const g=o.ec.getContext('2d');g.clearRect(0,0,256,48);g.fillStyle='rgba(0,0,0,.55)';g.fillRect(2,4,252,40);g.fillStyle='#fff';g.font='bold 25px Segoe UI';g.textAlign='center';g.textBaseline='middle';g.fillText(y,128,25);o.et.material.map.needsUpdate=true}}
+ const merkez=MRT.length?MRT.reduce((a,u)=>a.add(u.pos),new THREE.Vector3()).multiplyScalar(1/MRT.length):new THREE.Vector3(0,8,20);
+ K.position.set(Math.sin(t/9000)*8,merkez.y+15,merkez.z+38);K.lookAt(merkez.x*.4,merkez.y-3,merkez.z-10);
+ R.render(S,K);
+ for(const u of MRT){let b=BAL[u.id];if(u.msj&&t-u.msjT<4500){if(!b){b=BAL[u.id]=document.createElement('div');b.className='balon';document.body.appendChild(b)}b.textContent=u.msj;const p=u.pos.clone();p.y+=3.6;p.project(K);b.style.left=(p.x*.5+.5)*W()+'px';b.style.top=(-p.y*.5+.5)*H()+'px'}else if(b){b.remove();delete BAL[u.id]}}
+ const kalan=Math.max(0,TUR-(t-turBas)/1000);
+ if(!bitis&&kalan<=0){bitis=t+7000;const s=[...MRT].sort((a,b)=>b.puan-a.puan)[0];if(s){KAL.kazan[s.ad]=(KAL.kazan[s.ad]||0)+1;OY.kaydet(KAL);OY.ses.zafer();OY.kazanan(s,'🕊 BOĞAZIN KRALI',`${s.puan} simit kaptı`)}}
+ if(bitis&&t>bitis){bitis=0;turBas=t;OY.kazanan(null);MRT.forEach(u=>u.puan=0)}
+ if((t|0)%300<20){OY.bilgi(OY.sure(kalan),`🕊 ${MRT.length}`);OY.ilk3([...MRT].sort((a,b)=>b.puan-a.puan).slice(0,3))}
+}
+kare();
+</script></body></html>
