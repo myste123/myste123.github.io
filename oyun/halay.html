@@ -198,8 +198,8 @@ const CIFT={g:new THREE.Group(),m:[],roz:[],et:[],kim:[null,null]};
  const kenar=new THREE.Mesh(new THREE.TorusGeometry(2.3,.08,6,40),new THREE.MeshStandardMaterial({color:0xffd166,metalness:.5,roughness:.4}));kenar.rotation.x=Math.PI/2;kenar.position.y=.09;CIFT.g.add(kenar);
  [['model/karakter/character-male-b.glb',-.85,'🤵 DAMAT'],['model/karakter/character-female-b.glb',.85,'👰 GELİN']].forEach(([yol,x,ad],i)=>{
   UC.ornek(yol,3.3).then(m=>{m.sahne.position.set(x,.1,0);CIFT.g.add(m.sahne);CIFT.m[i]=m;m.oynat('idle')});
-  const r=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(document.createElement('canvas')),depthTest:false}));r.scale.setScalar(1.15);r.position.set(x,3.1,0);r.renderOrder=12;CIFT.g.add(r);CIFT.roz[i]=r;
-  const e=UC.etiket(3.4);e.position.set(x*1.3,3.9,0);CIFT.g.add(e);CIFT.et[i]=e;e.adi=ad});
+  const r=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(document.createElement('canvas')),depthTest:false}));r.scale.setScalar(.8);r.position.set(x,3.05,0);r.renderOrder=12;CIFT.g.add(r);CIFT.roz[i]=r;
+  const e=UC.etiket(2.4);e.position.set(x*1.25,3.85,0);CIFT.g.add(e);CIFT.et[i]=e;e.adi=ad});
  const tac=new THREE.Mesh(new THREE.TorusGeometry(.32,.06,6,16),new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xffffff,emissiveIntensity:.3}));tac.position.set(.85,2.45,0);tac.rotation.x=Math.PI/2;CIFT.g.add(tac);
  S.add(CIFT.g)}
 function ciftGuncelle(t){const ilk=Object.values(U).filter(u=>u.puan>0).sort((a,b)=>b.puan-a.puan).slice(0,2);
