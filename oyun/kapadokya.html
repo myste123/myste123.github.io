@@ -20,7 +20,7 @@
 </style></head><body>
 <canvas id="sahne"></canvas><div id="etk"></div><div id="irtbar"><div class="c"></div><b>☁️</b></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
+<script src="core.js?v=4"></script><script src="hud.js?v=3"></script>
 <script>
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
 /* ---- hediyeler: balon festivaline ozgu ---- */
@@ -32,7 +32,7 @@ OY.hud({baslik:'BALON FESTİVALİ',alt:'Kapadokya · Beğen → brülörü yak, 
 OY.demoYorum=()=>['Yak brülörü! 🔥','Kartal geliyor 🦅','Bulutlara çıkıyoruz','Kum torbası atın','Ne manzara!','Hadi hadi!','Rüzgâr esti 🌪️','Zirve bizim'][Math.random()*8|0];
 /* ---- render ---- */
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true,powerPreference:'high-performance'});R.outputEncoding=THREE.sRGBEncoding;
-let PR=Math.min(devicePixelRatio||1,1.5,Math.max(1,1080/innerWidth));
+let PR=Math.max(1,Math.min(devicePixelRatio||1,2));
 const S=new THREE.Scene();const VFOV=48,PITCH=.16,BANT=.48,KAY=.14;
 const K=new THREE.PerspectiveCamera(VFOV,1,.5,1200),KF=new THREE.PerspectiveCamera(VFOV,1,.5,1200);
 function boyut(){R.setPixelRatio(PR);R.setSize(W(),H());for(const c of[K,KF]){c.aspect=W()/H();c.updateProjectionMatrix()}K.setViewOffset(W(),H(),0,-KAY*H()/2,W(),H())}
@@ -163,7 +163,7 @@ function kadraj(yuk,dus,x0,x1){let ly=(yuk+dus)/2,D=60;
   kamKur(KF,D,ly,0);V.set(0,yuk,-10).project(KF);const yu=V.y;V.set(0,dus,-10).project(KF);ly+=((yu+V.y)/2)*(yuk-dus)*.5}
  return{D,ly}}
 let fpsN=0,fpsT=now();window.__fps=0;
-function fpsKontrol(t){fpsN++;if(t-fpsT>2000){const f=fpsN*1000/(t-fpsT);window.__fps=Math.round(f);fpsN=0;fpsT=t;if(f<34&&PR>.7){PR=Math.max(.7,PR-.15);boyut()}}}
+function fpsKontrol(t){fpsN++;if(t-fpsT>2000){const f=fpsN*1000/(t-fpsT);window.__fps=Math.round(f);fpsN=0;fpsT=t;if(f<34&&PR>.7){PR=Math.max(1,PR-.25);boyut()}}}
 const TUR=180;let turBas=now(),son=now(),sonCubuk=0;
 // ruzgar cizgileri
 const RZ=new THREE.Group(),rzM=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.55,depthWrite:false});for(let i=0;i<26;i++){const m=new THREE.Mesh(new THREE.PlaneGeometry(14+Math.random()*10,.25),rzM);m.position.set((Math.random()-.5)*160,(Math.random()-.5)*90,(Math.random()-.5)*20);RZ.add(m)}RZ.visible=false;S.add(RZ);

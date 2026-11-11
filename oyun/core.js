@@ -96,9 +96,9 @@
   const YORUM = ['Selam herkese', 'Hadi hadi!', 'Ben de varım', 'Çok iyi oyun', 'Kim kazanır?', 'Bana da gül atın', 'Süpersin', 'Yaşasın', 'Ooo', 'Helal', 'Bir daha!', 'Haydi bakalım'];
   const HEDL = [['Rose', 1], ['Rose', 1], ['Rose', 1], ['Finger Heart', 5], ['Finger Heart', 5], ['Perfume', 20], ['Doughnut', 30], ['Hat and Mustache', 99], ['Galaxy', 1000]];
   OY.sahteKisi = i => { const ad = ADLAR[i % ADLAR.length] + (i >= ADLAR.length ? (i / ADLAR.length | 0) : ''); return { id: 'd' + i, ad, foto: '' } };
-  function demoDongu() { let n = 0; setInterval(() => { const u = OY.sahteKisi(Math.random() * 30 | 0), r = Math.random();
-    if (r < .55) dagit({ t: 'begeni', ...u, adet: 1 + (Math.random() * 15 | 0) }); else if (r < .8) dagit({ t: 'yorum', ...u, metin: OY.demoYorum ? OY.demoYorum() : YORUM[Math.random() * YORUM.length | 0] });
-    else if (r < .93) { const h = HEDL[Math.random() * HEDL.length | 0]; dagit({ t: 'hediye', ...u, hediye: h[0], elmas: h[1], adet: 1 }) } else dagit({ t: Math.random() < .5 ? 'takip' : 'paylasim', ...u }); n++ }, 650) }
+  function demoDongu() { let n = 0; setInterval(() => { const u = OY.sahteKisi(Math.random() * 14 | 0), r = Math.random();
+    if (r < .6) dagit({ t: 'begeni', ...u, adet: 1 + (Math.random() * 5 | 0) }); else if (r < .9) dagit({ t: 'yorum', ...u, metin: OY.demoYorum ? OY.demoYorum() : YORUM[Math.random() * YORUM.length | 0] });
+    else if (r < .95) { const h = Math.random() < .7 ? HEDL[0] : HEDL[Math.random() * HEDL.length | 0]; dagit({ t: 'hediye', ...u, hediye: h[0], elmas: h[1], adet: 1 }) } else dagit({ t: Math.random() < .5 ? 'takip' : 'paylasim', ...u }); n++ }, 1700) }
   addEventListener('message', m => { const e = m.data; if (e && e.oy) { delete e.oy; dagit(e) } });
 
   OY.basla = cfg => {

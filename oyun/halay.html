@@ -18,7 +18,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
-<script src="core.js?v=3"></script><script src="uc.js?v=3"></script><script src="hud.js?v=3"></script>
+<script src="core.js?v=4"></script><script src="uc.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
 /* HALAY MEYDANI
    - Her etkilesim "coşku" puani verir (birikimli, gecikmeye dayanikli; refleks yok).
@@ -32,7 +32,7 @@ OY.demoYorum=()=>['Halaya ben de varım!','Hadi davul!','Mendil bende','Oyy oy',
 
 // ---------------- sahne ----------------
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:!DAR,powerPreference:'high-performance'});
-R.setPixelRatio(Math.min(devicePixelRatio,DAR?1:1.5));R.outputEncoding=THREE.sRGBEncoding;
+R.setPixelRatio(Math.max(1,Math.min(devicePixelRatio||1,2)));R.outputEncoding=THREE.sRGBEncoding;
 const S=new THREE.Scene();S.fog=new THREE.Fog(0x1d1850,50,120);
 const K=new THREE.PerspectiveCamera(45,1,.5,300);
 function boyut(){R.setSize(W(),H());K.aspect=W()/H();K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);

@@ -22,7 +22,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
-<script src="core.js?v=3"></script><script src="uc.js?v=3"></script><script src="hud.js?v=3"></script>
+<script src="core.js?v=4"></script><script src="uc.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
 /* ---- hediyeler: konvoya ozgu ---- */
@@ -196,7 +196,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  const sr=sirali(),lead=sr.length?sr[0].yol:0;
  // serit secimi: ondeki arabalarin isgal ettigi seritten kac
  const dolu=[];for(const u of sr){if(!u.o)continue;const bos=s=>!dolu.some(d=>d.s===s&&Math.abs(d.y-u.yol)<6.5);
-  if(!bos(u.serit)){let en=null;for(const dd of[1,-1,2,-2,3,-3,4,-4]){const s=u.serit+dd;if(s>=0&&s<SERIT&&bos(s)){en=s;break}}if(en!==null)u.serit=en}dolu.push({s:u.serit,y:u.yol})}
+  if(!bos(u.serit)){let en=null;for(const dd of[1,-1,2,-2,3,-3,4,-4]){const s=u.serit+dd;if(s>=0&&s<SERIT&&bos(s)){en=s;break}}if(en!==null)u.serit=en;else{const on=dolu.filter(d=>d.s===u.serit&&d.y>=u.yol-6.5).reduce((m,d)=>Math.min(m,d.y),1e9);if(on<1e9)u.yol=Math.max(0,Math.min(u.yol,on-6.5))}}dolu.push({s:u.serit,y:u.yol})}
  for(const u of ARAC){const o=u.o;if(!o)continue;const nit=t<u.nitroBit;
   if(!bitis){const gap=lead-u.yol,yakala=gap>6?Math.min(12,(gap-6)*.25):0;
    if(!OY.donuk(u))u.yol+=(u.hiz*(nit?1.8:1)*OY.ikiKat(u)*(t<u.yavas?.3:1)+1.4+yakala)*dt;
