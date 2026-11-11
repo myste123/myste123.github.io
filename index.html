@@ -105,7 +105,7 @@ const O=[{id:'halay',k:'3b',ad:'Halay Meydanı',d:'İzleyiciler 3B karakter olar
  {id:'kediler',k:'2b',ad:'Sokak Kedileri',d:'Mama döken izleyiciyi kediler takip eder; en büyük kedi ordusu kazanır.'},
  {id:'halat',k:'2b',ad:'Halat Çekme',d:'Kırmızı ve Mavi takım. Yorumla takım seç, beğeniyle çek.'},
  {id:'balon',k:'2b',ad:'Balon Arenası',d:'Fotoğraflı balonlar büyüyüp birbirini ısırır; hediyeler süper güç verir.',canliYok:1},
- {id:'muhtar',k:'2b',ad:'Muhtarlık Seçimi',d:'İzleyiciler aday olur, yorumla oy toplar.',y:'🗳'}];
+ {id:'muhtar',k:'2b',ad:'Muhtarlık Seçimi',d:'İzleyiciler aday olur, numarayla oy toplar; hediyeyle rakibi dondur, oy çal, yer değiştir.'}];
 const IZ=document.getElementById('izgara');
 function ciz(k){IZ.innerHTML=O.filter(o=>o.k===k).map(o=>o.y?`<div class="oyun y"><div class="g">${o.y}</div><div class="i"><h3>${o.ad}</h3><p>Yakında · ${o.d}</p></div></div>`:
  `<div class="oyun" data-id="${o.id}"><div class="g"><img loading="lazy" src="img/${o.id}.jpg?v=3" alt="${o.ad}"><span>${o.k.toUpperCase()}</span></div><div class="i"><h3>${o.ad}</h3><p>${o.d}</p></div></div>`).join('')}

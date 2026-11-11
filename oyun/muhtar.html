@@ -1,0 +1,56 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Muhtarlık Seçimi</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:linear-gradient(180deg,#1b2a4a,#0e1628);color:#fff;font-family:Nunito,Segoe UI,Arial,sans-serif}
+#sandik{position:fixed;left:4vw;right:4vw;top:14vh;bottom:36vh;display:flex;flex-direction:column;gap:1.2vh;justify-content:center}
+.aday{position:relative;height:7.2vh;background:rgba(255,255,255,.06);border-radius:1.6vh;overflow:hidden;transition:transform .5s}
+.aday .dol{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 60%,#fff));transition:width .6s cubic-bezier(.2,.9,.3,1)}
+.aday .ic{position:absolute;inset:0;display:flex;align-items:center;gap:1.4vh;padding:0 1.6vh}
+.aday .no{font:900 3.4vh 'Baloo 2',Nunito;width:4.2vh;height:4.2vh;border-radius:1vh;background:rgba(0,0,0,.35);display:grid;place-items:center}
+.aday img{width:5.2vh;height:5.2vh;border-radius:50%;border:.3vh solid #fff}
+.aday .ad{font:800 2.2vh Nunito;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.aday .oy{font:900 2.6vh 'Baloo 2',Nunito}
+.aday .yz{font:700 1.5vh Nunito;opacity:.85}
+.aday.bos{opacity:.45}.aday.lider{box-shadow:0 0 0 .3vh #ffd84a}
+#bilgi{position:fixed;left:4vw;right:4vw;bottom:31vh;text-align:center;font:800 1.9vh Nunito;color:#cfe0ff}
+.oyp{position:fixed;font-size:3vh;pointer-events:none;animation:uc 1s ease-out forwards}@keyframes uc{to{transform:translateY(-8vh);opacity:0}}
+</style></head><body>
+<div id="sandik"></div><div id="bilgi">🗳 Yorumda <b>aday</b> yaz, aday ol · Oy vermek için adayın <b>numarasını</b> yaz · Beğenilerin son oy verdiğin adaya gider</div>
+<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
+<script>
+OY.hud({baslik:'MUHTARLIK SEÇİMİ',alt:'"aday" yaz aday ol · numara yaz oy ver · hediye = kampanya',renk:'#ffd84a',hediyeler:OY.REKABET_HED});
+const RENK=['#ff5d73','#4da3ff','#3ddc97','#ffb02e','#b16cff','#ff7ad9'],now=()=>performance.now();
+const U={},ADAY=[null,null,null,null,null,null];let bitis=0,KAL={muhtar:{}};
+const SN=document.getElementById('sandik');
+SN.innerHTML=ADAY.map((_,i)=>`<div class="aday bos" id="a${i}" style="--c:${RENK[i]}"><div class="dol"></div><div class="ic"><div class="no">${i+1}</div><img hidden><div class="ad">Boş kürsü · "aday" yaz</div><div class="yz"></div><div class="oy"></div></div></div>`).join('');
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,oy:0,puan:0,secim:-1,son:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
+function adayOl(u){if(ADAY.includes(u))return;let i=ADAY.indexOf(null);if(i<0){const z=ADAY.reduce((a,b,j)=>b.oy<ADAY[a].oy?j:a,0);if(ADAY[z].oy>u.oy+5)return;OY.akis(`📉 ${ADAY[z].ad} kürsüyü kaybetti`,'#f99');i=z}
+ ADAY[i]=u;u.oy=u.oy||0;OY.akis(`🎤 ${u.ad} ${i+1} numaralı aday oldu!`,RENK[i]);OY.ses.guc()}
+function oy(aday,n,kimden){if(!aday||OY.donuk(aday))return;n*=OY.ikiKat(aday);aday.oy+=n;aday.puan=aday.oy;if(kimden)kimden.son=now();ucur(ADAY.indexOf(aday))}
+function ucur(i){if(Math.random()>.35)return;const el=document.getElementById('a'+i).getBoundingClientRect(),d=document.createElement('div');d.className='oyp';d.textContent='🗳';d.style.left=(el.right-60)+'px';d.style.top=el.top+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1000)}
+OY.rekabetKur({liste:()=>ADAY.filter(Boolean),skor:u=>u.oy,ayarla:(u,v)=>{u.oy=Math.max(0,v);u.puan=u.oy}});
+OY.basla({muzik:'pop',olay:e=>{
+ if(e.t==='kalici'&&e.veri&&e.veri.muhtar){KAL=e.veri;return}
+ if(!e.id||bitis)return;const u=kul(e);
+ if(e.t==='yorum'){const m=String(e.metin||'').toLowerCase().trim();
+  if(/\baday\b/.test(m))adayOl(u);
+  const no=m.match(/^\s*([1-6])\b/);if(no&&ADAY[no[1]-1]){u.secim=no[1]-1;oy(ADAY[u.secim],3,u);OY.ses.tik()}
+  else if(ADAY.includes(u))oy(u,1,u)}
+ else if(e.t==='begeni'){const a=u.secim>=0?ADAY[u.secim]:ADAY.includes(u)?u:null;if(a)oy(a,(e.adet||1)*.3,u)}
+ else if(e.t==='takip'){const a=u.secim>=0?ADAY[u.secim]:u;if(ADAY.includes(a))oy(a,6,u)}
+ else if(e.t==='paylasim'){const a=u.secim>=0?ADAY[u.secim]:u;if(ADAY.includes(a))oy(a,5,u)}
+ else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;if(!ADAY.includes(u)&&u.secim<0)adayOl(u);
+  const a=ADAY.includes(u)?u:ADAY[u.secim];if(!a)return;oy(a,8*h.adet+n);OY.ses.para();const et=OY.rekabetHediye(a,h);
+  OY.vitrin(u,h.ikon,h.ad,(a!==u?`${OY.kisaAd(a.ad,10)} için `:'')+et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
+}});
+OY.demoYorum=()=>{const r=Math.random();return r<.12?'aday':r<.75?String(1+(Math.random()*Math.max(1,ADAY.filter(Boolean).length)|0)):['Muhtarım sensin!','Yaşasın','Oylar bana','Hadi 2 numara!'][Math.random()*4|0]};
+const TUR=180;let turBas=now();
+function ciz(){const t=now(),max=Math.max(10,...ADAY.filter(Boolean).map(a=>a.oy));const sira=ADAY.map((a,i)=>({a,i})).filter(x=>x.a).sort((x,y)=>y.a.oy-x.a.oy);
+ ADAY.forEach((a,i)=>{const el=document.getElementById('a'+i);el.classList.toggle('bos',!a);el.classList.toggle('lider',!!a&&sira[0]&&sira[0].a===a);
+  if(!a)return;el.querySelector('.dol').style.width=(a.oy/max*100)+'%';const im=el.querySelector('img');if(im.dataset.id!==a.id||im.dataset.s!=OY.foto(a,96).surum){im.src=OY.foto(a,96).toDataURL();im.dataset.id=a.id;im.dataset.s=OY.foto(a,96).surum}im.hidden=false;
+  el.querySelector('.ad').textContent=OY.durum(a)+a.ad;el.querySelector('.oy').textContent=Math.round(a.oy);
+  const yuz=sira.reduce((s,x)=>s+x.a.oy,0)||1;el.querySelector('.yz').textContent='%'+Math.round(a.oy/yuz*100)});
+ const kalan=Math.max(0,TUR-(t-turBas)/1000);OY.bilgi(OY.sure(kalan),`🗳 ${Object.values(U).filter(u=>u.secim>=0).length} seçmen`);
+ OY.ilk3(sira.slice(0,3).map(x=>x.a));
+ if(!bitis&&kalan<=0){bitis=t+8000;if(sira[0]){const m=sira[0].a;KAL.muhtar[m.ad]=(KAL.muhtar[m.ad]||0)+1;OY.kaydet(KAL);OY.ses.zafer();OY.kazanan(m,'🏛 YENİ MUHTAR',`${Math.round(m.oy)} oy · ${KAL.muhtar[m.ad]}. dönem`)}}
+ if(bitis&&t>bitis){bitis=0;turBas=t;OY.kazanan(null);ADAY.forEach(a=>{if(a)a.oy=a.puan=0});Object.values(U).forEach(u=>u.secim=-1)}}
+setInterval(ciz,400);
+</script></body></html>
