@@ -74,7 +74,7 @@ const termG=new THREE.CylinderGeometry(3.8,1.6,26,18,1,true);
 const U={},BAL=[];let bitis=0,ruzgar=0;
 function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,irt:0,hiz:0,brulor:0,alevT:0,agir:0,kartal:0,termal:0,savrul:0,puan:0,son:0,o:null,msj:'',msjT:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
 let slot=0;
-function katil(u){if(u.o)return true;if(BAL.length>=22){const e=BAL.reduce((a,b)=>a.son<b.son?a:b);if(now()-e.son<25000)return false;S.remove(e.o);e.o=null;BAL.splice(BAL.indexOf(e),1);if(ET[e.id]){ET[e.id].el.remove();delete ET[e.id]}}
+function katil(u){if(u.o)return true;if(BAL.length>=12){const e=BAL.reduce((a,b)=>a.son<b.son?a:b);if(now()-e.son<25000)return false;S.remove(e.o);e.o=null;BAL.splice(BAL.indexOf(e),1);if(ET[e.id]){ET[e.id].el.remove();delete ET[e.id]}}
  const i=slot++;u.o=balonMesh(new THREE.Color().setHSL((i*.137+.03)%1,.8,.55));
  const k=i%4,sr=(i/4|0)%3;u.x=(k-1.5)*10.5+(sr-1)*3.5;u.z=-sr*9;u.o.position.set(u.x,0,u.z);u.irt=Math.max(0,ortI()*.5);
  const o=u.o,ud=o.userData;
@@ -174,7 +174,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  const lider=BAL.reduce((m,u)=>Math.max(m,u.irt),0);
  for(const u of BAL){const br=t<u.brulor,ag=t<u.agir,o=u.o,ud=o.userData;
   if(!bitis){let tir=u.hiz*(br?2.2:1)*OY.ikiKat(u)*(t<u.termal?1.3:1);if(OY.donuk(u))tir=0;if(ag)tir*=.15;
-   const gap=lider-u.irt,yakala=gap>30&&t-u.son<15000?Math.min(4,(gap-30)*.03):0;
+   const gap=lider-u.irt,yakala=gap>10?Math.min(9,(gap-10)*.12):0;
    u.irt+=(tir/(1+u.irt/220)+yakala-1.1-(ag?2.5:0)-(OY.donuk(u)?1.2:0))*dt*3;u.hiz*=Math.pow(.5,dt);if(u.irt<0)u.irt=0}
   u.puan=u.irt;const sv=t<u.savrul?Math.sin(t/90+u.x)*1:0;
   o.position.y+=(u.irt*.6-o.position.y)*Math.min(1,dt*3);o.position.x=u.x+Math.sin(t/1700+u.x)*1.2+sv*3;o.rotation.z=Math.sin(t/1300+u.z)*.04+sv*.18;
@@ -191,7 +191,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  RZ.visible=t<ruzgar;
  const sr=sirali();
  // kamera kadraji
- if(sr.length){const lead=sr[0].irt*.6,grup=sr.filter((u,i)=>i<3||lead-u.irt*.6<70);
+ if(sr.length){const lead=sr[0].irt*.6,grup=sr.filter((u,i)=>i<3||(i<6&&lead-u.irt*.6<25));
   const yuk=Math.max(...grup.map(u=>u.o.position.y))+18,dus=Math.min(...grup.map(u=>u.o.position.y))-1,xs=grup.map(u=>u.o.position.x);
   const k=kadraj(yuk,dus,Math.min(...xs)-6,Math.max(...xs)+6);kamD+=(k.D-kamD)*Math.min(1,dt*1.5);kamY+=(k.ly-kamY)*Math.min(1,dt*1.5)}
  kamKur(K,kamD,kamY,Math.sin(t/9000)*4);
