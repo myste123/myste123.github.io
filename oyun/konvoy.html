@@ -34,7 +34,7 @@ OY.hud({baslik:'DÜĞÜN KONVOYU',alt:'Beğen → gaz ver · Salona ilk varan ka
 OY.demoYorum=()=>['Bas gaza!','Gelin arabası bizim olacak','Halay başlasın 💃','Korna çalın!','Polis geliyor 👮','Hadi hadi!','Kurdele bende','Salona az kaldı'][Math.random()*8|0];
 /* ---- render ---- */
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true,powerPreference:'high-performance'});R.outputEncoding=THREE.sRGBEncoding;
-let PR=Math.min(devicePixelRatio||1,1.5,Math.max(1,1080/innerWidth));
+let PR=Math.max(1,Math.min(devicePixelRatio||1,2));
 const S=new THREE.Scene();S.background=new THREE.Color(0xa9d3f5);S.fog=new THREE.Fog(0xa9d3f5,90,260);
 const VFOV=46,PITCH=.72,BANT=.48,KAY=.14;  // dikey gorus, kamera egimi, kadraj yari yuksekligi (NDC), HUD icin yukari kaydirma
 const K=new THREE.PerspectiveCamera(VFOV,1,.5,600),KF=new THREE.PerspectiveCamera(VFOV,1,.5,600);
@@ -42,7 +42,7 @@ function boyut(){R.setPixelRatio(PR);R.setSize(W(),H());for(const c of[K,KF]){c.
  K.setViewOffset(W(),H(),0,-KAY*H()/2,W(),H())}
 boyut();addEventListener('resize',boyut);
 S.add(new THREE.HemisphereLight(0xffffff,0x5c7a3a,.95));const gun=new THREE.DirectionalLight(0xfff2dd,.8);gun.position.set(20,40,10);S.add(gun);
-const YOL=600,SERIT=5,SG=3.4,YARI=SERIT*SG/2;
+const YOL=900,SERIT=5,SG=3.4,YARI=SERIT*SG/2;
 const cim=new THREE.Mesh(new THREE.PlaneGeometry(500,YOL+500),new THREE.MeshLambertMaterial({color:0x79b85a}));cim.rotation.x=-Math.PI/2;cim.position.z=-YOL/2;S.add(cim);
 const yc=document.createElement('canvas');yc.width=256;yc.height=128;{const g=yc.getContext('2d');g.fillStyle='#45464f';g.fillRect(0,0,256,128);g.fillStyle='rgba(255,255,255,.9)';
  for(let i=1;i<SERIT;i++)g.fillRect(i*256/SERIT-2,0,4,64);g.fillStyle='#f4d35e';g.fillRect(2,0,5,128);g.fillRect(249,0,5,128)}
@@ -89,7 +89,7 @@ function katil(u){if(u.o)return true;if(ARAC.length>=25){const e=ARAC.reduce((a,
  u.serit=ARAC.length%SERIT;u.yol=Math.max(0,ort()-15);u.o=araba(u);u.o.g.position.set((u.serit-2)*SG,0,-u.yol);u.son=now();ARAC.push(u);OY.akis(`🚗 ${u.ad} konvoya katıldı`,'#bff');OY.ses.korna();return true}
 function atil(e){S.remove(e.o.g);e.o=null;ARAC.splice(ARAC.indexOf(e),1);if(ET[e.id]){ET[e.id].el.remove();delete ET[e.id]}}
 const korunuyor=u=>OY.korunuyor(u);
-function gaz(u,n){u.son=now();if(OY.donuk(u))return;u.hiz=Math.min(20,u.hiz+n)}
+function gaz(u,n){u.son=now();if(OY.donuk(u))return;u.hiz=Math.min(13,u.hiz+n)}
 /* ---- efektler ---- */
 let POLIS=[],HALAY=null,FISEK=[];
 UC.yukle('model/araba/police.glb').catch(()=>{});
@@ -190,7 +190,7 @@ function kadraj(on,arka,x){let lz=(on+arka)/2,D=40;
  return{D,lz}}
 /* ---- performans: FPS dusukse piksel oranini dusur ---- */
 let fpsN=0,fpsT=now();window.__fps=0;
-function fpsKontrol(t){fpsN++;if(t-fpsT>2000){const f=fpsN*1000/(t-fpsT);window.__fps=Math.round(f);fpsN=0;fpsT=t;if(f<34&&PR>.7){PR=Math.max(.7,PR-.15);boyut()}}}
+function fpsKontrol(t){fpsN++;if(t-fpsT>2000){const f=fpsN*1000/(t-fpsT);window.__fps=Math.round(f);fpsN=0;fpsT=t;if(f<24&&PR>1.25){PR=Math.max(1,PR-.25);boyut()}}}
 let son=now(),sonCubuk=0;
 function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;fpsKontrol(t);if(bitis&&t>bitis)sifirla();
  const sr=sirali(),lead=sr.length?sr[0].yol:0;
@@ -198,7 +198,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  const dolu=[];for(const u of sr){if(!u.o)continue;const bos=s=>!dolu.some(d=>d.s===s&&Math.abs(d.y-u.yol)<6.5);
   if(!bos(u.serit)){let en=null;for(const dd of[1,-1,2,-2,3,-3,4,-4]){const s=u.serit+dd;if(s>=0&&s<SERIT&&bos(s)){en=s;break}}if(en!==null)u.serit=en}dolu.push({s:u.serit,y:u.yol})}
  for(const u of ARAC){const o=u.o;if(!o)continue;const nit=t<u.nitroBit;
-  if(!bitis){const gap=lead-u.yol,yakala=gap>15?Math.min(9,(gap-15)*.09):0;
+  if(!bitis){const gap=lead-u.yol,yakala=gap>6?Math.min(12,(gap-6)*.25):0;
    if(!OY.donuk(u))u.yol+=(u.hiz*(nit?1.8:1)*OY.ikiKat(u)*(t<u.yavas?.3:1)+1.4+yakala)*dt;
    if(u.ucus>0){const d=Math.min(u.ucus,dt/1.6);u.yol+=u.ucusYol*d;u.ucus-=d}
    u.hiz*=Math.pow(.55,dt);if(u.yol>=YOL&&!kazananU)bitir(u)}
@@ -220,7 +220,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
   const p=f.P.geometry.attributes.position.array;for(let i=0;i<f.v.length;i+=3){p[i]+=f.v[i]*dt;p[i+1]+=f.v[i+1]*dt;p[i+2]+=f.v[i+2]*dt;f.v[i+1]-=5*dt;f.v[i]*=.985;f.v[i+2]*=.985}
   f.P.geometry.attributes.position.needsUpdate=true;f.P.material.opacity=1-a/1.7;return true});
  // kamera kadraji
- if(sr.length){const top3=sr.slice(0,3),grup=sr.filter((u,i)=>i<3||lead-u.yol<55);
+ if(sr.length){const top3=sr.slice(0,3),grup=sr.filter((u,i)=>i<3||(i<5&&lead-u.yol<25));
   const on=-lead-3,arka=-Math.min(...grup.map(u=>u.yol))+3,cx=Math.sin(t/9000)*2;const k=kadraj(on,arka,cx);
   const hedefOf=k.lz+lead;kamD+=(k.D-kamD)*Math.min(1,dt*1.6);kamOf+=(hedefOf-kamOf)*Math.min(1,dt*1.6);kamX=cx;void top3}
  kamKur(K,kamD,-lead+kamOf,kamX);

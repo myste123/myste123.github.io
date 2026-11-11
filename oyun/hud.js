@@ -16,10 +16,10 @@
   .h-akis{display:flex;flex-direction:column;gap:.5vh;margin-bottom:1vh;align-items:flex-start}
   .h-akis div{background:rgba(8,10,25,.6);backdrop-filter:blur(6px);border-radius:1.4vh;padding:.45vh 1.3vh;font:600 1.5vh Segoe UI,Arial;max-width:80vw;animation:hg .35s ease-out}
   .h-akis div:first-child{border:1px solid var(--r);box-shadow:0 0 1.2vh rgba(0,0,0,.4)}.h-akis div:nth-child(2){opacity:.72}.h-akis div:nth-child(3){opacity:.45}
-  .h-vit{position:fixed;left:50%;top:22vh;transform:translateX(-50%);z-index:25;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:.6vh}
-  .h-vit .kart{display:flex;align-items:center;gap:1.4vh;background:linear-gradient(90deg,rgba(20,10,40,.92),rgba(60,20,80,.92));border:.25vh solid var(--r);border-radius:6vh;padding:.8vh 2.4vh .8vh .8vh;animation:vg .5s cubic-bezier(.2,1.6,.4,1),vc .5s 3.2s forwards;box-shadow:0 1vh 4vh rgba(0,0,0,.5)}
-  .h-vit img{width:6vh;height:6vh;border-radius:50%;border:.3vh solid #fff}.h-vit .ik{font-size:6vh;line-height:1;animation:vz .6s infinite alternate}
-  .h-vit .y{white-space:nowrap}.h-vit .y b{display:block;font:800 2.1vh Nunito;color:#fff}.h-vit .y span{display:block;font:900 2.5vh 'Baloo 2',Nunito;color:var(--r)}
+  .h-vit{position:fixed;left:50%;top:13.6vh;max-width:72vw;transform:translateX(-50%);z-index:25;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:.6vh}
+  .h-vit .kart{display:flex;align-items:center;gap:.9vh;background:rgba(15,10,35,.88);border:.18vh solid var(--r);border-radius:4vh;padding:.4vh 1.4vh .4vh .4vh;animation:vg .5s cubic-bezier(.2,1.6,.4,1),vc .5s 3.2s forwards;box-shadow:0 1vh 4vh rgba(0,0,0,.5)}
+  .h-vit img{width:3.4vh;height:3.4vh;border-radius:50%;border:.2vh solid #fff}.h-vit .ik{font-size:3vh;line-height:1;animation:vz .6s infinite alternate}
+  .h-vit .y{white-space:nowrap}.h-vit .y b{display:block;font:700 1.3vh Nunito;color:#ddd}.h-vit .y span{display:block;font:800 1.6vh Nunito;color:var(--r);overflow:hidden;text-overflow:ellipsis}
   @keyframes vg{from{transform:scale(.3) translateY(-4vh);opacity:0}}@keyframes vc{to{opacity:0;transform:translateY(-3vh)}}@keyframes vz{to{transform:scale(1.15) rotate(8deg)}}
   @keyframes hg{from{transform:translateY(1vh);opacity:0}}
   .h-hed{display:grid;grid-template-columns:repeat(3,1fr);gap:.6vh}
