@@ -25,6 +25,7 @@
   .h-hed{display:grid;grid-template-columns:repeat(3,1fr);gap:.6vh}
   .h-hed div{background:rgba(8,10,25,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);border-radius:1.3vh;padding:.6vh .4vh;text-align:center;font:600 1.25vh/1.25 Segoe UI,Arial;color:rgba(255,255,255,.85)}
   .h-hed b{display:block;font-size:1.5vh;color:var(--r)}
+  .h-rkz{position:fixed;right:2vw;top:50vh;z-index:19;display:flex;align-items:center;gap:.8vh;background:linear-gradient(135deg,rgba(124,92,255,.85),rgba(255,77,141,.85));border-radius:1.6vh;padding:.7vh 1.2vh;pointer-events:none;animation:rkz 4s ease-in-out infinite;box-shadow:0 .6vh 2vh rgba(0,0,0,.35)}.h-rkz b{font-size:2.4vh}.h-rkz span{font:800 1.25vh/1.25 Nunito;color:#fff}.h-rkz i{font-style:normal;font-weight:900;font-size:1.4vh}@keyframes rkz{0%,100%{transform:translateY(0)}50%{transform:translateY(-.8vh)}}
   .h-rek{text-align:center;font:600 1.15vh Segoe UI,Arial;color:rgba(255,255,255,.55);margin-top:.7vh}
   .h-kaz{position:fixed;inset:0;display:none;place-items:center;background:radial-gradient(rgba(0,0,0,.25),rgba(0,0,0,.7));z-index:30;text-align:center;color:#fff}
   .h-kaz div{font:900 4vh/1.2 Segoe UI,Arial;color:var(--r);text-shadow:0 0 3vh rgba(0,0,0,.8)}
@@ -40,9 +41,9 @@
      <div class="h-ust"><div class="h-bas"><b style="font-size:${cfg.baslik.length>13?"min(2.5vh,4.6vw)":""}">${cfg.baslik}</b><span>${cfg.alt || ''}</span></div><div class="h-cip" id="hSol">⏱ 3:00</div><div class="h-cip" id="hSag">👥 0</div></div>
      <div class="h-ilk" id="hIlk"></div>
      <div class="h-alt"><div class="h-akis" id="hAkis"></div><div class="h-hed">${(cfg.hediyeler || []).map(h => `<div><b>${h[0]} ${h[1]}</b>${h[2]}</div>`).join('')}</div>
-     <div class="h-rek">🎮 Bu oyunu yayınına kirala · myste123.github.io</div></div>
+     </div>
      <div class="h-vit" id="hVit"></div><div class="h-kaz" id="hKaz"><div id="hKazI"></div></div>`;
-    document.body.appendChild(d); AK = d.querySelector('#hAkis'); IL = d.querySelector('#hIlk'); SOL = d.querySelector('#hSol'); SAG = d.querySelector('#hSag'); KZ = d.querySelector('#hKaz');
+    d.insertAdjacentHTML('beforeend','<div class="h-rkz"><b>🎮</b><span>Bu oyunu yayınına kirala<br><i>myste123.github.io</i></span></div>');document.body.appendChild(d); AK = d.querySelector('#hAkis'); IL = d.querySelector('#hIlk'); SOL = d.querySelector('#hSol'); SAG = d.querySelector('#hSag'); KZ = d.querySelector('#hKaz');
   };
   OY.akis = (t, renk = '#fff') => { if (!AK) return; const d = document.createElement('div'); d.style.color = renk; d.textContent = t; AK.prepend(d); while (AK.children.length > 3) AK.lastChild.remove() };
   OY.bilgi = (sol, sag) => { if (SOL && SOL.textContent !== sol) SOL.textContent = sol; if (SAG && SAG.textContent !== sag) SAG.textContent = sag };
