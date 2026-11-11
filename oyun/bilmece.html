@@ -1,58 +1,153 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bilmece Kahvehanesi</title>
-<style>html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 30%,#5a3a22,#2a180d 70%);color:#fff;font-family:Nunito,Segoe UI,Arial,sans-serif}
-#masa{position:fixed;left:5vw;right:5vw;top:15vh;padding:3vh 3vh 2.4vh;background:linear-gradient(180deg,#f7ead2,#e8d3ab);color:#3b2412;border-radius:2.4vh;box-shadow:0 2vh 5vh rgba(0,0,0,.45);text-align:center}
-#masa .ust{display:flex;justify-content:space-between;font:800 1.6vh Nunito;color:#8a5a2b}
-#soru{font:800 3vh/1.3 'Baloo 2',Nunito;margin:1.6vh 0 2vh;min-height:12vh;display:grid;place-items:center}
-#kutular{display:flex;justify-content:center;gap:.8vh;flex-wrap:wrap}
-.h{width:4.6vh;height:5.6vh;border-radius:1vh;background:#3b2412;color:#ffd166;font:900 3vh/5.6vh 'Baloo 2',Nunito;transition:transform .3s}
+<style>html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 25%,#5a3a22,#2a180d 70%);color:#fff;font-family:Nunito,Segoe UI,Arial,sans-serif}
+/* dikey yerlesim (vh): 0-12 hud ust · 13.2-50.4 soru karti · 51-59 hediye vitrini (sabit yuva) · 60-hud deneme akisi */
+.h-vit{top:51.2vh!important}
+#masa{position:fixed;left:4vw;right:4vw;top:13.2vh;height:37.2vh;box-sizing:border-box;padding:1.6vh 2.2vh 1.6vh;background:linear-gradient(180deg,#f7ead2,#e8d3ab);color:#3b2412;border-radius:2.4vh;box-shadow:0 2vh 5vh rgba(0,0,0,.45);text-align:center;display:flex;flex-direction:column;border:.35vh solid transparent;transition:border-color .3s,box-shadow .3s}
+#masa.cift{border-color:#f0b400;box-shadow:0 0 3vh rgba(255,200,0,.55),0 2vh 5vh rgba(0,0,0,.45)}
+#masa .ust{display:flex;justify-content:space-between;align-items:center;gap:1vh;font:800 min(1.6vh,3vw) Nunito;color:#8a5a2b;min-height:2.6vh}
+#masa .ust b{background:#f0b400;color:#3b2412;border-radius:1vh;padding:.2vh .9vh;font-weight:900;animation:cp .6s infinite alternate}@keyframes cp{to{transform:scale(1.08)}}
+#etki{min-height:2.2vh;font:800 min(1.45vh,2.8vw)/1.5 Nunito;color:#a0391b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#soru{flex:1;min-height:0;display:grid;place-items:center;font:800 min(2.9vh,5.3vw)/1.28 'Baloo 2',Nunito;padding:0 .4vh;overflow:hidden}
+#ipucu{font:800 min(1.7vh,3.2vw) Nunito;color:#8a5a2b;min-height:2.6vh;margin-bottom:.8vh}
+#ipucu.ac{color:#fff;background:#c0662b;border-radius:1.2vh;padding:.3vh 1vh;align-self:center;animation:dg .4s}
+#kutular{display:flex;justify-content:center;gap:var(--g,.7vh);flex-wrap:nowrap}
+.h{flex:none;border-radius:.9vh;background:#3b2412;color:#ffd166;display:grid;place-items:center;font-family:'Baloo 2',Nunito;font-weight:900;transition:transform .35s,background .35s}
 .h.ac{background:#c0662b;color:#fff;transform:rotateY(360deg)}
-#sure{height:.9vh;background:rgba(59,36,18,.2);border-radius:1vh;margin-top:2vh;overflow:hidden}#sure div{height:100%;background:#c0662b;transition:width .2s linear}
-#cevap{position:fixed;left:5vw;right:5vw;top:52vh;text-align:center;font:900 3vh 'Baloo 2',Nunito;color:#9dff9d;min-height:4vh;text-shadow:0 .3vh 1vh #000}
-#denemeler{position:fixed;left:5vw;right:5vw;top:58vh;display:flex;flex-wrap:wrap;gap:.8vh;justify-content:center}
-#denemeler div{background:rgba(0,0,0,.45);border-radius:2vh;padding:.4vh 1.2vh;font:700 1.5vh Nunito;animation:dg .3s}@keyframes dg{from{transform:scale(.6);opacity:0}}
-#denemeler .y{color:#ff9b9b}#denemeler .d{background:#2f8f46;color:#fff}
-.h-vit{top:47vh!important}
+.h.bil{background:#2f8f46;color:#fff}
+#sonuc{margin-top:1.2vh;min-height:3.8vh;display:flex;align-items:center;justify-content:center;gap:1vh;font:900 min(2.2vh,4.1vw) 'Baloo 2',Nunito;color:#5a3412}
+#sonuc img{width:3.6vh;height:3.6vh;border-radius:50%;border:.25vh solid #2f8f46}
+#sonuc.ok{color:#1f7a37}#sonuc.zaman{color:#a0391b}
+#sure{flex:none;height:.9vh;background:rgba(59,36,18,.2);border-radius:1vh;margin-top:.8vh;overflow:hidden}#sure div{height:100%;background:#c0662b;transition:width .25s linear}
+#denemeler{position:fixed;left:4vw;right:4vw;top:60vh;height:16vh;overflow:hidden;display:flex;flex-wrap:wrap;align-content:flex-start;gap:.7vh;justify-content:center}
+#denemeler div{display:flex;align-items:center;gap:.5vh;background:rgba(0,0,0,.45);border-radius:2vh;padding:.3vh 1vh .3vh .3vh;font:700 min(1.5vh,2.9vw) Nunito;animation:dg .3s;max-width:44vw;white-space:nowrap}
+#denemeler img{width:2.5vh;height:2.5vh;border-radius:50%}#denemeler span{overflow:hidden;text-overflow:ellipsis}
+@keyframes dg{from{transform:scale(.6);opacity:0}}
+#denemeler .y{color:#ffb4b4}#denemeler .d{background:#2f8f46;color:#fff}#denemeler .k{background:#c25e00;color:#fff}#denemeler .x{color:#9fd0ff}
+#bos{position:fixed;left:4vw;right:4vw;top:52.4vh;text-align:center;font:800 min(1.7vh,3.2vw)/1.5 Nunito;color:rgba(255,230,200,.75);transition:opacity .3s}
+#bos.gizli{opacity:0}
+.jok{position:fixed;left:50%;top:30vh;transform:translate(-50%,-50%);z-index:26;pointer-events:none;font:900 6vh 'Baloo 2',Nunito;color:#ffd166;text-shadow:0 .5vh 2vh #000;white-space:nowrap;animation:jk 1.6s forwards}
+@keyframes jk{0%{transform:translate(-50%,-50%) scale(.2) rotate(-20deg);opacity:0}25%{transform:translate(-50%,-50%) scale(1.15);opacity:1}80%{opacity:1}100%{transform:translate(-50%,-80%) scale(1);opacity:0}}
 </style></head><body>
-<div id="masa"><div class="ust"><span id="kat">☕ Bilmece</span><span id="no">1. soru</span></div><div id="soru">Hazırlanıyor…</div><div id="kutular"></div><div id="sure"><div></div></div></div>
-<div id="cevap"></div><div id="denemeler"></div>
+<div id="masa"><div class="ust"><span id="no">☕ 1. soru</span><b id="ciftR" hidden>⭐ ÇİFT PUAN</b><span id="deger"></span></div><div id="etki"></div><div id="soru">Hazırlanıyor…</div><div id="ipucu"></div><div id="kutular"></div><div id="sonuc"></div><div id="sure"><div></div></div></div>
+<div id="bos">💬 Cevabı <b>tek kelime</b> yorum olarak yaz · ilk doğru yazan puanı alır</div>
+<div id="denemeler"></div>
 <script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
-OY.hud({baslik:'BİLMECE KAHVEHANESİ',alt:'Cevabı yorum olarak yaz · ilk bilen kazanır · harf açıldıkça puan azalır',renk:'#ffd166',hediyeler:[['🌹','Gül','harf aç'],...OY.REKABET_HED.slice(1)]});
-// kendi yazdigimiz bilmeceler (cevap: tek kelime)
-const SB=[['Dişleri var ama ısırmaz, saçları tarar.','tarak'],['Gece gelir, sabah gider; gökte gümüş bir tabak.','ay'],['Yağmurdan sonra gökte belirir, yedi rengi vardır.','gökkuşağı'],
-['Akrebi var ama sokmaz, durmadan tıklar.','saat'],['Ayağı yok yürür, ağzı yok konuşur, her eve gelir.','mektup'],['Ne kadar çok alırsan o kadar büyür, toprağı kazarsın.','çukur'],
-['Kanadı yok uçar, gözü yok ağlar.','bulut'],['Bir evim var, kapısı yok; içinde sarı bir hazine saklı.','yumurta'],['Sabah dört, öğlen iki, akşam üç ayakla yürür.','insan'],
-['Benim bir kardeşim var, ben nereye o oraya; ışık olmadan kaybolur.','gölge'],['Suya girer ıslanmaz, yere düşer kırılmaz.','gölge'],['Boynu var başı yok, kolu var eli yok.','şişe'],
-['Çaydanlığın kardeşi, bardakları doldurur, ince belli.','çay'],['Simidin kardeşi, susamlı ve yuvarlak; vapurda martılar bayılır.','simit'],['Kırmızı başlı, beyaz sakallı, kökü toprakta.','turp'],
-['Ağzı var dili yok, sırtında ev taşır, yavaş yürür.','kaplumbağa'],['Gökten iner yağar, beyaz örtü serer, kardan adam yapılır.','kar'],['İçi kırmızı, dışı yeşil, çekirdekli yaz meyvesi.','karpuz'],
-['Sarı sarı salkım, kışın tatlı pekmez olur.','üzüm'],['Uzun boylu, yeşil kulaklı, tepesinde sarı püsküllü.','mısır'],['Bir ağaç düşün on iki dalı var, her dalda dört yuva.','yıl'],
-['Uçar ama kuş değil, bal yapar, iğnesi var.','arı'],['Aynaya bakar seni gösterir, kendisi yoktur.','yansıma'],['Delik deşik ama suyu tutar.','sünger'],['Göz açıp kapayıncaya kadar geçer, ama geri gelmez.','zaman'],
-['Her sabah öter, köyü uyandırır.','horoz'],['Ayakkabının arkadaşı, ayağı ısıtır, eşi hep kaybolur.','çorap'],['Tuşları var piyano değil, harf yazar.','klavye'],
-['Çiçekten çiçeğe konar, kanatları renkli.','kelebek'],['Bütün gün çalışır, gece dinlenir; ışık verir, ısıtır.','güneş'],['Elle tutulmaz, gözle görülmez, uçurtmayı uçurur.','rüzgar'],
-['Dört bacağı var yürüyemez, üstünde yemek yenir.','masa'],['Vapurdan iner, köprüyü geçer; iki kıtayı birleştiren şehir.','istanbul'],['Peri bacaları ve balonlarıyla ünlü bölge.','kapadokya']];
-const norm=s=>String(s||'').toLocaleLowerCase('tr').replace(/[^a-zçğıöşü]/g,'');
-const U={};let soru=null,acik=[],bas=0,bitis=0,no=0,sira=[...SB].sort(()=>Math.random()-.5),bilen=null;const SURE=40000,now=()=>performance.now();
-function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,son:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
-function yeniSoru(){soru=sira[no%sira.length];no++;acik=[];bas=now();bilen=null;document.getElementById('soru').textContent=soru[0];document.getElementById('no').textContent=no+'. soru';
- document.getElementById('cevap').textContent='';document.getElementById('denemeler').innerHTML='';kutuCiz()}
-function kutuCiz(){document.getElementById('kutular').innerHTML=[...soru[1]].map((h,i)=>`<div class="h ${acik.includes(i)?'ac':''}">${acik.includes(i)||bilen?h.toLocaleUpperCase('tr'):''}</div>`).join('')}
-function harfAc(n=1){for(let k=0;k<n;k++){const kapali=[...soru[1]].map((_,i)=>i).filter(i=>!acik.includes(i));if(kapali.length<=1)return;acik.push(kapali[Math.random()*kapali.length|0])}kutuCiz();OY.ses.tik()}
-function deneme(u,metin,dogru){const d=document.createElement('div');d.className=dogru?'d':'y';d.textContent=`${OY.kisaAd(u.ad,10)}: ${String(metin).slice(0,18)}`;const D=document.getElementById('denemeler');D.prepend(d);while(D.children.length>10)D.lastChild.remove()}
-OY.rekabetKur({liste:()=>Object.values(U),skor:u=>u.puan,ayarla:(u,v)=>{u.puan=Math.max(0,Math.round(v))}});
+const HED=[['🌹','Gül','🔤 1 harf aç'],['💖','Kalp','💡 İpucu göster'],['💐','Parfüm','🔒 Lideri 12 sn kilitle'],['🍩','Donut','⭐ Çift puan sorusu'],['🎩','Şapka','🃏 Joker: soru senin'],['🌌','Galaksi','👑 Ağa: %25 çal + 2x']];
+OY.hud({baslik:'BİLMECE KAHVEHANESİ',alt:'Cevabı yorum olarak yaz · ilk bilen kazanır · harf açıldıkça puan azalır',renk:'#ffd166',hediyeler:HED});
+// [soru, cevap (tek kelime), ipucu] — hepsi kendi yazdigimiz, cevabi tek ve kesin
+const SB=[['Dişleri var ama ısırmaz, her sabah saçları düzeltir.','tarak','Banyoda durur'],
+['Gece gökte parlar; bazen dolunay, bazen hilal olur.','ay','Gökyüzünde'],
+['Yağmurdan sonra gökte belirir, yedi rengi vardır.','gökkuşağı','Gökyüzünde'],
+['Akrebi var ama sokmaz, yelkovanı var ama esmez.','saat','Duvarda ya da kolda'],
+['Kanadı yok uçar, gözü yok ağlar.','bulut','Gökyüzünde'],
+['Sırtında evini taşır, kabuğuna saklanır, yarışta tavşanı geçmiştir.','kaplumbağa','Bir hayvan'],
+['Sabah dört, öğlen iki, akşam üç ayakla yürür.','insan','Hepimiz oyuz'],
+['Ben nereye gidersem o da peşimden gelir; ışık sönünce kaybolur.','gölge','Güneşte yere düşer'],
+['Boynu var başı yok, kolu var eli yok, düğmeleri var.','gömlek','Giyilir'],
+['Gökten beyaz beyaz yağar, kışın yerleri örter, ondan adam yapılır.','kar','Hava durumu'],
+['Dışı yeşil, içi kırmızı, çekirdekli kocaman bir yaz meyvesi.','karpuz','Meyve'],
+['Salkım salkım asılır, kurusu çerez olur, şırası pekmez olur.','üzüm','Meyve'],
+['Uzun boylu, tepesi püsküllü; koçanında sarı sarı taneler.','mısır','Tarlada yetişir'],
+['On iki dalı var, her dalda dört yuva, her yuvada yedi yumurta.','yıl','Takvimle ilgili'],
+['Çiçekten çiçeğe konar, bal yapar, iğnesi vardır.','arı','Bir böcek'],
+['Delik deşik ama suyu tutar, bulaşıkta köpürür.','sünger','Mutfakta durur'],
+['Her sabah öter, köyü uyandırır, ibiği kırmızıdır.','horoz','Kümeste yaşar'],
+['Ayağını ısıtır, ayakkabının içine girer, teki hep kaybolur.','çorap','Giyilir'],
+['Tuşları var ama piyano değil, ekrana harf yazar.','klavye','Bilgisayarda'],
+['Önce tırtıldı, sonra renkli kanatlarıyla uçtu.','kelebek','Bir böcek'],
+['Gündüz gökte parlar, ısıtır; akşam batar, sabah doğar.','güneş','Gökyüzünde'],
+['Görünmez, elle tutulmaz; uçurtmayı uçurur, ağaçları sallar.','rüzgar','Hava durumu'],
+['Dört ayağı var yürüyemez, üstünde yemek yenir.','masa','Ev eşyası'],
+['Pulu var balık değil, zarfın içinde yol alır.','mektup','Postacı getirir'],
+['Kapısı yok, penceresi yok; içinde sarı bir hazine saklı.','yumurta','Kahvaltıda yenir'],
+['Gözü var görmez, gözünden iplik geçer, kumaşı deler.','iğne','Dikişte kullanılır'],
+['Ahşap gövdeli, kurşunu var ama silah değil; yazı yazar.','kalem','Okul eşyası'],
+['Sen sağ elini kaldırırsan ben solumu kaldırırım; her sabah yüzüne bakarım.','ayna','Duvarda asılı'],
+['Doğrarken ağlatır, katman katmandır, yemeğe tat verir.','soğan','Sebze'],
+['Yuvarlak ve susamlı, çayın yanında yenir; vapurda martılar kapışır.','simit','Fırından çıkar'],
+['Peynire bayılır, kediden kaçar, deliğinde yaşar.','fare','Bir hayvan'],
+['Çölde yaşar, hörgücünde yağ saklar, susuzluğa dayanır.','deve','Bir hayvan'],
+['Boynu upuzun, ağaçların tepesindeki yaprakları yer.','zürafa','Bir hayvan'],
+['Ormanlar kralı derler, yelesiyle ünlüdür.','aslan','Bir hayvan'],
+['Sayfaları var ağaç değil, içinde hikâyeler saklı.','kitap','Okunur'],
+['Cebinde taşırsın, kilide girer, kapıyı açar.','anahtar','Kapıyla ilgili'],
+['İki tekerleği var, pedal çevirirsin, benzin yemez.','bisiklet','Taşıt'],
+['Kurulamak için kullanılır, kuruladıkça kendisi ıslanır.','havlu','Banyoda durur'],
+['Sıcakta erir, külahta yenir; soğuk ve tatlıdır.','dondurma','Yaz tatlısı'],
+['Yaz kış yeşildir, yılbaşında süslenir.','çam','Bir ağaç'],
+['Kendisi yanar, etrafı aydınlatır, eridikçe kısalır.','mum','Elektrik kesilince'],
+['Yağmur yağınca açılır, yağmur dinince kapanır.','şemsiye','Elde taşınır'],
+['Geceleri uyanır, başını çevirir, "hu hu" diye öter.','baykuş','Bir kuş'],
+['Uzun kulaklı, havuç sever, zıplayarak koşar.','tavşan','Bir hayvan'],
+['Kapıda durur, basınca çalar, misafiri haber verir.','zil','Kapıyla ilgili'],
+['Sarı kabuklu, uzun ve kıvrık; maymunlar bayılır.','muz','Meyve'],
+['Küçük bir kutudan çıkar, sürtünce alev alır.','kibrit','Ateş yakar'],
+['Sonbaharda sararır, dalından kopup yere düşer.','yaprak','Ağaçta olur'],
+['Asya ile Avrupa\'yı birleştirir; köprüleri ve boğazıyla ünlü şehir.','istanbul','Türkiye\'de bir şehir']];
+// karsilastirma: Turkce harf yazmayan da bilsin (gokkusagi = gökkuşağı), sapkali harfler duz
+const kat=s=>String(s||'').toLocaleLowerCase('tr').replace(/[âàá]/g,'a').replace(/[îíì]/g,'i').replace(/[ûúù]/g,'u').replace(/ç/g,'c').replace(/ğ/g,'g').replace(/ı/g,'i').replace(/ö/g,'o').replace(/ş/g,'s').replace(/ü/g,'u');
+const kelime=s=>kat(s).split(/[^a-z]+/).filter(Boolean);
+function yakin(a,b){if(Math.abs(a.length-b.length)>1||b.length<4)return false;const d=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]===1}
+const TURSORU=10,SURE=40000,now=()=>performance.now(),$=s=>document.getElementById(s),kisa=(s,n=10)=>OY.kisaAd(s,n);
+const U={};let soru=null,acik=[],bas=0,no=0,turNo=0,bilen=null,ipucuAcik=0,cift=0,bekHarf=0,bekCift=0,bitis=0,KAL={sampiyon:{}};
+let tahmin=0,sira=[...SB].sort(()=>Math.random()-.5);
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,son:0,kilit:0,aga:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
+const deger=()=>Math.max(10,(soru[1].length-acik.length)*10)*(cift?2:1);
+function yeniSoru(){if(no>0&&no%sira.length===0)sira.sort(()=>Math.random()-.5);soru=sira[no%sira.length];no++;turNo++;acik=[];bas=now();bilen=null;ipucuAcik=0;cift=bekCift;bekCift=0;
+ $('soru').textContent=soru[0];$('no').textContent=`☕ ${turNo}/${TURSORU}. soru`;$('sonuc').className='';$('sonuc').textContent='';tahmin=0;$('denemeler').innerHTML='';ipucuCiz();kutuCiz();
+ if(bekHarf){const n=bekHarf;bekHarf=0;harfAc(n)}}
+function ipucuCiz(){const I=$('ipucu');if(ipucuAcik){I.className='ac';I.textContent='💡 İpucu: '+soru[2]}else{I.className='';I.textContent='💡 İpucu için 💖 Kalp gönder'}}
+function kutuCiz(){const K=$('kutular'),c=[...soru[1]],n=c.length,W=K.clientWidth||innerWidth*.8,g=Math.min(innerHeight*.007,W*.015),
+  w=Math.min(innerHeight*.05,(W-(n-1)*g)/n),h=Math.min(innerHeight*.058,w*1.22);K.style.setProperty('--g',g+'px');
+ K.innerHTML=c.map((x,i)=>{const a=acik.includes(i);return `<div class="h ${bilen&&bilen.ad!=='kimse'?'bil':a?'ac':''}" style="width:${w}px;height:${h}px;font-size:${h*.6}px">${a||bilen?x.toLocaleUpperCase('tr'):''}</div>`}).join('')}
+function harfAc(n=1){let k=0;for(;k<n;k++){const kapali=[...soru[1]].map((_,i)=>i).filter(i=>!acik.includes(i));if(kapali.length<=1)break;acik.push(kapali[Math.random()*kapali.length|0])}if(k){kutuCiz();OY.ses.tik()}return k}
+function deneme(u,metin,tip){const d=document.createElement('div');d.className=tip;d.innerHTML=`<img src="${OY.foto(u,64).toDataURL()}"><span></span>`;d.querySelector('span').textContent=`${kisa(u.ad,9)}: ${String(metin).slice(0,18)}`;
+ const D=$('denemeler');D.prepend(d);while(D.children.length>16)D.lastChild.remove()}
+function bildi(u,p,joker){u.puan+=p;bilen=u;kutuCiz();OY.ses.dogru();const S=$('sonuc');S.className='ok';
+ S.innerHTML=`<img src="${OY.foto(u,64).toDataURL()}"><span></span>`;S.querySelector('span').textContent=`${joker?'🃏 ':'✅ '}${kisa(u.ad,12)} bildi! +${p} puan`;
+ OY.akis(`🧠 ${u.ad} ${joker?'jokerle aldı':'bildi'}: "${soru[1].toLocaleUpperCase('tr')}" · +${p}`,'#9f9');setTimeout(sonraki,5000)}
+function sonraki(){if(turNo>=TURSORU){turSonu();return}yeniSoru()}
+function turSonu(){const s=Object.values(U).filter(u=>u.puan>0).sort((a,b)=>b.puan-a.puan);bitis=1;
+ if(s[0]){const m=s[0];KAL.sampiyon[m.ad]=(KAL.sampiyon[m.ad]||0)+1;OY.kaydet(KAL);OY.ses.zafer();OY.kazanan(m,'☕ KAHVEHANE ŞAMPİYONU',`${m.puan} puan · ${KAL.sampiyon[m.ad]}. şampiyonluk`)}
+ setTimeout(()=>{OY.kazanan(null);Object.values(U).forEach(u=>{u.puan=0;u.kilit=0;u.aga=0});turNo=0;bitis=0;OY.akis('☕ Yeni tur başladı! 10 bilmece, en çok bilen şampiyon','#ffd166');yeniSoru()},s[0]?8000:500)}
+function lider(u){return Object.values(U).filter(x=>x!==u&&x.puan>0).sort((a,b)=>b.puan-a.puan)[0]||null}
+function jokerYazi(t){const d=document.createElement('div');d.className='jok';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1700)}
+function hediyeEtki(h,u){const t=now(),A=h.adet,aktif=!bilen&&!bitis;
+ switch(h.sinif){
+  case 'gul':{if(aktif){const k=harfAc(A);if(k)return `🔤 ${k} harf açtı`;return '🔤 Açılacak harf kalmadı'}bekHarf+=A;return '🔤 Sonraki soruda harf açılacak'}
+  case 'kalp':{if(aktif&&!ipucuAcik){ipucuAcik=1;ipucuCiz();OY.ses.tik();return '💡 İpucu açıldı'}if(aktif&&harfAc(1))return '💡 İpucu zaten açık · 1 harf açtı';bekHarf++;return '💡 Sonraki soruda harf açılacak'}
+  case 'parfum':{const l=lider(u);if(!l)return '🔒 Kilitlenecek rakip yok';l.kilit=Math.max(l.kilit,t)+12000;OY.ses.yanlis();return `🔒 ${kisa(l.ad,9)} 12 sn cevap veremez`}
+  case 'donut':{if(aktif){cift=1;$('masa').classList.add('cift');return '⭐ Bu soru ÇİFT PUAN'}bekCift=1;return '⭐ Sonraki soru ÇİFT PUAN'}
+  case 'sapka':{if(aktif){jokerYazi('🃏 JOKER!');const p=deger();bildi(u,p,1);return `🃏 Joker! Soruyu aldı +${p}`}u.puan+=30*A;return `🃏 Joker: +${30*A} puan`}
+  case 'galaksi':{const l=lider(u);let c=0;if(l){c=Math.round(l.puan*.25);l.puan-=c;u.puan+=c}u.aga=Math.max(u.aga,t)+60000;jokerYazi('👑 KAHVEHANE AĞASI');OY.ses.patla();
+   return l?`👑 ${kisa(l.ad,9)}'dan ${c} puan aldı · 60 sn 2x`:'👑 60 sn boyunca 2x puan'}}
+ return ''}
 OY.basla({muzik:'sakin',olay:e=>{
- if(!e.id||!soru)return;const u=kul(e);u.son=now();
- if(e.t==='yorum'&&!bilen){const c=norm(e.metin);if(!c)return;if(OY.donuk(u)){deneme(u,'❄ donuk',0);return}
-  if(c===norm(soru[1])){const p=Math.max(10,(soru[1].length-acik.length)*10)*OY.ikiKat(u);u.puan+=p;bilen=u;kutuCiz();deneme(u,e.metin,1);OY.ses.dogru();
-   document.getElementById('cevap').textContent=`✅ ${u.ad} bildi! +${p} puan`;OY.akis(`🧠 ${u.ad} "${soru[1]}" dedi · +${p}`,'#9f9');setTimeout(yeniSoru,4500)}
-  else deneme(u,e.metin,0)}
- else if(e.t==='begeni'){u.puan+=0}
- else if(e.t==='hediye'){const h=OY.hediye(e);OY.ses.para();if(h.sinif==='gul'&&!bilen)harfAc(1);const et=h.sinif==='gul'?'bir harf açtı':OY.rekabetHediye(u,h);OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
+ if(e.t==='kalici'&&e.veri&&e.veri.sampiyon){KAL=e.veri;return}
+ if(!e.id||!soru)return;const u=kul(e),t=now();
+ if(e.t==='yorum'&&!bilen&&!bitis){const w=kelime(e.metin);if(!w.length)return;const dc=kat(soru[1]);
+  const dogru=w.includes(dc)||w.join('')===dc;
+  if(u.kilit>t){deneme(u,`🔒 kilitli ${Math.ceil((u.kilit-t)/1000)} sn`,'x');return}
+  if(dogru){const p=deger()*(u.aga>t?2:1);bildi(u,p);deneme(u,'✅ DOĞRU','d')}
+  else if(w.some(x=>yakin(x,dc)))deneme(u,'🔥 çok yakın!','k');
+  else deneme(u,String(e.metin).trim(),'y');if(!dogru)tahmin++}
+ else if(e.t==='hediye'){const h=OY.hediye(e);OY.ses.para();const et=hediyeEtki(h,u);OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad}: ${et}`,'#ffd84a')}
 }});
-OY.demoYorum=()=>{if(soru&&Math.random()<.18)return soru[1];return['bilmem','çay','saat','bulut','güneş','kalem','ay','kar'][Math.random()*8|0]};
-yeniSoru();
-setInterval(()=>{const t=now(),gecen=t-bas;if(!bilen){if(gecen>SURE){bilen={ad:'kimse'};kutuCiz();document.getElementById('cevap').textContent=`⌛ Cevap: ${soru[1].toLocaleUpperCase('tr')}`;OY.ses.yanlis();setTimeout(yeniSoru,4500)}
- else if(gecen>SURE*(acik.length+1)/(soru[1].length+1)&&acik.length<soru[1].length-1)harfAc(1)}
- document.querySelector('#sure div').style.width=Math.max(0,100-gecen/SURE*100)+'%';
- const s=Object.values(U).filter(u=>u.puan>0).sort((a,b)=>b.puan-a.puan);OY.bilgi(`❓ ${no}. soru`,`👥 ${Object.keys(U).length}`);OY.ilk3(s.slice(0,3))},250);
+OY.demoYorum=()=>{if(soru&&Math.random()<.03+acik.length/soru[1].length*.35)return soru[1];if(soru&&Math.random()<.08){const c=[...soru[1]];c[c.length-1]='x';return c.join('')}
+ return['bilmem','çay','saat','bulut','güneş','kalem','ay','kar','masa','kedi','ağaç'][Math.random()*11|0]};
+yeniSoru();addEventListener('resize',()=>soru&&kutuCiz());
+setInterval(()=>{const t=now(),gecen=t-bas;
+ if(soru&&!bilen&&!bitis){if(gecen>SURE){bilen={ad:'kimse'};kutuCiz();const S=$('sonuc');S.className='zaman';S.textContent=`⌛ Kimse bilemedi · Cevap: ${soru[1].toLocaleUpperCase('tr')}`;OY.ses.yanlis();setTimeout(sonraki,5000)}
+  else{const hedef=Math.min(Math.ceil(soru[1].length*.6),Math.floor(Math.max(0,gecen-8000)/(SURE-8000)*(Math.ceil(soru[1].length*.6)+1)));if(acik.length<hedef)harfAc(1)}}
+ $('sure').firstChild.style.width=(bilen?0:Math.max(0,100-gecen/SURE*100))+'%';
+ if(soru){const dv=bilen?'':`🏆 ${deger()} puan`;if($('deger').textContent!==dv)$('deger').textContent=dv;
+  if(!bilen){const st=tahmin?`✍️ ${tahmin} tahmin · henüz bilen yok`:'✍️ Cevabını yorumlara yaz';if($('sonuc').textContent!==st)$('sonuc').textContent=st}}
+ $('ciftR').hidden=!cift||!!bilen;$('masa').classList.toggle('cift',!!cift&&!bilen);
+ const ek=[];Object.values(U).forEach(u=>{if(u.kilit>t)ek.push(`🔒 ${kisa(u.ad,8)} ${Math.ceil((u.kilit-t)/1000)}`);if(u.aga>t)ek.push(`👑 ${kisa(u.ad,8)} 2x ${Math.ceil((u.aga-t)/1000)}`)});
+ const et=ek.join(' · ');if($('etki').textContent!==et)$('etki').textContent=et;
+ const k=document.querySelector('#hVit .kart');$('bos').classList.toggle('gizli',!!(k&&+getComputedStyle(k).opacity>.05));
+ const D=$('denemeler'),ht=document.querySelector('.h-alt').getBoundingClientRect().top,hh=Math.max(0,ht-D.getBoundingClientRect().top-innerHeight*.008)+'px';if(D.style.height!==hh)D.style.height=hh;
+ const s=Object.values(U).filter(u=>u.puan>0).sort((a,b)=>b.puan-a.puan);OY.bilgi(`❓ ${turNo}/${TURSORU}`,`👥 ${Object.keys(U).length}`);OY.ilk3(s.slice(0,3))},250);
 </script></body></html>

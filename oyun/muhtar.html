@@ -1,56 +1,145 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Muhtarlık Seçimi</title>
-<style>html,body{margin:0;height:100%;overflow:hidden;background:linear-gradient(180deg,#1b2a4a,#0e1628);color:#fff;font-family:Nunito,Segoe UI,Arial,sans-serif}
-#sandik{position:fixed;left:4vw;right:4vw;top:14vh;bottom:36vh;display:flex;flex-direction:column;gap:1.2vh;justify-content:center}
-.aday{position:relative;height:7.2vh;background:rgba(255,255,255,.06);border-radius:1.6vh;overflow:hidden;transition:transform .5s}
-.aday .dol{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 60%,#fff));transition:width .6s cubic-bezier(.2,.9,.3,1)}
-.aday .ic{position:absolute;inset:0;display:flex;align-items:center;gap:1.4vh;padding:0 1.6vh}
-.aday .no{font:900 3.4vh 'Baloo 2',Nunito;width:4.2vh;height:4.2vh;border-radius:1vh;background:rgba(0,0,0,.35);display:grid;place-items:center}
-.aday img{width:5.2vh;height:5.2vh;border-radius:50%;border:.3vh solid #fff}
-.aday .ad{font:800 2.2vh Nunito;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.aday .oy{font:900 2.6vh 'Baloo 2',Nunito}
-.aday .yz{font:700 1.5vh Nunito;opacity:.85}
-.aday.bos{opacity:.45}.aday.lider{box-shadow:0 0 0 .3vh #ffd84a}
-#bilgi{position:fixed;left:4vw;right:4vw;bottom:31vh;text-align:center;font:800 1.9vh Nunito;color:#cfe0ff}
-.oyp{position:fixed;font-size:3vh;pointer-events:none;animation:uc 1s ease-out forwards}@keyframes uc{to{transform:translateY(-8vh);opacity:0}}
+<style>html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 0%,#2a3f6e,#121c33 55%,#0b1222);color:#fff;font-family:Nunito,Segoe UI,Arial,sans-serif}
+/* dikey yerlesim (vh): 0-12 hud ust · 13-21.5 vitrin/nasil · 22.5-65 kursuler · 66-77 oy akisi · 78+ hud alt */
+.h-vit{top:13.2vh!important}
+#nasil{position:fixed;left:4vw;right:4vw;top:13.2vh;height:7.6vh;display:grid;grid-template-columns:repeat(3,1fr);gap:1vh;transition:opacity .3s}
+#nasil div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:1.4vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 .6vh;font:700 min(1.45vh,2.7vw)/1.25 Nunito}
+#nasil b{font:900 min(2.2vh,4.2vw)/1.1 'Baloo 2',Nunito;color:#ffd84a}
+#nasil.gizli{opacity:0}
+#nasil.son{display:flex;align-items:center;justify-content:center;background:rgba(255,60,60,.18);border:.25vh solid #ff5d5d;border-radius:1.6vh;font:900 3.4vh 'Baloo 2',Nunito;color:#ffd0d0;animation:nb .5s infinite alternate}
+@keyframes nb{to{background:rgba(255,60,60,.35)}}
+#sandik{position:fixed;left:4vw;right:4vw;top:22.6vh;display:flex;flex-direction:column;gap:1vh}
+.aday{position:relative;height:6.3vh;background:rgba(255,255,255,.07);border-radius:1.5vh;overflow:hidden;border:.22vh solid transparent;transition:border-color .3s,opacity .3s}
+.aday .dol{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 75%,#000),var(--c));transition:width .6s cubic-bezier(.2,.9,.3,1);opacity:.85}
+.aday .ic{position:absolute;inset:0;display:flex;align-items:center;gap:1.1vh;padding:0 1.4vh 0 .9vh}
+.aday .no{flex:none;font:900 3vh/1 'Baloo 2',Nunito;width:4.4vh;height:4.4vh;border-radius:1vh;background:rgba(0,0,0,.4);border:.2vh solid var(--c);display:grid;place-items:center}
+.aday img{flex:none;width:4.6vh;height:4.6vh;border-radius:50%;border:.25vh solid #fff;background:#0003}
+.aday .ad{flex:1;min-width:0;line-height:1.15}
+.aday .ad b{display:block;font:800 min(2.15vh,4.1vw) Nunito;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 .2vh .5vh #0008}
+.aday .ad small{display:block;font:700 min(1.45vh,2.8vw) Nunito;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aday .rz{flex:none;display:flex;gap:.5vh}
+.aday .rz span{font:900 min(1.5vh,2.9vw) Nunito;background:rgba(0,0,0,.5);border-radius:1vh;padding:.3vh .7vh;white-space:nowrap}
+.aday .oy{flex:none;font:900 min(3vh,5.6vw) 'Baloo 2',Nunito;min-width:5vh;text-align:right;text-shadow:0 .2vh .6vh #000a}
+.aday.bos{opacity:.5}.aday.bos .ad b{font-weight:700;opacity:.8}
+.aday.lider{border-color:#ffd84a;box-shadow:0 0 1.6vh rgba(255,216,74,.45)}
+.aday.lider .no::after{content:'👑';position:absolute;font-size:1.8vh;transform:translate(1.9vh,-2.3vh)}
+.aday.miting{animation:mt .45s infinite alternate}@keyframes mt{to{box-shadow:0 0 2.4vh var(--c),inset 0 0 1.4vh var(--c)}}
+.aday.kalkan{border-color:#7fd3ff}
+.aday .sk{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:repeating-linear-gradient(-45deg,rgba(200,0,0,.55) 0 1.2vh,rgba(120,0,0,.55) 1.2vh 2.4vh);font:900 2.6vh 'Baloo 2',Nunito;letter-spacing:.1em;color:#fff;text-shadow:0 .2vh .6vh #000}
+.aday.skandal .sk{display:flex;animation:skb 1s infinite}@keyframes skb{50%{opacity:.55}}
+.aday.flas{animation:fl .6s}@keyframes fl{30%{filter:brightness(1.8)}}
+#oylar{position:fixed;left:4vw;right:4vw;top:66.4vh;height:10.6vh;overflow:hidden;display:flex;flex-wrap:wrap;align-content:flex-start;gap:.7vh}
+#oylar .c{display:flex;align-items:center;gap:.6vh;background:rgba(0,0,0,.4);border-radius:2vh;padding:.3vh 1vh .3vh .3vh;font:800 min(1.5vh,2.9vw) Nunito;animation:cg .3s;max-width:44vw;white-space:nowrap}
+#oylar .c img{width:2.6vh;height:2.6vh;border-radius:50%}
+#oylar .c span{overflow:hidden;text-overflow:ellipsis}
+#oylar .c i{font-style:normal;font-weight:900;border-radius:.7vh;padding:0 .6vh;color:#111}
+@keyframes cg{from{transform:scale(.5);opacity:0}}
+.pop{position:fixed;pointer-events:none;font:900 2.4vh 'Baloo 2',Nunito;text-shadow:0 .2vh .6vh #000;z-index:12;animation:pu 1.1s ease-out forwards}
+@keyframes pu{to{transform:translateY(-5vh);opacity:0}}
+.uc{position:fixed;pointer-events:none;z-index:11;border-radius:50%;width:3.4vh;height:3.4vh;border:.2vh solid #fff}
+.efk{position:fixed;pointer-events:none;z-index:13;line-height:1}
+.otobus{position:fixed;pointer-events:none;z-index:14;display:flex;align-items:center;gap:1vh;white-space:nowrap;font:900 2.6vh 'Baloo 2',Nunito;color:#fff;text-shadow:0 .3vh .8vh #000}
+.otobus i{font-style:normal;font-size:8vh}
+.otobus span{background:var(--c);color:#111;border-radius:1.2vh;padding:.3vh 1.2vh;text-shadow:none}
+.manset{position:fixed;left:0;right:0;z-index:14;pointer-events:none;background:#c40000;color:#fff;font:900 2.4vh 'Baloo 2',Nunito;text-align:center;padding:.6vh 0;box-shadow:0 .6vh 2vh #000a;animation:ms 2.6s forwards}
+@keyframes ms{0%{transform:scaleY(0)}8%,85%{transform:none;opacity:1}100%{opacity:0}}
 </style></head><body>
-<div id="sandik"></div><div id="bilgi">🗳 Yorumda <b>aday</b> yaz, aday ol · Oy vermek için adayın <b>numarasını</b> yaz · Beğenilerin son oy verdiğin adaya gider</div>
+<div id="nasil"></div>
+<div id="sandik"></div><div id="oylar"></div>
 <script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
 <script>
-OY.hud({baslik:'MUHTARLIK SEÇİMİ',alt:'"aday" yaz aday ol · numara yaz oy ver · hediye = kampanya',renk:'#ffd84a',hediyeler:OY.REKABET_HED});
-const RENK=['#ff5d73','#4da3ff','#3ddc97','#ffb02e','#b16cff','#ff7ad9'],now=()=>performance.now();
-const U={},ADAY=[null,null,null,null,null,null];let bitis=0,KAL={muhtar:{}};
-const SN=document.getElementById('sandik');
-SN.innerHTML=ADAY.map((_,i)=>`<div class="aday bos" id="a${i}" style="--c:${RENK[i]}"><div class="dol"></div><div class="ic"><div class="no">${i+1}</div><img hidden><div class="ad">Boş kürsü · "aday" yaz</div><div class="yz"></div><div class="oy"></div></div></div>`).join('');
-function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,oy:0,puan:0,secim:-1,son:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
-function adayOl(u){if(ADAY.includes(u))return;let i=ADAY.indexOf(null);if(i<0){const z=ADAY.reduce((a,b,j)=>b.oy<ADAY[a].oy?j:a,0);if(ADAY[z].oy>u.oy+5)return;OY.akis(`📉 ${ADAY[z].ad} kürsüyü kaybetti`,'#f99');i=z}
- ADAY[i]=u;u.oy=u.oy||0;OY.akis(`🎤 ${u.ad} ${i+1} numaralı aday oldu!`,RENK[i]);OY.ses.guc()}
-function oy(aday,n,kimden){if(!aday||OY.donuk(aday))return;n*=OY.ikiKat(aday);aday.oy+=n;aday.puan=aday.oy;if(kimden)kimden.son=now();ucur(ADAY.indexOf(aday))}
-function ucur(i){if(Math.random()>.35)return;const el=document.getElementById('a'+i).getBoundingClientRect(),d=document.createElement('div');d.className='oyp';d.textContent='🗳';d.style.left=(el.right-60)+'px';d.style.top=el.top+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1000)}
-OY.rekabetKur({liste:()=>ADAY.filter(Boolean),skor:u=>u.oy,ayarla:(u,v)=>{u.oy=Math.max(0,v);u.puan=u.oy}});
+const HED=[['🌹','Gül','📄 Broşür +5'],['💖','Kalp','🤝 Koalisyon +10'],['💐','Parfüm','📰 Skandal: lider -%10'],
+ ['🍩','Donut','📣 Miting: 20 sn 2x'],['🎩','Şapka','🚌 Otobüs: %8 topla'],['🌌','Galaksi','⚖ İtiraz: lider -%25']];
+OY.hud({baslik:'MUHTARLIK SEÇİMİ',alt:'"aday" yaz kürsüye çık · numara yaz oy ver · hediye = kampanya',renk:'#ffd84a',hediyeler:HED});
+const RENK=['#ff5d73','#4da3ff','#3ddc97','#ffb02e','#b16cff','#ff7ad9'],now=()=>performance.now(),$=s=>document.getElementById(s);
+const U={},ADAY=[null,null,null,null,null,null];let bitis=0,KAL={muhtar:{}};const TUR=180;let turBas=now();
+const NASIL=`<div><b>💬 aday</b>yaz, kürsüye çık</div><div><b>🔢 1 – 6</b>yaz, adaya +3 oy</div><div><b>❤️ beğeni</b>seçtiğine oy olur</div>`;
+$('nasil').innerHTML=NASIL;
+$('sandik').innerHTML=ADAY.map((_,i)=>`<div class="aday bos" id="a${i}" style="--c:${RENK[i]}"><div class="dol"></div><div class="ic"><div class="no">${i+1}</div><img hidden><div class="ad"><b>Boş kürsü</b><small>"aday" yaz, ${i+1} numara sen ol</small></div><div class="rz"></div><div class="oy"></div></div><div class="sk">📰 SKANDAL</div></div>`).join('');
+const kisa=(s,n=10)=>OY.kisaAd(s,n);
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,oy:0,puan:0,secim:-1,son:0,miting:0,skandal:0,kalkan:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
+const sira=()=>ADAY.filter(Boolean).sort((x,y)=>y.oy-x.oy);
+const korumali=x=>x.kalkan>now();
+function rakip(a){return sira().find(x=>x!==a)||null} // lider; kendisi liderse ikinci
+function barRect(a){const i=ADAY.indexOf(a);return i<0?null:$('a'+i).getBoundingClientRect()}
+function flas(a){const i=ADAY.indexOf(a);if(i<0)return;const el=$('a'+i);el.classList.remove('flas');void el.offsetWidth;el.classList.add('flas')}
+function pop(a,txt,renk='#fff'){const r=barRect(a);if(!r)return;const d=document.createElement('div');d.className='pop';d.textContent=txt;d.style.color=renk;
+ d.style.left=(r.right-r.width*.28-Math.random()*r.width*.15)+'px';d.style.top=(r.top+r.height*.12)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1100)}
+let ucan=0;
+function ucur(u,a){if(ucan>7)return;const r=barRect(a);if(!r)return;ucan++;const im=document.createElement('img');im.className='uc';im.src=OY.foto(u,64).toDataURL();document.body.appendChild(im);
+ const x0=innerWidth*(.1+Math.random()*.7),y0=innerHeight*.68,x1=r.left+r.height*1.4,y1=r.top+r.height*.2;
+ im.animate([{transform:`translate(${x0}px,${y0}px) scale(1)`,opacity:1},{transform:`translate(${(x0+x1)/2}px,${Math.min(y0,y1)-innerHeight*.04}px) scale(1.2)`,opacity:1,offset:.5},{transform:`translate(${x1}px,${y1}px) scale(.4)`,opacity:.2}],{duration:700,easing:'ease-in'}).onfinish=()=>{im.remove();ucan--}}
+function oyEkle(a,n){if(!a||bitis)return 0;let k=1;if(a.miting>now())k*=2;if(a.skandal>now())k*=.5;n*=k;a.oy+=n;a.puan=a.oy;return n}
+function cip(u,a,etiket){const i=ADAY.indexOf(a);if(i<0)return;const d=document.createElement('div');d.className='c';
+ d.innerHTML=`<img src="${OY.foto(u,64).toDataURL()}"><span></span><i style="background:${RENK[i]}">${i+1}</i>`;d.querySelector('span').textContent=`${kisa(u.ad,9)} ${etiket}`;
+ const O=$('oylar');O.prepend(d);while(O.children.length>12)O.lastChild.remove()}
+let akisSon=0;
+function adayOl(u,zorla){if(ADAY.includes(u))return true;let i=ADAY.indexOf(null);
+ if(i<0){const z=ADAY.reduce((a,b,j)=>b.oy<ADAY[a].oy?j:a,0);if(!zorla&&ADAY[z].oy>5){if(now()-akisSon>4000){akisSon=now();OY.akis(`🚫 Kürsüler dolu · en zayıf aday 5 oyun altına düşünce yer açılır`,'#f99')}return false}
+  OY.akis(`📉 ${ADAY[z].ad} kürsüyü ${u.ad}'a kaptırdı`,'#f99');ADAY[z].secim=-1;Object.values(U).forEach(v=>{if(v.secim===z)v.secim=-1});i=z}
+ ADAY[i]=u;u.oy=0;u.puan=0;u.miting=u.skandal=u.kalkan=0;OY.akis(`🎤 ${u.ad} ${i+1} numaralı aday oldu!`,RENK[i]);OY.ses.guc();setTimeout(()=>flas(u),50);return true}
+// ---- hediye etkileri (hepsi desteklenen adaya: kendisi adaysa kendisi, degilse son oy verdigi aday) ----
+function efektYag(a,ikon,n=7){const r=barRect(a);if(!r)return;for(let k=0;k<n;k++){const d=document.createElement('div');d.className='efk';d.textContent=ikon;d.style.fontSize='3.2vh';document.body.appendChild(d);
+ const x0=Math.random()*innerWidth,x1=r.left+Math.random()*r.width;d.animate([{transform:`translate(${x0}px,${-innerHeight*.05}px) rotate(0)`},{transform:`translate(${x1}px,${r.top}px) rotate(${Math.random()*720-360}deg)`,opacity:.9}],{duration:900+Math.random()*500,delay:k*70,easing:'ease-in',fill:'both'}).onfinish=()=>d.remove()}}
+function manset(r,txt){const b=barRect(r),d=document.createElement('div');d.className='manset';d.textContent=txt;d.style.top=(b?b.top-innerHeight*.045:innerHeight*.3)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),2700)}
+function otobus(a,txt){const r=barRect(a),i=ADAY.indexOf(a),d=document.createElement('div');d.className='otobus';d.style.setProperty('--c',RENK[i]);d.innerHTML=`<i>🚌</i><span></span>`;d.querySelector('span').textContent=txt;
+ d.style.top=(r.top-r.height*.6)+'px';document.body.appendChild(d);d.animate([{transform:`translateX(${innerWidth}px)`},{transform:`translateX(${-d.offsetWidth-20}px)`}],{duration:2600,easing:'linear'}).onfinish=()=>d.remove()}
+function hediyeEtki(h,a){const A=h.adet,t=now(),r=rakip(a);
+ switch(h.sinif){
+  case 'gul':{const n=oyEkle(a,5*A);efektYag(a,'📄',Math.min(12,4+A));pop(a,'+'+Math.round(n),'#fff');return `📄 Broşür dağıttı +${Math.round(n)} oy`}
+  case 'kalp':{const n=oyEkle(a,10*A);pop(a,'+'+Math.round(n),'#ff9ad5');flas(a);const s=sira(),j=s.indexOf(a),k=s[j>0?j-1:1];
+   if(k){const m=oyEkle(k,4*A);pop(k,'+'+Math.round(m),'#ff9ad5');flas(k);efektYag(k,'🤝',3);efektYag(a,'🤝',3);return `🤝 ${kisa(k.ad,9)} ile koalisyon +${Math.round(n)}`}return `🤝 Koalisyon +${Math.round(n)} oy`}
+  case 'parfum':{if(!r){oyEkle(a,15*A);pop(a,'+15');return '📰 Rakip yok · +15 oy'}
+   if(korumali(r)){oyEkle(a,8*A);pop(r,'🛡','#7fd3ff');return `📰 ${kisa(r.ad,9)} kalkanlı, skandal tutmadı!`}
+   const c=Math.max(1,r.oy*.1);r.oy-=c;r.puan=r.oy;r.skandal=Math.max(r.skandal,t)+10000;pop(r,'-'+Math.round(c),'#ff6b6b');manset(r,`📰 SON DAKİKA: ${r.ad} SKANDALA KARIŞTI!`);OY.ses.yanlis();
+   return `📰 ${kisa(r.ad,9)} skandalda: -%10, 10 sn yarım oy`}
+  case 'donut':{a.miting=Math.max(a.miting,t)+20000;oyEkle(a,10*A);efektYag(a,'📣',5);OY.ses.davul();setTimeout(OY.ses.davul,250);return '📣 MİTİNG! 20 sn tüm oylar 2x'}
+  case 'sapka':{let top=0;for(const x of ADAY)if(x&&x!==a&&!korumali(x)){const c=Math.max(x.oy>0?1:0,x.oy*.08);x.oy-=c;x.puan=x.oy;top+=c;if(c)pop(x,'-'+Math.round(c),'#ff6b6b')}
+   a.oy+=top+30*A;a.puan=a.oy;pop(a,'+'+Math.round(top+30*A),'#ffd84a');otobus(a,`${kisa(a.ad,10)} SEÇİM OTOBÜSÜ`);OY.ses.korna();return `🚌 Otobüs ${Math.round(top)} oy topladı +30`}
+  case 'galaksi':{a.kalkan=Math.max(a.kalkan,t)+30000;a.oy+=150*A;a.puan=a.oy;pop(a,'+'+150*A,'#7fd3ff');OY.ses.patla();
+   if(r&&!korumali(r)){const c=r.oy*.25;r.oy-=c;r.puan=r.oy;a.oy+=c*.5;a.puan=a.oy;pop(r,'-'+Math.round(c),'#ff6b6b');manset(r,`⚖ İTİRAZ KABUL: ${r.ad} oylarının %25'i İPTAL`);
+    return `⚖ İtiraz! ${kisa(r.ad,9)} -${Math.round(c)} · 30 sn kalkan`}
+   return r?`⚖ ${kisa(r.ad,9)} kalkanlı · sana +150, 30 sn 🛡`:'⚖ +150 oy · 30 sn kalkan 🛡'}}
+ return ''}
 OY.basla({muzik:'pop',olay:e=>{
  if(e.t==='kalici'&&e.veri&&e.veri.muhtar){KAL=e.veri;return}
- if(!e.id||bitis)return;const u=kul(e);
- if(e.t==='yorum'){const m=String(e.metin||'').toLowerCase().trim();
-  if(/\baday\b/.test(m))adayOl(u);
-  const no=m.match(/^\s*([1-6])\b/);if(no&&ADAY[no[1]-1]){u.secim=no[1]-1;oy(ADAY[u.secim],3,u);OY.ses.tik()}
-  else if(ADAY.includes(u))oy(u,1,u)}
- else if(e.t==='begeni'){const a=u.secim>=0?ADAY[u.secim]:ADAY.includes(u)?u:null;if(a)oy(a,(e.adet||1)*.3,u)}
- else if(e.t==='takip'){const a=u.secim>=0?ADAY[u.secim]:u;if(ADAY.includes(a))oy(a,6,u)}
- else if(e.t==='paylasim'){const a=u.secim>=0?ADAY[u.secim]:u;if(ADAY.includes(a))oy(a,5,u)}
- else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;if(!ADAY.includes(u)&&u.secim<0)adayOl(u);
-  const a=ADAY.includes(u)?u:ADAY[u.secim];if(!a)return;oy(a,8*h.adet+n);OY.ses.para();const et=OY.rekabetHediye(a,h);
-  OY.vitrin(u,h.ikon,h.ad,(a!==u?`${OY.kisaAd(a.ad,10)} için `:'')+et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
+ if(!e.id||bitis)return;const u=kul(e),t=now();
+ if(e.t==='yorum'){const m=String(e.metin||'').toLocaleLowerCase('tr').trim();
+  if(/(^|\s)aday(\s|$|!|\.)/.test(m)){adayOl(u);return}
+  const no=m.match(/^#?\s*([1-6])(\s|$|\D)/);
+  if(no){const a=ADAY[no[1]-1];if(!a)return;if(t-u.son<1500)return;u.son=t;u.secim=no[1]-1;const n=oyEkle(a,3);ucur(u,a);cip(u,a,'+'+Math.round(n));OY.ses.tik()}
+  else if(ADAY.includes(u)&&t-u.son>3000){u.son=t;oyEkle(u,1)}}
+ else if(e.t==='begeni'){const a=u.secim>=0?ADAY[u.secim]:ADAY.includes(u)?u:null;if(a){oyEkle(a,(e.adet||1)*.3);if(Math.random()<.3)pop(a,'❤','#ff8fb1')}}
+ else if(e.t==='takip'||e.t==='paylasim'){const a=u.secim>=0?ADAY[u.secim]:ADAY.includes(u)?u:null;if(a){const n=oyEkle(a,e.t==='takip'?6:5);ucur(u,a);cip(u,a,(e.t==='takip'?'➕ takip ':'🔁 paylaşım ')+'+'+Math.round(n))}}
+ else if(e.t==='hediye'){const h=OY.hediye(e);let a=ADAY.includes(u)?u:u.secim>=0?ADAY[u.secim]:null,kararsiz=0;
+  if(!a){const zayif=sira().slice(-1)[0];if(adayOl(u,!zayif||zayif.oy<=5||h.elmas*h.adet>=30))a=u;else{a=zayif;kararsiz=1}}if(!a)return;
+  OY.ses.para();const et=hediyeEtki(h,a);const i=ADAY.indexOf(a);
+  OY.vitrin(u,h.ikon,h.ad,(a!==u?`${i+1} numaraya: `:'')+et);if(kararsiz)OY.akis(`💡 ${u.ad}: numara yazmadığın için hediyen son sıradaki ${i+1} numaraya gitti`,'#9fd0ff');OY.akis(`${h.ikon} ${u.ad}${a!==u?' → '+(i+1)+' numara':''}: ${et}`,'#ffd84a')}
 }});
-OY.demoYorum=()=>{const r=Math.random();return r<.12?'aday':r<.75?String(1+(Math.random()*Math.max(1,ADAY.filter(Boolean).length)|0)):['Muhtarım sensin!','Yaşasın','Oylar bana','Hadi 2 numara!'][Math.random()*4|0]};
-const TUR=180;let turBas=now();
-function ciz(){const t=now(),max=Math.max(10,...ADAY.filter(Boolean).map(a=>a.oy));const sira=ADAY.map((a,i)=>({a,i})).filter(x=>x.a).sort((x,y)=>y.a.oy-x.a.oy);
- ADAY.forEach((a,i)=>{const el=document.getElementById('a'+i);el.classList.toggle('bos',!a);el.classList.toggle('lider',!!a&&sira[0]&&sira[0].a===a);
-  if(!a)return;el.querySelector('.dol').style.width=(a.oy/max*100)+'%';const im=el.querySelector('img');if(im.dataset.id!==a.id||im.dataset.s!=OY.foto(a,96).surum){im.src=OY.foto(a,96).toDataURL();im.dataset.id=a.id;im.dataset.s=OY.foto(a,96).surum}im.hidden=false;
-  el.querySelector('.ad').textContent=OY.durum(a)+a.ad;el.querySelector('.oy').textContent=Math.round(a.oy);
-  const yuz=sira.reduce((s,x)=>s+x.a.oy,0)||1;el.querySelector('.yz').textContent='%'+Math.round(a.oy/yuz*100)});
+OY.demoYorum=()=>{const r=Math.random(),n=ADAY.filter(Boolean).length;return r<.1||n<2?'aday':r<.8?String(1+(Math.random()*6|0)):['Muhtarım sensin!','Yaşasın','Oylar bana','Hadi 2 numara!'][Math.random()*4|0]};
+let nasilMod='';
+function ciz(){const t=now(),s=sira(),max=Math.max(10,...s.map(a=>a.oy)),top=s.reduce((q,x)=>q+x.oy,0)||1,secmen={};
+ Object.values(U).forEach(u=>{if(u.secim>=0)secmen[u.secim]=(secmen[u.secim]||0)+1});
+ ADAY.forEach((a,i)=>{const el=$('a'+i);el.classList.toggle('bos',!a);el.classList.toggle('lider',!!a&&s[0]===a&&a.oy>0);
+  el.classList.toggle('miting',!!a&&a.miting>t);el.classList.toggle('skandal',!!a&&a.skandal>t);el.classList.toggle('kalkan',!!a&&a.kalkan>t);
+  const im=el.querySelector('img'),B=el.querySelector('.ad b'),S=el.querySelector('.ad small'),rz=el.querySelector('.rz'),O=el.querySelector('.oy');
+  if(!a){el.querySelector('.dol').style.width='0';im.hidden=true;im.dataset.id='';B.textContent='Boş kürsü';S.textContent=`"aday" yaz, ${i+1} numara sen ol`;rz.innerHTML='';O.textContent='';return}
+  el.querySelector('.dol').style.width=(a.oy/max*100)+'%';const f=OY.foto(a,96);if(im.dataset.id!==a.id||im.dataset.s!=f.surum){im.src=f.toDataURL();im.dataset.id=a.id;im.dataset.s=f.surum}im.hidden=false;
+  B.textContent=a.ad;S.textContent=`%${Math.round(a.oy/top*100)} · ${secmen[i]||0} seçmen`;
+  const z=[];if(a.miting>t)z.push(`📣${Math.ceil((a.miting-t)/1000)}`);if(a.skandal>t)z.push(`📰${Math.ceil((a.skandal-t)/1000)}`);if(a.kalkan>t)z.push(`🛡${Math.ceil((a.kalkan-t)/1000)}`);
+  const zh=z.map(x=>`<span>${x}</span>`).join('');if(rz.innerHTML!==zh)rz.innerHTML=zh;O.textContent=Math.round(a.oy)});
  const kalan=Math.max(0,TUR-(t-turBas)/1000);OY.bilgi(OY.sure(kalan),`🗳 ${Object.values(U).filter(u=>u.secim>=0).length} seçmen`);
- OY.ilk3(sira.slice(0,3).map(x=>x.a));
- if(!bitis&&kalan<=0){bitis=t+8000;if(sira[0]){const m=sira[0].a;KAL.muhtar[m.ad]=(KAL.muhtar[m.ad]||0)+1;OY.kaydet(KAL);OY.ses.zafer();OY.kazanan(m,'🏛 YENİ MUHTAR',`${Math.round(m.oy)} oy · ${KAL.muhtar[m.ad]}. dönem`)}}
- if(bitis&&t>bitis){bitis=0;turBas=t;OY.kazanan(null);ADAY.forEach(a=>{if(a)a.oy=a.puan=0});Object.values(U).forEach(u=>u.secim=-1)}}
-setInterval(ciz,400);
+ OY.ilk3(s.slice(0,3));
+ {const O=$('oylar'),ht=document.querySelector('.h-alt').getBoundingClientRect().top,h=Math.max(0,ht-O.getBoundingClientRect().top-innerHeight*.008)+'px';if(O.style.height!==h)O.style.height=h}
+ // nasil kutusu: vitrin karti gorunurken gizle, son 10 sn geri sayim
+ const N=$('nasil'),k=document.querySelector('#hVit .kart'),vit=k&&+getComputedStyle(k).opacity>.05;
+ const mod=!bitis&&kalan<=10&&kalan>0?'son':'normal';
+ if(mod==='son'){const tx=`⏳ SANDIKLAR KAPANIYOR: ${Math.ceil(kalan)}`;if(nasilMod!=='son'){N.className='son'}if(N.textContent!==tx)N.textContent=tx}
+ else if(nasilMod!=='normal'){N.className='';N.innerHTML=NASIL}
+ nasilMod=mod;N.classList.toggle('gizli',!!vit);
+ if(!bitis&&kalan<=0){bitis=t+9000;if(s[0]&&s[0].oy>0){const m=s[0];KAL.muhtar[m.ad]=(KAL.muhtar[m.ad]||0)+1;OY.kaydet(KAL);OY.ses.zafer();
+   OY.kazanan(m,'🏛 YENİ MUHTAR',`${Math.round(m.oy)} oy · %${Math.round(m.oy/top*100)} · ${KAL.muhtar[m.ad]}. dönem`);OY.akis(`🏛 ${m.ad} muhtar seçildi!`,'#ffd84a')}}
+ if(bitis&&t>bitis){bitis=0;turBas=t;OY.kazanan(null);ADAY.forEach(a=>{if(a){a.oy=a.puan=0;a.miting=a.skandal=a.kalkan=0}});Object.values(U).forEach(u=>u.secim=-1);$('oylar').innerHTML='';OY.akis('🗳 Yeni seçim başladı! Numaranı yaz, oyunu ver','#9fd0ff')}}
+setInterval(ciz,250);
 </script></body></html>
