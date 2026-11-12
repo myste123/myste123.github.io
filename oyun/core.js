@@ -55,8 +55,12 @@
     zafer: () => [523, 659, 784, 1047].forEach((f, i) => ton(f, .3, 'triangle', .2, 0, ANA, i * .12)),
     korna: () => { ton(440, .35, 'square', .12); ton(554, .35, 'square', .12) }, davul: () => { ton(90, .25, 'sine', .6, .4); gurultu(.12, .25, 150) },
     yanlis: () => ton(200, .3, 'sawtooth', .12, .6), dogru: () => { ton(784, .1, 'triangle', .2); ton(1175, .3, 'triangle', .2, 0, ANA, .1) },
-    ton, gurultu
+    ton, gurultu,
+    // gercek ses dosyasi (onbellekli, WebAudio): OY.ses.dosya('ses/x.mp3', .8, hiz)
+    dosya: (url, v = 1, hiz = 1) => { if (!AC) return; const c = BUF[url] || (BUF[url] = fetch(url).then(r => r.arrayBuffer()).then(x => AC.decodeAudioData(x)).catch(() => null));
+      c.then(b => { if (!b) return; const n = AC.createBufferSource(), g = AC.createGain(); n.buffer = b; n.playbackRate.value = hiz; g.gain.value = v; n.connect(g); g.connect(ANA); n.start() }) }
   };
+  const BUF = {};
 
   // ---- muzik: kendi urettigimiz telifsiz ritimler veya yayincinin kendi dosyasi (&muzikurl=) ----
   const STIL = { halay: { bpm: 112, kok: 196, olcek: [0, 1, 4, 5, 7, 8, 10] }, pop: { bpm: 118, kok: 220, olcek: [0, 2, 4, 7, 9] },
@@ -65,6 +69,8 @@
   function muzikBasla() {
     const url = Q.get('muzikurl'); if (muzikSes <= 0) return;
     if (url) { const a = new Audio(url); a.loop = true; a.volume = muzikSes; a.crossOrigin = 'anonymous'; a.play().catch(() => { }); OY.muzikEl = a; return }
+    if (OY.muzikListe && OY.muzikListe.length) { let i = Math.random() * OY.muzikListe.length | 0; const a = new Audio(); a.volume = muzikSes * .7; OY.muzikEl = a;
+      const cal = () => { a.src = OY.muzikListe[i++ % OY.muzikListe.length]; a.play().catch(() => setTimeout(cal, 3000)) }; a.onended = cal; a.onerror = () => setTimeout(cal, 1000); cal(); return }
     let adim = 0, motif = []; const yeniMotif = s => { motif = Array.from({ length: 16 }, () => Math.random() < .6 ? s.olcek[Math.random() * s.olcek.length | 0] + (Math.random() < .25 ? 12 : 0) : null) };
     const dongu = () => { const s = STIL[Q.get('stil') || OY.muzikStil] || STIL.pop; if (!motif.length || adim % 64 === 0) yeniMotif(s); const sure = 60 / s.bpm / 2;
       const i = adim % 16, n = motif[i];
@@ -88,8 +94,8 @@
     OY.ws.onclose = () => { if (OY.kilit) return; wsHata++; const gr = Q.get('geri');
       if (gr && wsHata >= 6) { const q = new URLSearchParams(location.search); q.delete('geri'); location.href = gr + '?' + q } else setTimeout(bagla, 2000) };
   }
-  function sesCal(yol) { const a = new Audio((yol[0]==='/'||yol.startsWith('http')) ? yol : '/' + yol); a.volume = .95; if (MZ) { MZ.gain.value = muzikSes * .15 }
-    const bit = () => { if (MZ) MZ.gain.value = muzikSes * .5; OY.gonder({ t: 'bitti' }) }; a.onended = bit; a.onerror = bit; a.play().catch(bit) }
+  function sesCal(yol) { const a = new Audio((yol[0]==='/'||yol.startsWith('http')) ? yol : '/' + yol); a.volume = .95; if (MZ) { MZ.gain.value = muzikSes * .15 } if (OY.muzikEl) OY.muzikEl.volume = muzikSes * .2;
+    const bit = () => { if (MZ) MZ.gain.value = muzikSes * .5; if (OY.muzikEl) OY.muzikEl.volume = muzikSes * (OY.muzikListe ? .7 : 1); OY.gonder({ t: 'bitti' }) }; a.onended = bit; a.onerror = bit; a.play().catch(bit) }
 
   // ---- demo / simulasyon ----
   const ADLAR = ['Ayşe', 'Mehmet', 'Zeynep', 'Emre', 'Elif', 'Burak', 'Selin', 'Can', 'Deniz', 'Kerem', 'Ece', 'Mert', 'Derya', 'Oğuz', 'Buse', 'Kaan', 'İrem', 'Yusuf', 'Gizem', 'Arda', 'Nisa', 'Furkan', 'Melis', 'Onur'];

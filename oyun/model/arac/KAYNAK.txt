@@ -6,4 +6,17 @@ Araç modelleri (Sketchfab), lisans ve yazar:
 - BMW M3 F80 (bmw.glb) — "2015 BMW M3 (F80)" by 007 (tangwang920) — CC BY 4.0
 - Mercedes C63 AMG (mercedes.glb) — "Mercedes Benz C63 AMG" by LuizZed36 — CC BY 4.0
 - Polis (polis.glb) — "Illinois '90 Police cruiser" — CC BY 4.0
+- Fiat Linea (linea.glb) — "Fiat Linea" by koelkastasbers — Sketchfab Free Standard
+- Renault Clio 4 (clio.glb) — "clio 4" by xray_collection — CC BY 4.0
+- Fiat Egea (egea.glb) — "Fiat Tipo / Egea" by koelkastasbers — Sketchfab Free Standard
+- Toyota Corolla (corolla.glb) — "Toyota Corolla 2020" by ItsDiyor — CC BY 4.0
+- BMW E34 (e34.glb) — "1987 BMW E34 (LP)" by KrStolorz — Sketchfab Free Standard
+- Range Rover Evoque (evoque.glb) — "Range Rover Evoque" by minghau — CC BY 4.0
+- Mercedes G63 (g63.glb) — "Mersedes-Benz G63 AMG" by BlackSnow02 — CC BY 4.0
 Modeller ölçeklendi, yönlendirildi ve sıkıştırıldı.
+
+Sesler (Pixabay Content License, ticari kullanım serbest):
+- ses/konvoy_m1.mp3 — "Amed" by azadijihan (pixabay.com)
+- ses/konvoy_m2.mp3 — "Turkish Wedding Music - Wedding Fire" by openmindaudio (pixabay.com)
+- ses/korna.mp3 — "car horn beep beep" by freesound_community (pixabay.com)
+- ses/egzoz.mp3 — "backfire" by freesound_community (pixabay.com)
