@@ -1,0 +1,9 @@
+Araç modelleri (Sketchfab), lisans ve yazar:
+- Renault 12 (toros.glb) — "VEHICLE - RENAULT 12" by Thcyrax — CC BY 4.0
+- Tofaş Kartal (kartal.glb) — "Low-poly Tofaş Kartal" by tarkouz — CC BY 4.0
+- Golf 7 (golf7.glb) — "Volkswagen Golf 7." by Mona x Supercars (Car2022) — CC BY 4.0
+- Passat (passat.glb) — "low-poly Passat B8" — CC BY 4.0
+- BMW M3 F80 (bmw.glb) — "2015 BMW M3 (F80)" by 007 (tangwang920) — CC BY 4.0
+- Mercedes C63 AMG (mercedes.glb) — "Mercedes Benz C63 AMG" by LuizZed36 — CC BY 4.0
+- Polis (polis.glb) — "Illinois '90 Police cruiser" — CC BY 4.0
+Modeller ölçeklendi, yönlendirildi ve sıkıştırıldı.
