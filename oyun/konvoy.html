@@ -166,7 +166,7 @@ for(const m of[yildiz,yagmur,kar]){m.frustumCulled=false;S.add(m)}
 /* ---- gece-gunduz + hava durumu: gunduz HDRI -> gun batimi HDRI -> gece ---- */
 const GUN_SURE=240000,HAVALAR=[['acik','☀️ Hava açtı'],['yagmur','🌧️ Yağmur başladı'],['acik','☀️ Hava açtı'],['sis','🌫️ Sis çöktü'],['kar','❄️ Kar yağıyor']];
 let hava='acik',havaT=now()+60000,gece=0,gokAd='';const HW={yagmur:0,sis:0,kar:0};
-const C_GUN=new THREE.Color(0xc2d2e2),C_AKS=new THREE.Color(0xd9a07c),C_GECE=new THREE.Color(0x0b1226),C_BULUT=new THREE.Color(0x8a939c),CTMP=new THREE.Color(),C_LAMBA=new THREE.Color(0xffd48a);
+const C_GUN=new THREE.Color(0xe3c4ab),C_AKS=new THREE.Color(0xd9a07c),C_GECE=new THREE.Color(0x0b1226),C_BULUT=new THREE.Color(0x8a939c),CTMP=new THREE.Color(),C_LAMBA=new THREE.Color(0xffd48a);
 function cevreGuncelle(t,dt){
  // 0-.45 gunduz, .45-.55 aksam, .55-.9 gece, .9-1 sabah
  const f=((t+GUN_SURE*.2+(window.__gs||0))%GUN_SURE)/GUN_SURE,ss=x=>x<0?0:x>1?1:x*x*(3-2*x);
@@ -175,14 +175,14 @@ function cevreGuncelle(t,dt){
  for(const k in HW)HW[k]+=((hava===k?1:0)-HW[k])*Math.min(1,dt*.35);
  const bul=Math.max(HW.yagmur,HW.sis*.8,HW.kar*.6);
  // gokyuzu: gunduz / aksam HDRI, gece koyu renk; bulutlu havada gri
- const ad=gece<.3?'gok_gun':'gok_aksam',G=GOK[ad];
+ const ad='gok_aksam',G=GOK[ad];
  if(G&&gokAd!==ad+(gece>.75||bul>.6)){gokAd=ad+(gece>.75||bul>.6);S.environment=G.env;S.background=gece>.75||bul>.6?CTMP.clone():G.bg}
  if(gece<.5)CTMP.copy(C_GUN).lerp(C_AKS,gece*2);else CTMP.copy(C_AKS).lerp(C_GECE,(gece-.5)*2);CTMP.lerp(C_BULUT,bul*.7*(1-gece*.7));
  S.fog.color.copy(CTMP);if(S.background&&S.background.isColor)S.background.copy(CTMP);
  S.fog.near=60+(1-HW.sis)*80;S.fog.far=180+(1-HW.sis)*250;
- R.toneMappingExposure=.92-gece*.08;
- gun.intensity=(2.4*(1-gece)+.05)*(1-bul*.65);gun.color.setHex(gece>.15&&gece<.7?0xffb27a:0xfff0dc);hemi.intensity=.25+bul*.25+gece*.12;
- const isik=Math.min(1,gece+bul*.35);havuzM.opacity=isik*(.75+HW.yagmur*.35);parlakM.opacity=isik;basM.emissive.copy(C_LAMBA).multiplyScalar(isik*2);
+ R.toneMappingExposure=1.02;
+ gun.intensity=2.7;gun.color.setHex(0xffc38a);hemi.intensity=.42;hemi.color.setHex(0xffe2c8);
+ const isik=.3;havuzM.opacity=isik*(.75+HW.yagmur*.35);parlakM.opacity=isik;basM.emissive.copy(C_LAMBA).multiplyScalar(isik*2);
  for(const m of CEPHE)m.emissiveIntensity=gece*1.4;for(const m of[yolM,kalM,bordM,zemM,cizM,catiM,tabM,vitM,direkM,...CEPHE])m.envMapIntensity=1-gece*.6;tabM.emissiveIntensity=.05+gece*1.1;vitM.emissiveIntensity=.06+gece*.22;
  yildiz.material.opacity=gece*(1-bul);yildiz.position.set(K.position.x,0,K.position.z);
  // islak yol: koyu ve parlak
@@ -526,7 +526,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
   const p=f.P.geometry.attributes.position.array;for(let i=0;i<f.v.length;i+=3){p[i]+=f.v[i]*dt;p[i+1]+=f.v[i+1]*dt;p[i+2]+=f.v[i+2]*dt;f.v[i+1]-=5*dt;f.v[i]*=.985;f.v[i+2]*=.985}
   f.P.geometry.attributes.position.needsUpdate=true;f.P.material.opacity=1-a/1.7;return true});
  kamGuncelle(t,dt);if(GELIN.pank){const d=K.position.distanceTo(GELIN.o.g.position);GELIN.pank.material.opacity=Math.max(0,Math.min(1,(d-9)/8))}
- gun.position.set(LK.x+34,36,LK.z+16);gun.target.position.copy(LK);
+ gun.position.set(LK.x+46,21,LK.z-18);gun.target.position.copy(LK);
  cevreGuncelle(t,dt);R.render(S,K);
  const sr=sirali();etiketler(sr,t);
  if(t-sonBilgi>250){sonBilgi=t;OY.bilgi(`👰 Arkasında: ${SIRA[0]?OY.kisaAd(SIRA[0].ad,10):'—'}`,`🚗 ${SIRA.length}`);OY.ilk3(sr.slice(0,3).map(u=>({...u,puan:u.coin||0})))}
