@@ -207,7 +207,7 @@ function kare(){requestAnimationFrame(kare);const t=now();dtY+=(Math.min(.05,(t-
    u.irt+=(tir/(1+u.irt/220)+yakala-1.1-(ag?2.5:0)-(OY.donuk(u)?1.2:0))*dt*3;u.hiz*=Math.pow(.5,dt);if(u.irt<0)u.irt=0}
   u.puan=u.irt;const sv=t<u.savrul?Math.sin(t/160+u.x):0,zemin=ZEM(u.x,u.z)-.1;
   o.position.y+=(zemin+u.irt*.6-o.position.y)*Math.min(1,dt*2.2);o.position.x+=(u.x+Math.sin(t/2300+u.x)*1.4+sv*4-o.position.x)*Math.min(1,dt*2);o.position.z=u.z+Math.cos(t/2900+u.x)*1.2;
-  o.rotation.z+=(Math.sin(t/1700+u.z)*.03+sv*.16-o.rotation.z)*Math.min(1,dt*3);o.rotation.y+=dt*.04;
+  o.rotation.z+=(Math.sin(t/1700+u.z)*.03+sv*.16-o.rotation.z)*Math.min(1,dt*3);{const hy=Math.atan2(K.position.x-o.position.x,K.position.z-o.position.z)-Math.PI/4;let d=hy-o.rotation.y;d=Math.atan2(Math.sin(d),Math.cos(d));o.rotation.y+=d*Math.min(1,dt*2.5)}
   const yan=t<u.alevT||br;ud.al.visible=yan;if(yan){const k=br?1.5:1;ud.al.scale.set(.9*k,(2.2+Math.random()*.9)*k,1);if(Math.random()<dt*6)OY.ses.gurultu(.25,.05,600)}
   ud.zm.emissiveIntensity+=((yan?(br?.55:.3):0)-ud.zm.emissiveIntensity)*Math.min(1,dt*6);ud.parl.material.opacity=ud.zm.emissiveIntensity*.9;
   ud.kalkan.visible=OY.korunuyor(u);if(ud.kalkan.visible)ud.kalkan.material.opacity=.12+Math.sin(t/200)*.05;
