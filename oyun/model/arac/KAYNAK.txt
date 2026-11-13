@@ -1,10 +1,9 @@
 Araç modelleri (Sketchfab), lisans ve yazar:
-- Renault Clio (clio.glb) — "2020 Renault Clio" by tonielpro520 — CC BY 4.0
+- Honda Civic 2022 (civic.glb) — "Honda Civic 2022 (Free Download)" by Ricy (@ngon_3d) — CC BY 4.0
+- Cupra Leon 2021 (leon.glb) — "2021 Cupra Leon 5Door" — CC BY 4.0
+- Mercedes C-Serisi 2022 (c200.glb) — "2022 Mercedes-Benz C-Class" — CC BY 4.0
 - Fiat Egea (egea.glb) — "Fiat Tipo / Egea" by koelkastasbers — Sketchfab Free Standard
-- Honda Civic (civic.glb) — "Honda Civic Type R -98 (Free Asset)" by tiedtke — CC BY 4.0
 - Golf 7 (golf7.glb) — "Volkswagen Golf 7." by Mona x Supercars (Car2022) — CC BY 4.0
-- Seat Leon (leon.glb) — "Seat Leon Cupra R" by Ruleta (@romanian_guy_0069) — CC BY 4.0
-- Peugeot RCZ (rcz.glb) — "peugeot rcz r" by amogusstrikesback2 — CC BY 4.0
 - BMW M4 (m4.glb) — "BMW m4 CSL 2023" by Black Snow (@BlackSnow02) — CC BY 4.0
 - Mercedes G63 (g63.glb) — "Mersedes-Benz G63 AMG" by BlackSnow02 — CC BY 4.0
 Modeller ölçeklendi, yönlendirildi ve sıkıştırıldı.
