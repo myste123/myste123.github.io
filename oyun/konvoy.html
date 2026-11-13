@@ -41,7 +41,7 @@ OY.demoYorum=()=>['Korna çalın!','drift at','Selektör yak','Gaz gaz!','makas 
 /* ---- render: gercek gokyuzu isigi (HDRI), gunes golgesi, ACES ton ---- */
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true,powerPreference:'high-performance'});R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=.9;
 R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFShadowMap;
-let PR=1;
+let PR=Math.min(2,Math.max(1,devicePixelRatio||1));
 const S=new THREE.Scene();S.background=new THREE.Color(0xb7c9dc);S.fog=new THREE.Fog(0xc2d2e2,140,430);
 const VFOV=46,PITCH=.72,BANT=.48,KAY=.14;
 const K=new THREE.PerspectiveCamera(VFOV,1,.5,700),KF=new THREE.PerspectiveCamera(VFOV,1,.5,700);
@@ -489,7 +489,7 @@ let fpsN=0,fpsT=now();window.__fps=0;
 // otomatik kalite: kasarsa once golge, sonra cozunurluk, sonra duman azalir
 let kalite=3,dusukN=0;
 function fpsKontrol(t){fpsN++;if(t-fpsT>2000){const f=fpsN*1000/(t-fpsT);window.__fps=Math.round(f);fpsN=0;fpsT=t;
- if(f<42&&kalite>0){if(++dusukN>=2){dusukN=0;kalite--;if(kalite===2)gun.castShadow=false}}else dusukN=0}}
+ if(f<42&&kalite>0){if(++dusukN>=2){dusukN=0;kalite--;if(kalite===2)gun.castShadow=false;else if(kalite===1&&PR>1){PR=Math.max(1,PR*.75);boyut()}}}else dusukN=0}}
 let son=now(),sonBilgi=0,yolZ=0;
 function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;fpsKontrol(t);
  yolZ=(yolZ+VD*dt)%P;CEV.position.z=yolZ;
