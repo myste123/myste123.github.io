@@ -16,3 +16,5 @@ Sesler (Pixabay Content License, ticari kullanım serbest):
 - ses/konvoy_m2.mp3 — "Turkish Wedding Music - Wedding Fire" by openmindaudio (pixabay.com)
 - ses/korna.mp3 — "car horn beep beep" by freesound_community (pixabay.com)
 - ses/egzoz.mp3 — "backfire" by freesound_community (pixabay.com)
+
+Ortam dokulari (CC0): gokyuzu HDRI "kloofendal_48d_partly_cloudy_puresky", "industrial_sunset_puresky", asfalt "asphalt_01", kaldirim "concrete_pavers" (polyhaven.com); bina cepheleri Facade018/019/020 (ambientcg.com).
