@@ -1,17 +1,13 @@
 Araç modelleri (Sketchfab), lisans ve yazar:
 - Renault 12 (toros.glb) — "VEHICLE - RENAULT 12" by Thcyrax — CC BY 4.0
-- Tofaş Kartal (kartal.glb) — "Low-poly Tofaş Kartal" by tarkouz — CC BY 4.0
-- Golf 7 (golf7.glb) — "Volkswagen Golf 7." by Mona x Supercars (Car2022) — CC BY 4.0
-- Passat (passat.glb) — "low-poly Passat B8" — CC BY 4.0
-- BMW M3 F80 (bmw.glb) — "2015 BMW M3 (F80)" by 007 (tangwang920) — CC BY 4.0
-- Mercedes C63 AMG (mercedes.glb) — "Mercedes Benz C63 AMG" by LuizZed36 — CC BY 4.0
-- Polis (polis.glb) — "Illinois '90 Police cruiser" — CC BY 4.0
-- Fiat Linea (linea.glb) — "Fiat Linea" by koelkastasbers — Sketchfab Free Standard
-- Renault Clio 4 (clio.glb) — "clio 4" by xray_collection — CC BY 4.0
+- Fiat Punto (punto.glb) — "(FREE) 1995 Fiat Punto GT" by Lionsharp Studios (@lionsharp) — CC BY 4.0
+- Renault Clio (clio.glb) — "2020 Renault Clio" by tonielpro520 — CC BY 4.0
 - Fiat Egea (egea.glb) — "Fiat Tipo / Egea" by koelkastasbers — Sketchfab Free Standard
-- Toyota Corolla (corolla.glb) — "Toyota Corolla 2020" by ItsDiyor — CC BY 4.0
-- BMW E34 (e34.glb) — "1987 BMW E34 (LP)" by KrStolorz — Sketchfab Free Standard
-- Range Rover Evoque (evoque.glb) — "Range Rover Evoque" by minghau — CC BY 4.0
+- Honda Civic (civic.glb) — "Honda Civic Type R -98 (Free Asset)" by tiedtke — CC BY 4.0
+- Golf 7 (golf7.glb) — "Volkswagen Golf 7." by Mona x Supercars (Car2022) — CC BY 4.0
+- Seat Leon (leon.glb) — "Seat Leon Cupra R" by Ruleta (@romanian_guy_0069) — CC BY 4.0
+- Peugeot RCZ (rcz.glb) — "peugeot rcz r" by amogusstrikesback2 — CC BY 4.0
+- BMW M4 (m4.glb) — "BMW m4 CSL 2023" by Black Snow (@BlackSnow02) — CC BY 4.0
 - Mercedes G63 (g63.glb) — "Mersedes-Benz G63 AMG" by BlackSnow02 — CC BY 4.0
 Modeller ölçeklendi, yönlendirildi ve sıkıştırıldı.
 
