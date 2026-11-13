@@ -523,7 +523,8 @@ const IK=['🌹','💖','🎈','💐','🍩','🎩','🌌','👑','🎁'];setInt
 (()=>{let sid;try{sid=localStorage.getItem('msid')||Math.random().toString(36).slice(2,12);localStorage.setItem('msid',sid)}catch(e){sid=Math.random().toString(36).slice(2,12)}
 let adres=null;const kuyruk=[];fetch('arena/adres.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(d=>{adres=d.adres.replace(/\/$/,'');kuyruk.splice(0).forEach(gonder)}).catch(()=>{});
 const cihaz=/Mobi|Android|iPhone/i.test(navigator.userAgent)?'mobil':'masaüstü';
-function gonder(o){if(!adres){kuyruk.push(o);return}try{navigator.sendBeacon(adres+'/api/olay',JSON.stringify(o))}catch(e){}}
+const QP=new URLSearchParams(location.search);let ben=false,kim='';try{if(QP.get('ben')){localStorage.setItem('mben','1')}ben=localStorage.getItem('mben')==='1';if(QP.get('r'))localStorage.setItem('mkim',QP.get('r'));kim=localStorage.getItem('mkim')||''}catch(e){}
+function gonder(o){if(ben)return;o.kim=kim;if(!adres){kuyruk.push(o);return}try{navigator.sendBeacon(adres+'/api/olay',JSON.stringify(o))}catch(e){}}
 window.MA=(t,d)=>gonder({t,d,sid,cihaz,ref:document.referrer?new URL(document.referrer).hostname:''});
 MA('giris',location.hash||'/');
 document.addEventListener('click',e=>{const o=e.target.closest('.oyun[data-id]');if(o){MA('oyun',o.dataset.id);return}
