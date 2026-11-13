@@ -43,7 +43,7 @@
      <div class="h-alt"><div class="h-akis" id="hAkis"></div><div class="h-hed">${(cfg.hediyeler || []).map(h => `<div><b>${h[0]} ${h[1]}</b>${h[2]}</div>`).join('')}</div>
      </div>
      <div class="h-vit" id="hVit"></div><div class="h-kaz" id="hKaz"><div id="hKazI"></div></div>`;
-    if(!new URLSearchParams(location.search).get('k'))d.insertAdjacentHTML('beforeend','<div class="h-rkz"><b>🎮</b><span>Bu oyunu yayınına kirala<br><i>TT @bilesikyatirim</i></span></div>');document.body.appendChild(d); AK = d.querySelector('#hAkis'); IL = d.querySelector('#hIlk'); SOL = d.querySelector('#hSol'); SAG = d.querySelector('#hSag'); KZ = d.querySelector('#hKaz');
+    d.insertAdjacentHTML('beforeend','<div class="h-rkz"><b>🎮</b><span>Bu oyunu yayınına kirala<br><i>TT @bilesikyatirim</i></span></div>');document.body.appendChild(d); AK = d.querySelector('#hAkis'); IL = d.querySelector('#hIlk'); SOL = d.querySelector('#hSol'); SAG = d.querySelector('#hSag'); KZ = d.querySelector('#hKaz');
   };
   OY.akis = (t, renk = '#fff') => { if (!AK) return; const d = document.createElement('div'); d.style.color = renk; d.textContent = t; AK.prepend(d); while (AK.children.length > 3) AK.lastChild.remove() };
   OY.bilgi = (sol, sag) => { if (SOL && SOL.textContent !== sol) SOL.textContent = sol; if (SAG && SAG.textContent !== sag) SAG.textContent = sag };
