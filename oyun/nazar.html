@@ -1,92 +1,170 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Nazar Savunması</title>
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#0b1640;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}</style></head><body>
-<canvas id="c"></canvas>
-<script src="core.js?v=3"></script><script src="hud.js?v=3"></script>
+<canvas id="a"></canvas><canvas id="c"></canvas>
+<script src="core.js?v=4"></script><script src="hud.js?v=7"></script>
 <script>
-OY.hud({baslik:'NAZAR SAVUNMASI',alt:'Kem gözler yayına saldırıyor! Beğen ve yorum yaz, nazar boncuğun ateş etsin 🧿',renk:'#5ec8ff',
- hediyeler:OY.REKABET_HED});
-const C=document.getElementById('c'),g=C.getContext('2d');let W,H,cx,cy,M;
-function boyut(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*d;C.height=H*d;g.setTransform(d,0,0,d,0,0);cx=W/2;cy=H*.5;M=Math.min(W,H*.62)}boyut();addEventListener('resize',boyut);
-const now=()=>performance.now();
-const U={},KULE=[],GOZ=[],MERMI=[],PAR=[],YAZI=[];let yavas=0,can=100,dalga=1,dalgaKalan=0,sonDogum=0,bitis=0,halka=[],kalkan=0,enIyi=1;
-let KAL={rekor:1};
-// arka plan: cini desen (onceden ciz)
-const ARK=document.createElement('canvas');function arkaCiz(){ARK.width=W;ARK.height=H;const a=ARK.getContext('2d');const gr=a.createRadialGradient(cx,cy,10,cx,cy,Math.max(W,H)*.75);gr.addColorStop(0,'#1b3c86');gr.addColorStop(1,'#060c26');a.fillStyle=gr;a.fillRect(0,0,W,H);
- const s=M*.16;a.globalAlpha=.09;a.strokeStyle='#9fd8ff';a.lineWidth=2;for(let y=-s;y<H+s;y+=s)for(let x=-s;x<W+s;x+=s){a.beginPath();for(let k=0;k<8;k++){const an=k/8*Math.PI*2,r=k%2?s*.22:s*.42;a.lineTo(x+Math.cos(an)*r,y+Math.sin(an)*r)}a.closePath();a.stroke()}a.globalAlpha=1}
-arkaCiz();addEventListener('resize',arkaCiz);
-const hash=s=>[...String(s)].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7);
-function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,son:0,k:null};if(e.foto&&!u.foto)u.foto=e.foto;return u}
-function kule(u){if(u.k)return u.k;if(KULE.length>=18){const e=KULE.reduce((a,b)=>a.u.son<b.u.son?a:b);if(now()-e.u.son<20000)return null;e.u.k=null;KULE.splice(KULE.indexOf(e),1)}
- u.k={u,a:Math.random()*6.28,r:.24+(KULE.length%3)*.06,atis:0,sarj:0,isik:0};KULE.push(u.k);OY.akis(`🧿 ${u.ad} nazar boncuğunu taktı`,'#9fe3ff');return u.k}
-function ates(k,n=1,guc=1){k.sarj+=n;k.u.son=now()}
-function kpos(k){return[cx+Math.cos(k.a)*M*k.r,cy+Math.sin(k.a)*M*k.r]}
-function gozDog(){const a=Math.random()*6.28,d=Math.max(W,H)*.62,tip=Math.random()<Math.min(.3,dalga*.03)?1:0;
- GOZ.push({x:cx+Math.cos(a)*d,y:cy+Math.sin(a)*d,can:tip?6+dalga:2+dalga*.5,max:tip?6+dalga:2+dalga*.5,h:(tip?.035:.06)*(1+dalga*.04),r:tip?M*.075:M*.045,tip,kirp:Math.random()*5})}
-function vur(gz,hasar,u){gz.can-=hasar;if(gz.can<=0&&!gz.ol){gz.ol=1;if(u){u.puan+=(gz.tip?5:1)*OY.ikiKat(u)};patla(gz.x,gz.y,gz.tip?40:16,'#b066ff');OY.ses.pop()}}
-function patla(x,y,n,c){for(let i=0;i<n;i++)PAR.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,o:40+Math.random()*20,r:2+Math.random()*3,c})}
-OY.rekabetKur({liste:()=>Object.values(U),skor:u=>u.puan,ayarla:(u,v)=>{u.puan=Math.max(0,Math.round(v))}});
+/* NAZAR SAVUNMASI - bireysel rekabet
+   Her izleyici halkada kendi nazar boncugudur. Ortadaki Kem Goz Anasi kem gozler salar; her goz BIR boncuga yurur.
+   Begeni/yorum = mermi (birikir, boncuk kendiliginden ates eder; zamanlama gerekmez). Gozu VURAN puani alir.
+   Goz boncuga degerse 1 can gider; 3 can biterse boncuk CATLAR: puanin %20'si gider, 5 sn sonra geri gelir.
+   Kem gozler en cok LIDERE saldirir (nazar basarili olana deger). 150 sn'lik tur, en cok puan kazanir. */
+const TUR=+(OY.Q.get('tur')||150),MAXS=20;
+const HED=[['🌹','Gül','Üzerlik: yakını yakar'],['💖','Kalp','Kalkan: 20 sn'],['💐','Parfüm','Tütsü: seri ateş'],['🍩','Donut','Ayna: gözler lidere'],['🎩','Şapka','Dev Nazar: 2x puan'],['🌌','Galaksi','Maşallah: hepsi senin']];
+OY.hud({baslik:'NAZAR SAVUNMASI',alt:'Beğen = mermi · Gözü vuran puanı alır · Kem göz LİDERE saldırır 😠',renk:'#5ec8ff',hediyeler:HED});
+const A=document.getElementById('a'),C=document.getElementById('c'),g=C.getContext('2d');let W,H,DPR,cx,cy,RX,RY,R=20,UST,ALT,ARA=60;
+const now=()=>performance.now(),FONT='Nunito,Segoe UI,Arial';
+const U={},SLOT=[],GOZ=[],MER=[],PAR=[],YAZ=[],DALGA=[],BAL=[];let turBit=now()+TUR*1000,arada=0,sonDog=0,sonBoss=now(),KAL={gal:{}},LID=null;
+// ---------- yerlesim: oyuncular elips halkada esit aralikli yuvalarda (asla ust uste binmez) ----------
+function olc(){const ilk=document.getElementById('hIlk'),hed=document.querySelector('.h-hed');
+ UST=Math.max(H*.125,(ilk&&ilk.children.length?ilk.getBoundingClientRect().bottom:H*.12)+H*.01);
+ ALT=Math.max(UST+120,(hed?hed.getBoundingClientRect().top:H*.86)-H*.118)}
+let SN=8,YOL=[];
+function halkaKur(){olc();cx=W/2;cy=(UST+ALT)/2;SN=[8,12,16,20].find(n=>n>=SLOT.filter(Boolean).length)||20;
+ for(let k=0;k<3;k++){RX=Math.max(40,W/2-R*1.3-W*.02);RY=Math.max(40,(ALT-UST)/2-R*1.35);const per=2*Math.PI*Math.sqrt((RX*RX+RY*RY)/2);ARA=per/SN;R=Math.min(Math.min(W,ALT-UST)*.07,ARA*.36)}
+ const N=720,p=[];let top=0,ox=cx,oy=cy-RY;for(let i=0;i<=N;i++){const a=-Math.PI/2+i/N*Math.PI*2,x=cx+Math.cos(a)*RX,y=cy+Math.sin(a)*RY;top+=Math.hypot(x-ox,y-oy);p.push([x,y,top]);ox=x;oy=y}
+ YOL=[];let j=0;for(let s=0;s<SN;s++){const h=s/SN*top;while(j<N&&p[j][2]<h)j++;YOL.push([p[j][0],p[j][1]])}
+ arkaCiz();spriteKur();for(const u of Object.values(U)){u.kart=null;u.roz=null}}
+function boyut(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;for(const c of[A,C]){c.width=W*DPR;c.height=H*DPR}g.setTransform(DPR,0,0,DPR,0,0);halkaKur()}
+// ---------- statik arka plan ayri tuvalde (her kare yeniden cizilmez) ----------
+function arkaCiz(){const a=A.getContext('2d');a.setTransform(DPR,0,0,DPR,0,0);
+ const gr=a.createRadialGradient(cx,cy,10,cx,cy,Math.max(W,H)*.7);gr.addColorStop(0,'#2a1250');gr.addColorStop(.35,'#16306e');gr.addColorStop(1,'#060c26');a.fillStyle=gr;a.fillRect(0,0,W,H);
+ const s=Math.min(W,H)*.11;a.globalAlpha=.08;a.strokeStyle='#9fd8ff';a.lineWidth=1.5;for(let y=-s;y<H+s;y+=s)for(let x=-s;x<W+s;x+=s){a.beginPath();for(let k=0;k<8;k++){const an=k/8*Math.PI*2,r=k%2?s*.22:s*.42;a.lineTo(x+Math.cos(an)*r,y+Math.sin(an)*r)}a.closePath();a.stroke()}
+ a.globalAlpha=.22;a.strokeStyle='#5ec8ff';a.setLineDash([6,8]);a.lineWidth=2;a.beginPath();a.ellipse(cx,cy,RX,RY,0,0,7);a.stroke();a.setLineDash([]);a.globalAlpha=1;
+ for(const[x,y]of YOL){a.fillStyle='rgba(255,255,255,.05)';a.strokeStyle='rgba(158,216,255,.22)';a.lineWidth=1.5;a.beginPath();a.arc(x,y,R*.9,0,7);a.fill();a.stroke()}}
+let SPG=[];const gozR=tip=>R*[.55,.8,1.3][tip];
+function spriteKur(){SPG=[0,1,2].map(tip=>{const rr=gozR(tip),w=Math.ceil(rr*1.45),c2=document.createElement('canvas');c2.width=c2.height=w*2*DPR;const b=c2.getContext('2d');b.scale(DPR,DPR);b.translate(w,w);
+  b.fillStyle=['#2a0d3e','#3d0a52','#14001f'][tip];b.beginPath();b.ellipse(0,0,rr*1.3,rr,0,0,7);b.fill();
+  b.fillStyle='#f3e9ff';b.beginPath();b.ellipse(0,0,rr*.98,rr*.64,0,0,7);b.fill();
+  b.strokeStyle=['#7a33aa','#c02fd9','#ff2b5e'][tip];b.lineWidth=Math.max(2,rr*.12);b.beginPath();b.ellipse(0,0,rr*1.3,rr,0,0,7);b.stroke();
+  b.strokeStyle='#14001f';b.lineWidth=rr*.2;b.lineCap='round';b.beginPath();b.moveTo(-rr*.95,-rr*.78);b.lineTo(-rr*.15,-rr*.5);b.moveTo(rr*.95,-rr*.78);b.lineTo(rr*.15,-rr*.5);b.stroke();
+  return{c:c2,w}})}
+// boncuk + foto + isim plakasi tek tuvalde onbellek (foto yuklenince yenilenir)
+function kart(u){const f=OY.foto(u,96);if(u.kart&&u.kart.surum===f.surum)return u.kart;
+ const fs=Math.max(10,R*.46),pw=Math.min(ARA*.96,W*.3),w=Math.ceil(Math.max(R*2.6,pw)),h=Math.ceil(R*2.7),c=document.createElement('canvas');c.width=w*DPR;c.height=h*DPR;const a=c.getContext('2d');a.scale(DPR,DPR);
+ const x=w/2,y=R*1.3;a.fillStyle='#0a4fd6';a.beginPath();a.arc(x,y,R,0,7);a.fill();a.fillStyle='#fff';a.beginPath();a.arc(x,y,R*.78,0,7);a.fill();a.fillStyle='#6ccaff';a.beginPath();a.arc(x,y,R*.66,0,7);a.fill();
+ a.drawImage(f,x-R*.56,y-R*.56,R*1.12,R*1.12);
+ a.font=`800 ${fs}px ${FONT}`;let s=OY.kisaAd(u.ad,12);while(s.length>2&&a.measureText(s).width>pw-8)s=s.slice(0,-2)+'…';const tw=a.measureText(s).width+10,th=fs*1.3,ty=y+R*.62;
+ a.fillStyle='rgba(5,10,30,.85)';a.beginPath();a.roundRect?a.roundRect(x-tw/2,ty,tw,th,th/2):a.rect(x-tw/2,ty,tw,th);a.fill();a.fillStyle='#fff';a.textAlign='center';a.textBaseline='middle';a.fillText(s,x,ty+th/2+1);
+ u.kart={c,w,h,ox:w/2,oy:y,surum:f.surum};return u.kart}
+function rozet(u,lid){const k=u.puan+'|'+lid;if(u.roz&&u.roz.k===k)return u.roz;const br=Math.max(9,R*.4),w=Math.ceil(br*2+4),c=document.createElement('canvas');c.width=c.height=w*DPR;const a=c.getContext('2d');a.scale(DPR,DPR);
+ a.fillStyle=lid?'#ffd84a':'#fff';a.strokeStyle='#0b1640';a.lineWidth=2;a.beginPath();a.arc(w/2,w/2,br,0,7);a.fill();a.stroke();a.fillStyle='#0b1640';a.font=`900 ${br*(u.puan>99?.82:1.05)}px ${FONT}`;a.textAlign='center';a.textBaseline='middle';a.fillText(u.puan,w/2,w/2+1);
+ u.roz={c,w,k};return u.roz}
+// ---------- oyuncular ----------
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,vur:0,son:now(),mermi:0,can:3,catlak:0,kalkan:0,seri:0,dev:0,x2:0,s:-1,x:cx,y:cy,atis:0};
+ if(e.foto&&!u.foto)u.foto=e.foto;u.son=now();if(u.s<0)yerVer(u);return u}
+function yerVer(u){let s=SLOT.findIndex(v=>!v);if(s<0&&SLOT.length<MAXS)s=SLOT.length;
+ if(s<0){let en=null;for(const v of SLOT)if(v&&now()-v.son>30000&&(!en||v.son<en.son))en=v;if(!en)return;s=en.s;en.s=-1;SLOT[s]=null}
+ SLOT[s]=u;u.s=s;u.can=3;u.catlak=0;const eskiSN=SN;if(SLOT.filter(Boolean).length>SN)halkaKur();const[x,y]=hedefYer(u);u.x=x;u.y=y;if(eskiSN!==SN)OY.akis(`🧿 Halka büyüdü · ${SLOT.filter(Boolean).length} boncuk`,'#9fe3ff')}
+function hedefYer(u){const dolu=[];for(let i=0;i<SLOT.length;i++)if(SLOT[i])dolu.push(i);const k=dolu.indexOf(u.s);return YOL[Math.round(k*SN/Math.max(dolu.length,1))%SN]||YOL[0]}
+const aktif=()=>SLOT.filter(u=>u&&!u.catlak);
+function lider(){let l=null;for(const u of SLOT)if(u&&u.puan>0&&(!l||u.puan>l.puan))l=u;return l}
+function mermiVer(u,n){u.mermi=Math.min(60,u.mermi+n)}
+// ---------- gozler ----------
+function hedefSec(boss){const a=aktif();if(!a.length)return null;const l=lider();if(l&&!l.catlak&&(boss||Math.random()<.33))return l;
+ const yeni=a.filter(u=>now()-u.son<40000);const h=yeni.length?yeni:a;return h[Math.random()*h.length|0]}
+function gozDog(tip){const u=hedefSec(tip===2);if(!u)return;const can=[1,3,15][tip];
+ GOZ.push({x:cx,y:cy,sx:cx,sy:cy,p:0,tip,can,max:can,bek:0,u,sure:[7,9,14][tip],kirp:Math.random()*6,dal:Math.random()*6})}
+function hedefDegis(z,u,hiz=.6){z.sx=z.x;z.sy=z.y;z.p=0;z.u=u;z.sure=Math.max(2.5,z.sure*hiz)}
+function gozOl(z,u){if(z.ol)return;z.ol=1;const p=[1,3,10][z.tip]*(u&&u.x2>now()?2:1);if(u){u.puan+=p;u.vur++;YAZ.push({x:z.x,y:z.y,m:'+'+p,t:now(),r:z.tip===2?'#ffd84a':'#bff'})}
+ patla(z.x,z.y,z.tip===2?40:z.tip?16:9,z.tip===2?'#ff2b5e':'#c27bff');OY.ses.pop();if(z.tip===2&&u)OY.akis(`👁 ${u.ad} DEV KEM GÖZÜ vurdu! +${p}`,'#ffd84a')}
+function patla(x,y,n,c){if(PAR.length>240)n=Math.min(n,5);for(let i=0;i<n;i++){const a=Math.random()*6.28,v=1+Math.random()*4;PAR.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,o:28+Math.random()*18,r:1.5+Math.random()*2.5,c})}}
+function vurul(u,z){if(u.catlak)return;if(u.kalkan>now()||u.dev>now()){patla(u.x,u.y,10,'#7fd4ff');return}
+ u.can-=z.tip===2?3:1;OY.ses.yanlis();patla(u.x,u.y,14,'#f45');u.sars=now()+300;
+ if(u.can<=0){const k=Math.round(u.puan*.2);u.puan-=k;u.can=0;u.catlak=now()+5000;OY.ses.patla();patla(u.x,u.y,36,'#5ec8ff');
+  OY.akis(`💥 ${u.ad} boncuğu ÇATLADI! −${k} puan`,'#ff7b8a');for(const g2 of GOZ)if(g2.u===u){const y=hedefSec();if(y)hedefDegis(g2,y,1)}}}
+// ---------- hediyeler: Nazar'a ozel 6 etki ----------
+function hediye(u,h){const l=lider(),t=now();let ad,ik,et;
+ switch(h.sinif){
+  case 'gul':ik='🌿';ad='Üzerlik';DALGA.push({x:u.x,y:u.y,r:R,max:R*6.5,u,renk:'120,255,140'});mermiVer(u,10);et='Üzerlik tütsüsü · yakındaki gözler yandı';break;
+  case 'kalp':ik='🛡️';ad='Mavi Kalkan';u.kalkan=t+20000;u.can=3;et='20 sn kalkan · canı doldu';break;
+  case 'parfum':ik='🔥';ad='Tütsü';u.seri=t+15000;et='15 sn sınırsız SERİ ATEŞ';break;
+  case 'donut':{ik='🪞';ad='Kem Göz Aynası';const hd=l&&l!==u?l:SLOT.filter(v=>v&&v!==u&&!v.catlak).sort((a,b)=>b.puan-a.puan)[0];
+   if(!hd){et='ayna boşa döndü';break}for(let i=0;i<4;i++)gozDog(0);let n=0;for(const z of GOZ)if(!z.ol&&z.u!==hd&&z.tip<2){hedefDegis(z,hd);z.ayna=1;n++}
+   et=`${n} kem göz ${OY.kisaAd(hd.ad,10)}'e döndü!`;break}
+  case 'sapka':ik='🧿';ad='Dev Nazar';u.dev=t+20000;u.x2=t+20000;u.can=3;mermiVer(u,30);et='20 sn DEV boncuk · 3x hasar · 2x puan';break;
+  case 'galaksi':{ik='✨';ad='Maşallah';let n=0;for(const z of GOZ)if(!z.ol){gozOl(z,u);n++}u.x2=t+20000;u.can=3;DALGA.push({x:cx,y:cy,r:0,max:Math.max(W,H)*.8,u:null,renk:'255,216,74'});
+   et=`${n} göz patladı · puanı senin · 20 sn 2x`;OY.ses.patla();break}
+ }
+ OY.vitrin(u,ik,ad,et);OY.akis(`${h.ikon} ${u.ad} → ${ik} ${ad}`,'#ffd84a')}
 OY.basla({muzik:'elektro',olay:e=>{
- if(e.t==='kalici'&&e.veri&&e.veri.rekor){KAL=e.veri;return}
- if(!e.id)return;const u=kul(e);const k=kule(u);if(!k)return;
- if(e.t==='begeni')ates(k,(e.adet||1)*.6);
- else if(e.t==='yorum'){ates(k,3);YAZI.push({k,m:String(e.metin||'').slice(0,40),t:now()})}
- else if(e.t==='takip'){ates(k,10);OY.akis(`➕ ${u.ad} takip etti · +10 atış`,'#bdf')}
- else if(e.t==='paylasim')ates(k,8);
- else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;ates(k,8+Math.min(40,n));OY.ses.para();const et=OY.rekabetHediye(u,h);
-  if(h.sinif==='gul')halka.push({x:kpos(k)[0],y:kpos(k)[1],r:0,u});if(h.sinif==='galaksi'){for(const z of GOZ)vur(z,999,u);can=Math.min(100,can+20)}
-  OY.vitrin(u,h.ikon,h.ad,et);OY.akis(`${h.ikon} ${u.ad} → ${et}`,'#ffd84a')}
+ if(e.t==='kalici'&&e.veri&&e.veri.gal){KAL=e.veri;return}
+ if(!e.id||arada)return;const u=kul(e);
+ if(e.t==='begeni')mermiVer(u,e.adet||1);
+ else if(e.t==='yorum'){mermiVer(u,5);if(u.s>=0){for(let i=BAL.length-1;i>=0;i--)if(BAL[i].u===u)BAL.splice(i,1);BAL.push({u,m:OY.kisaAd(String(e.metin||''),22),t:now()});if(BAL.length>3)BAL.shift()}}
+ else if(e.t==='takip'){mermiVer(u,15);u.can=3;OY.akis(`➕ ${u.ad} takip etti · +15 mermi, can doldu`,'#bdf')}
+ else if(e.t==='paylasim'){mermiVer(u,10);OY.akis(`🔗 ${u.ad} paylaştı · +10 mermi`,'#bdf')}
+ else if(e.t==='hediye'){const h=OY.hediye(e);mermiVer(u,5*h.seviye*h.adet);OY.ses.para();if(u.s>=0)hediye(u,h)}
 }});
-OY.demoYorum=()=>['Maşallah','Nazar değmesin!','Tü tü tü','Vur vur!','Kem gözlere şiş','Ben de buradayım'][Math.random()*6|0];
-// ---- cizim yardimcilari ----
-function boncuk(x,y,r,u,isik){g.save();g.shadowColor='#4fc3ff';g.shadowBlur=isik*25;
- g.fillStyle='#0a4fd6';g.beginPath();g.arc(x,y,r,0,7);g.fill();g.shadowBlur=0;g.fillStyle='#fff';g.beginPath();g.arc(x,y,r*.72,0,7);g.fill();
- g.fillStyle='#6ccaff';g.beginPath();g.arc(x,y,r*.56,0,7);g.fill();g.save();g.beginPath();g.arc(x,y,r*.46,0,7);g.clip();g.drawImage(OY.foto(u,96),x-r*.46,y-r*.46,r*.92,r*.92);g.restore();
- g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.ellipse(x-r*.4,y-r*.45,r*.18,r*.1,-.6,0,7);g.fill();g.restore()}
-function kemGoz(z,t){const r=z.r;g.save();g.translate(z.x,z.y);const a=Math.atan2(cy-z.y,cx-z.x);
- g.fillStyle=z.tip?'#3d0a52':'#2a0d3e';g.beginPath();g.ellipse(0,0,r*1.25,r,0,0,7);g.fill();
- const kirp=Math.max(.15,Math.abs(Math.sin(t/700+z.kirp)));g.fillStyle='#f3e9ff';g.beginPath();g.ellipse(0,0,r*.95,r*.62*kirp,0,0,7);g.fill();
- g.fillStyle=z.tip?'#ff2b5e':'#b23cff';g.beginPath();g.arc(Math.cos(a)*r*.3,Math.sin(a)*r*.18*kirp,r*.36*kirp,0,7);g.fill();g.fillStyle='#000';g.beginPath();g.arc(Math.cos(a)*r*.34,Math.sin(a)*r*.2*kirp,r*.16*kirp,0,7);g.fill();
- g.strokeStyle='#14001f';g.lineWidth=r*.18;g.beginPath();g.moveTo(-r*.9,-r*.75);g.lineTo(r*.2,-r*.45);g.stroke();g.beginPath();g.moveTo(r*.9,-r*.75);g.lineTo(-r*.2,-r*.45);g.stroke();
- if(z.can<z.max){g.fillStyle='#300';g.fillRect(-r,r*1.15,r*2,r*.18);g.fillStyle='#f45';g.fillRect(-r,r*1.15,r*2*Math.max(0,z.can/z.max),r*.18)}g.restore()}
-let son=now();
-function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;
- // dalga yonetimi
- if(bitis){if(t>bitis){bitis=0;can=100;dalga=1;dalgaKalan=0;GOZ.length=0;OY.kazanan(null)}}
- else{if(dalgaKalan<=0&&GOZ.length===0){dalga++;dalgaKalan=6+dalga*3;OY.akis(`🌊 ${dalga}. dalga geliyor!`,'#f8a');if(dalga>KAL.rekor){KAL.rekor=dalga;OY.kaydet(KAL)}}
-  if(dalgaKalan>0&&t-sonDogum>Math.max(350,1400-dalga*60)){gozDog();dalgaKalan--;sonDogum=t}}
- g.drawImage(ARK,0,0,W,H);
- // merkez: yayin evi (kalkanli koca nazar)
- const nb=M*.11*(1+Math.sin(t/400)*.03);g.save();g.shadowColor=kalkan>t?'#7fd4ff':'#ffd84a';g.shadowBlur=30;g.fillStyle='#0a3fb0';g.beginPath();g.arc(cx,cy,nb,0,7);g.fill();g.restore();
- g.fillStyle='#fff';g.beginPath();g.arc(cx,cy,nb*.74,0,7);g.fill();g.fillStyle='#55bdf7';g.beginPath();g.arc(cx,cy,nb*.55,0,7);g.fill();g.fillStyle='#061b4a';g.beginPath();g.arc(cx,cy,nb*.3,0,7);g.fill();
- // bereket (can) halkasi
- g.lineWidth=M*.018;g.strokeStyle='rgba(255,255,255,.12)';g.beginPath();g.arc(cx,cy,nb*1.35,0,7);g.stroke();
- g.strokeStyle=can>50?'#5dff9a':can>25?'#ffd84a':'#ff4d5e';g.beginPath();g.arc(cx,cy,nb*1.35,-Math.PI/2,-Math.PI/2+Math.PI*2*can/100);g.stroke();
- g.fillStyle='#fff';g.font=`800 ${M*.032}px Segoe UI`;g.textAlign='center';g.fillText(`Bereket ${Math.round(can)}`,cx,cy+nb*1.35+M*.05);
- // kuleler
- KULE.forEach((k,i)=>{k.a+=dt*.25;const[x,y]=kpos(k);k.isik=Math.max(0,k.isik-dt*3);
-  if(k.sarj>0&&!OY.donuk(k.u)&&t-k.atis>140&&GOZ.length){let hedef=null,en=1e9;for(const z of GOZ){if(z.ol)continue;const d=(z.x-x)**2+(z.y-y)**2;if(d<en){en=d;hedef=z}}
-   if(hedef){k.sarj-=1;k.atis=t;k.isik=1;MERMI.push({x,y,z:hedef,u:k.u,h:M*.016})}}
-  boncuk(x,y,M*.042,k.u,k.isik);if(OY.donuk(k.u)||OY.korunuyor(k.u)){g.strokeStyle=OY.donuk(k.u)?'#bff':'#ffd84a';g.lineWidth=3;g.beginPath();g.arc(x,y,M*.055,0,7);g.stroke()}g.fillStyle='#fff';g.font=`800 ${M*.024}px Segoe UI`;g.textAlign='center';g.fillText(k.u.puan,x,y+M*.07)});
+OY.demoYorum=()=>['Maşallah','Nazar değmesin!','Tü tü tü','Vur vur!','Kem gözlere şiş','Lideri vurun 😂','Ben de buradayım'][Math.random()*7|0];
+addEventListener('resize',boyut);boyut();
+// ---------- tur ----------
+function turBitir(){const s=Object.values(U).sort((a,b)=>b.puan-a.puan);arada=now()+8000;OY.ses.zafer();
+ if(s[0]&&s[0].puan>0){KAL.gal[s[0].ad]=(KAL.gal[s[0].ad]||0)+1;OY.kaydet(KAL);
+  OY.kazanan(s[0],'🧿 TURUN KORUYUCUSU',`${s[0].puan} puan · ${s[0].vur} göz vurdu · ${KAL.gal[s[0].ad]}. galibiyeti`+(s[1]?`<br>🥈 ${s[1].ad} ${s[1].puan}`+(s[2]?` · 🥉 ${s[2].ad} ${s[2].puan}`:''):''))}
+ for(const z of GOZ)if(!z.ol)patla(z.x,z.y,6,'#c27bff');GOZ.length=0;MER.length=0}
+function turBasla(){arada=0;turBit=now()+TUR*1000;sonBoss=now();OY.kazanan(null);for(const u of Object.values(U)){u.puan=0;u.vur=0;u.can=3;u.catlak=0;u.roz=null}OY.akis('🔔 Yeni tur! Kem gözler geliyor','#f8a')}
+// ---------- cizim ----------
+function boncukCiz(u,t){const big=u.dev>t?1.45:1,sh=u.sars>t?(Math.random()-.5)*6:0,x=u.x+sh,y=u.y,r=R*big,k=kart(u);
+ if(u.catlak)g.globalAlpha=.4;g.drawImage(k.c,x-k.ox*big,y-k.oy*big,k.w*big,k.h*big);
+ if(u.catlak){g.strokeStyle='#fff';g.lineWidth=2;g.beginPath();g.moveTo(x-r*.7,y-r*.5);g.lineTo(x-r*.1,y+r*.05);g.lineTo(x-r*.3,y+r*.4);g.moveTo(x-r*.1,y+r*.05);g.lineTo(x+r*.6,y-r*.2);g.stroke();g.globalAlpha=1;
+  g.fillStyle='#fff';g.font=`900 ${R*.7}px ${FONT}`;g.textAlign='center';g.fillText(Math.ceil((u.catlak-t)/1000),x,y+R*.25);return}
+ // can halkasi: 3 parca (yesil -> son can kirmizi)
+ g.lineWidth=Math.max(2.5,R*.14);for(let i=0;i<3;i++){const a0=-Math.PI/2+i*2.094+.13,a1=a0+2.094-.26;g.strokeStyle=i<u.can?(u.can===1?'#ff4d5e':'#5dff9a'):'rgba(255,255,255,.15)';g.beginPath();g.arc(x,y,r+R*.17,a0,a1);g.stroke()}
+ if(u===LID){g.strokeStyle='#ffd84a';g.lineWidth=2;g.beginPath();g.arc(x,y,r+R*.36,0,7);g.stroke()}
+ if(u.kalkan>t){g.strokeStyle=`rgba(127,212,255,${.6+Math.sin(t/120)*.3})`;g.lineWidth=3;g.beginPath();g.arc(x,y,r+R*.48,0,7);g.stroke()}
+ if(u.seri>t){g.strokeStyle='#ffa53a';g.lineWidth=2.5;g.beginPath();g.arc(x,y,r+R*.3,t/150,t/150+2.5);g.stroke()}
+ const rz=rozet(u,u===LID);g.drawImage(rz.c,x+r*.82-rz.w/2,y-r*.72-rz.w/2,rz.w,rz.w);
+ if(u===LID){g.font=`${R*.62}px Segoe UI Emoji,Segoe UI`;g.textAlign='center';g.fillText('👑',x-r*.8,y-r*.5)}}
+function gozCiz(z,t,olcek,hx,hy){const sp=SPG[z.tip],w=sp.w*olcek,rr=gozR(z.tip)*olcek;
+ g.drawImage(sp.c,z.x-w,z.y-w,2*w,2*w);const a=Math.atan2(hy-z.y,hx-z.x),kirp=Math.max(.2,Math.abs(Math.sin(t/650+z.kirp)));
+ g.fillStyle=z.ayna?'#ffb000':['#b23cff','#e03cff','#ff2b5e'][z.tip];g.beginPath();g.arc(z.x+Math.cos(a)*rr*.32,z.y+Math.sin(a)*rr*.2,rr*.36*kirp,0,7);g.fill();
+ g.fillStyle='#000';g.beginPath();g.arc(z.x+Math.cos(a)*rr*.36,z.y+Math.sin(a)*rr*.22,rr*.16*kirp,0,7);g.fill();
+ if(z.max>1&&z.can<z.max&&olcek===1){const bh=Math.max(3,rr*.16);g.fillStyle='#300';g.fillRect(z.x-rr,z.y+rr*1.1,rr*2,bh);g.fillStyle='#f45';g.fillRect(z.x-rr,z.y+rr*1.1,rr*2*Math.max(0,z.can/z.max),bh)}}
+let son=now(),n=0;
+function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son)/1000);son=t;n++;
+ if(arada){if(t>arada)turBasla()}else if(t>turBit)turBitir();
+ const Ak=aktif().length;
+ if(!arada&&Ak){const hiz=.45+Math.min(2.8,Ak*.13);if(t-sonDog>1000/hiz&&GOZ.length<45){sonDog=t;gozDog(Math.random()<.18?1:0)}
+  if(t-sonBoss>30000&&lider()){sonBoss=t;gozDog(2);OY.akis(`😠 DEV KEM GÖZ liderin peşinde: ${lider().ad}`,'#ff7b8a')}}
+ LID=lider();
+ g.clearRect(0,0,W,H);
+ // merkez: Kem Goz Anasi (gozlerin ciktigi yuva) - lidere bakar
+ const ar=Math.min(RX,RY)*.24;g.save();g.translate(cx,cy);g.rotate(t/1800);g.fillStyle='rgba(20,0,35,.5)';for(let i=0;i<4;i++){g.beginPath();g.ellipse(0,0,ar*(1.2-i*.18),ar*(.6-i*.08),i*1.5,0,7);g.fill()}g.restore();
+ gozCiz({x:cx,y:cy,tip:2,kirp:0},t,ar*.62/gozR(2),LID?LID.x:cx,LID?LID.y:cy+50);
+ // oyuncular: yerlerine kay + otomatik ates (menzil sinirli: goz yaklasinca vurulur)
+ const menzil=(Math.max(R*5.2,Math.min(RX,RY)*.55))**2;
+ for(const u of SLOT){if(!u)continue;const[hx,hy]=hedefYer(u);u.x+=(hx-u.x)*Math.min(1,dt*4);u.y+=(hy-u.y)*Math.min(1,dt*4);
+  if(u.catlak&&t>u.catlak){u.catlak=0;u.can=3;patla(u.x,u.y,12,'#5ec8ff')}
+  if(u.catlak||arada)continue;const seri=u.seri>t,ara=seri?85:210;
+  if((u.mermi>=1||seri)&&t-u.atis>ara){let hd=null,en=1e18;
+   for(const z of GOZ){if(z.ol||z.bek>=z.can)continue;const d=(z.x-u.x)**2+(z.y-u.y)**2;if(d>menzil)continue;const k=z.u===u?d*.2:d;if(k<en){en=k;hd=z}}
+   if(hd){const dm=u.dev>t?3:1;hd.bek+=dm;u.atis=t;if(!seri)u.mermi-=1;MER.push({x:u.x,y:u.y,z:hd,u,dm,r:u.dev>t?R*.28:R*.17})}}}
+ // gozler: yuvadan cikip hedef boncuga kivrilarak yurur
+ for(let i=GOZ.length-1;i>=0;i--){const z=GOZ[i];if(z.ol){GOZ.splice(i,1);continue}
+  if(!z.u||z.u.catlak||z.u.s<0){const y=hedefSec(z.tip===2);if(!y){z.ol=1;continue}hedefDegis(z,y,1)}
+  if(!arada){z.p=Math.min(1,z.p+dt/z.sure);const ex=z.u.x,ey=z.u.y,dx=ex-z.sx,dy=ey-z.sy,L=Math.hypot(dx,dy)||1,ka=Math.sin(z.p*Math.PI*3+z.dal)*R*.8*(1-z.p);
+   z.x=z.sx+dx*z.p-dy/L*ka;z.y=z.sy+dy*z.p+dx/L*ka;if(Math.hypot(ex-z.x,ey-z.y)<R*(z.u.dev>t?1.45:1)+gozR(z.tip)*.5||z.p>=1){z.ol=1;vurul(z.u,z);continue}}
+  gozCiz(z,t,1,z.u.x,z.u.y)}
  // mermiler
- for(let i=MERMI.length-1;i>=0;i--){const m=MERMI[i],dx=m.z.x-m.x,dy=m.z.y-m.y,d=Math.hypot(dx,dy);if(m.z.ol&&d>5){m.z={x:m.z.x,y:m.z.y,ol:1}}
-  if(d<m.z.r||d<6){if(!m.z.ol)vur(m.z,1,m.u);MERMI.splice(i,1);continue}m.x+=dx/d*M*.02;m.y+=dy/d*M*.02;
-  g.fillStyle='#6ad5ff';g.shadowColor='#6ad5ff';g.shadowBlur=12;g.beginPath();g.arc(m.x,m.y,m.h*.5,0,7);g.fill();g.shadowBlur=0}
- // tutsu halkalari
- for(let i=halka.length-1;i>=0;i--){const h=halka[i];h.r+=M*(h.buyuk?.025:.018);const max=M*(h.buyuk?.9:.35);
-  for(const z of GOZ)if(!z.ol&&Math.abs(Math.hypot(z.x-h.x,z.y-h.y)-h.r)<z.r)vur(z,h.buyuk?99:3,h.u);
-  g.strokeStyle=h.buyuk?`rgba(150,255,150,${1-h.r/max})`:`rgba(255,180,100,${1-h.r/max})`;g.lineWidth=M*.02;g.beginPath();g.arc(h.x,h.y,h.r,0,7);g.stroke();if(h.r>max)halka.splice(i,1)}
- // gozler
- for(let i=GOZ.length-1;i>=0;i--){const z=GOZ[i];if(z.ol){GOZ.splice(i,1);continue}const dx=cx-z.x,dy=cy-z.y,d=Math.hypot(dx,dy);
-  if(d<nb*1.2){GOZ.splice(i,1);if(kalkan<t&&!bitis){can-=z.tip?14:6;OY.ses.yanlis();patla(z.x,z.y,20,'#f45')}continue}
-  if(!bitis){const yv=t<yavas?.35:1;z.x+=dx/d*M*z.h*dt*yv;z.y+=dy/d*M*z.h*dt*yv}kemGoz(z,t)}
- if(can<=0&&!bitis){bitis=t+7000;OY.ses.patla();const s=Object.values(U).sort((a,b)=>b.puan-a.puan);if(s[0])OY.kazanan(s[0],'🧿 NAZAR DEĞDİ!',`${dalga}. dalgaya kadar dayandınız · en iyi koruyucu`);for(const u of Object.values(U))u.puan=0}
+ g.fillStyle='#8fe0ff';for(let i=MER.length-1;i>=0;i--){const m=MER[i],z=m.z,dx=z.x-m.x,dy=z.y-m.y,d=Math.hypot(dx,dy),v=Math.max(R*.55,d*.2);
+  if(z.ol){MER.splice(i,1);continue}if(d<v+gozR(z.tip)*.5){MER.splice(i,1);z.can-=m.dm;z.bek-=m.dm;if(z.can<=0)gozOl(z,m.u);else patla(z.x,z.y,2,'#fff');continue}
+  m.x+=dx/d*v;m.y+=dy/d*v;g.beginPath();g.arc(m.x,m.y,m.r,0,7);g.fill()}
+ // dalgalar (uzerlik / masallah)
+ for(let i=DALGA.length-1;i>=0;i--){const h=DALGA[i];h.r+=h.max*dt*1.4;
+  if(h.u)for(const z of GOZ)if(!z.ol&&Math.hypot(z.x-h.x,z.y-h.y)<h.r)gozOl(z,h.u);
+  g.strokeStyle=`rgba(${h.renk},${Math.max(0,1-h.r/h.max)})`;g.lineWidth=R*.45;g.beginPath();g.arc(h.x,h.y,h.r,0,7);g.stroke();if(h.r>h.max)DALGA.splice(i,1)}
+ for(const u of SLOT)if(u)boncukCiz(u,t);
  // parcaciklar
- for(let i=PAR.length-1;i>=0;i--){const p=PAR[i];p.x+=p.vx;p.y+=p.vy;p.vx*=.95;p.vy*=.95;if(--p.o<=0){PAR.splice(i,1);continue}g.globalAlpha=Math.min(1,p.o/30);g.fillStyle=p.c;g.beginPath();g.arc(p.x,p.y,p.r,0,7);g.fill()}g.globalAlpha=1;
- // yorum balonlari
- for(let i=YAZI.length-1;i>=0;i--){const y=YAZI[i];if(t-y.t>4500||!y.k.u.k){YAZI.splice(i,1);continue}const[x,yy]=kpos(y.k);g.font=`700 ${M*.026}px Segoe UI`;const w=g.measureText(y.m).width+16;
-  g.fillStyle='rgba(255,255,255,.95)';g.beginPath();g.roundRect?g.roundRect(x-w/2,yy-M*.1,w,M*.042,10):g.rect(x-w/2,yy-M*.1,w,M*.042);g.fill();g.fillStyle='#111';g.textAlign='center';g.fillText(y.m,x,yy-M*.07)}
- if((t|0)%300<20){OY.bilgi(`🌊 Dalga ${dalga}`,`🏆 Rekor ${KAL.rekor}`);OY.ilk3(Object.values(U).filter(u=>u.puan>0).sort((a,b)=>b.puan-a.puan).slice(0,3))}
-}
+ for(let i=PAR.length-1;i>=0;i--){const p=PAR[i];p.x+=p.vx;p.y+=p.vy;p.vx*=.94;p.vy*=.94;if(--p.o<=0){PAR.splice(i,1);continue}g.globalAlpha=Math.min(1,p.o/22);g.fillStyle=p.c;g.fillRect(p.x-p.r,p.y-p.r,p.r*2,p.r*2)}g.globalAlpha=1;
+ // ucan puan yazilari
+ g.textAlign='center';g.font=`900 ${R*.62}px ${FONT}`;for(let i=YAZ.length-1;i>=0;i--){const y=YAZ[i],a=(t-y.t)/900;if(a>1){YAZ.splice(i,1);continue}g.globalAlpha=1-a;g.fillStyle=y.r;g.fillText(y.m,y.x,y.y-a*R)}g.globalAlpha=1;
+ // yorum balonlari (boncugun ic tarafinda)
+ for(let i=BAL.length-1;i>=0;i--){const b=BAL[i];if(t-b.t>4000||b.u.s<0){BAL.splice(i,1);continue}const u=b.u,fs=Math.max(10,R*.48);g.font=`700 ${fs}px ${FONT}`;
+  const w=g.measureText(b.m).width+14,h=fs*1.5,ix=u.x+(cx-u.x)*.3,iy=u.y+(cy-u.y)*.3;const bx=Math.max(4,Math.min(W-w-4,ix-w/2));
+  g.fillStyle='rgba(255,255,255,.95)';g.beginPath();g.roundRect?g.roundRect(bx,iy-h/2,w,h,h/2):g.rect(bx,iy-h/2,w,h);g.fill();g.fillStyle='#111';g.fillText(b.m,bx+w/2,iy+fs*.36)}
+ if(n%30===0){OY.bilgi(OY.sure(arada?0:Math.max(0,(turBit-t)/1000)),`🧿 ${SLOT.filter(Boolean).length}`);
+  OY.ilk3(Object.values(U).filter(u=>u.puan>0).sort((a,b)=>b.puan-a.puan).slice(0,3));
+  if(n%90===0){const u0=UST,a0=ALT;olc();if(Math.abs(u0-UST)>2||Math.abs(a0-ALT)>2)halkaKur()}}}
 kare();
 </script></body></html>
