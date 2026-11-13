@@ -293,7 +293,7 @@ function gelinKur(){const o=araba(GELIN);GELIN.o=o;o.kad=8;o.renk=BEYAZ;o.beyaz=
  // isim pankarti
  const cv=document.createElement('canvas');cv.width=768;cv.height=150;const g=cv.getContext('2d');g.fillStyle='rgba(120,20,40,.92)';g.beginPath();g.roundRect?g.roundRect(6,6,756,138,60):g.rect(6,6,756,138);g.fill();
  g.strokeStyle='#ffd27a';g.lineWidth=7;g.stroke();g.fillStyle='#fff';g.font='900 74px Nunito,Segoe UI,Arial';g.textAlign='center';g.textBaseline='middle';g.fillText(CIFT,384,80);
- const tx=new THREE.CanvasTexture(cv);tx.encoding=THREE.sRGBEncoding;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,depthTest:false}));sp.scale.set(5.2,1.02,1);sp.position.set(0,3.2,0);sp.renderOrder=6;o.g.add(sp);
+ const tx=new THREE.CanvasTexture(cv);tx.encoding=THREE.sRGBEncoding;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,depthTest:false}));sp.scale.set(5.2,1.02,1);sp.position.set(0,3.2,0);sp.renderOrder=6;o.g.add(sp);GELIN.pank=sp;
  o.vx=SX(2);o.g.position.set(SX(2),0,0);ARAC.push(GELIN)}
 
 /* ---- konvoy duzeni: gelin arabasinin arkasinda 3 serit kuyruk. Seritteki arabalar sadece ileri-geri kayar (yanal carpisma olmaz).
@@ -477,7 +477,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  FISEK=FISEK.filter(f=>{const a=(t-f.t0)/1000;if(a>1.7){S.remove(f.P);f.P.geometry.dispose();f.P.material.dispose();return false}
   const p=f.P.geometry.attributes.position.array;for(let i=0;i<f.v.length;i+=3){p[i]+=f.v[i]*dt;p[i+1]+=f.v[i+1]*dt;p[i+2]+=f.v[i+2]*dt;f.v[i+1]-=5*dt;f.v[i]*=.985;f.v[i+2]*=.985}
   f.P.geometry.attributes.position.needsUpdate=true;f.P.material.opacity=1-a/1.7;return true});
- kamGuncelle(t,dt);
+ kamGuncelle(t,dt);if(GELIN.pank){const d=K.position.distanceTo(GELIN.o.g.position);GELIN.pank.material.opacity=Math.max(0,Math.min(1,(d-9)/8))}
  gun.position.set(LK.x+34,36,LK.z+16);gun.target.position.copy(LK);
  cevreGuncelle(t,dt);R.render(S,K);
  const sr=sirali();etiketler(sr,t);
