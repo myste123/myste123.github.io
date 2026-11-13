@@ -24,7 +24,7 @@
   const FOTO = {};
   OY.foto = (u, boy = 128) => {
     const k = u.id || u.ad; if (FOTO[k]) return FOTO[k];
-    const c = document.createElement('canvas'); c.width = c.height = boy; const g = c.getContext('2d');
+    const c = document.createElement('canvas'); c.width = c.height = boy; const g = c.getContext('2d', { willReadFrequently: true });
     const renk = `hsl(${[...String(k)].reduce((a, b) => a + b.charCodeAt(0), 0) * 47 % 360},70%,55%)`;
     const ciz0 = () => { g.fillStyle = renk; g.beginPath(); g.arc(boy / 2, boy / 2, boy / 2, 0, 7); g.fill(); g.fillStyle = '#fff';
       g.font = `bold ${boy * .5}px Segoe UI,Arial`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText((u.ad || '?')[0].toUpperCase(), boy / 2, boy / 2 + 2) };
