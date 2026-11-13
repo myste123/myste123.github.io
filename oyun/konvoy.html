@@ -182,16 +182,14 @@ const golgeM=new THREE.MeshBasicMaterial({map:golgeTx,transparent:true,depthWrit
 const RENK=[0xf2f2f0,0x0e0f11,0xb9bec4,0x5a5f66,0x16264a,0xa30f17,0x5a0b16,0xd2560e,0x4f2780,0x1d5fbf,0x1f4a36,0xe7e3d6,0x2b2e33,0x7d0f12];
 const BEYAZ=0xf8f6f1;
 // kademeler: puan topladikca (veya Gul ile) araba yukselir. ters: modelin on yuzu -z. boya: govde malzemesi (=tam ad, yoksa on ek)
-const KADEME=[{ad:"Toros'a",m:'toros',p:0,boyaTx:64/512,camTx:[192/512,256/512]},
- {ad:"Punto'ya",m:'punto',p:1,boya:['=gt_body'],sil:['gt_shadow','gt_black'],mat:['gt_rim'],teker:/gt_tire|gt_rim/},
- {ad:"Clio'ya",m:'clio',ters:1,p:5,boya:['=Color_I08'],metalsiz:1,koyu:['Color_M01','Color_M07'],teker:/^Object_(15|16|79|80)$/},
- {ad:"Egea'ya",m:'egea',teker:/pab_v55_wheel/,p:15,boya:['=pab_v55_paint']},
- {ad:"Civic'e",m:'civic',p:30,boya:['=Body_MAT'],teker:/^Wheel_(FL|FR|RL|RR)/},
- {ad:"Golf'a",m:'golf7',teker:/tires|wheel[123]|disc[12]/,p:60,boya:['=Color_B06']},
- {ad:"Leon'a",m:'leon',p:100,boya:['=primary'],sil:['COLIDER__0'],teker:/^ratas/},
- {ad:"RCZ'ye",m:'rcz',p:200,sil:['glasses_glass_light__0','Material.010'],boya:['=Material.001'],teker:/^Wheel[BF][LR]/},
- {ad:"BMW M4'e",m:'m4',p:400,boya:['=M4xNME_Paint','=M4xNME_Paint2','=M4xNME_Colorable1'],teker:/M4xNME_wheels|M4xNME_hub/},
- {ad:"G63'e",m:'g63',teker:/AMG_wheels|_wheel_[lrf][lrf]_/i,p:800,boya:['=bodypaint','=vehicle_generic_smallspecmap__PAINT_2'],boy:4.8}];
+const KADEME=[{ad:"Clio'ya",m:'clio',ters:1,p:0,boya:['=Color_I08'],metalsiz:1,koyu:['Color_M01','Color_M07'],teker:/^Object_(15|16|79|80)$/},
+ {ad:"Egea'ya",m:'egea',teker:/pab_v55_wheel/,p:5,boya:['=pab_v55_paint']},
+ {ad:"Civic'e",m:'civic',p:15,boya:['=Body_MAT'],teker:/^Wheel_(FL|FR|RL|RR)/},
+ {ad:"Golf'a",m:'golf7',teker:/tires|wheel[123]|disc[12]/,p:30,boya:['=Color_B06']},
+ {ad:"Leon'a",m:'leon',p:60,boya:['=primary'],sil:['COLIDER__0'],teker:/^ratas/},
+ {ad:"RCZ'ye",m:'rcz',p:150,sil:['glasses_glass_light__0','Material.010'],boya:['=Material.001'],teker:/^Wheel[BF][LR]/},
+ {ad:"BMW M4'e",m:'m4',p:300,boya:['=M4xNME_Paint','=M4xNME_Paint2','=M4xNME_Colorable1'],teker:/M4xNME_wheels|M4xNME_hub/},
+ {ad:"G63'e",m:'g63',teker:/AMG_wheels|_wheel_[lrf][lrf]_/i,p:600,boya:['=bodypaint','=vehicle_generic_smallspecmap__PAINT_2'],boy:4.8}];
 
 // ayni malzemeli parcalari tek mesh'e birlestir (cizim cagrisi azalir, akici calisir)
 function oku(a,i,c){let x=c===0?a.getX(i):c===1?a.getY(i):c===2?a.getZ(i):a.getW(i);if(a.normalized){const A=a.array;
@@ -271,7 +269,7 @@ function araba(u){const g=new THREE.Group(),o={g,model:null,kad:0,renk:RENK[Math
  o.sp=[];for(const s of[-.62,.62]){const f=new THREE.Sprite(new THREE.SpriteMaterial({map:farTx,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:0}));f.position.set(s,.72,-2.25);f.scale.set(.8,.8,1);g.add(f);o.sp.push(f)}
  o.isin=new THREE.Mesh(HUZME_G,HUZME_M);o.isin.position.set(0,.7,-5.6);o.isin.visible=false;g.add(o.isin);
  S.add(g);o.kad=kademe(u);modelKoy(o);return o}
-function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,o:null,son:0,msj:'',msjT:0,puan:0,m:null,bek:null,gelinBit:0,ucus:0,ln:2,lnT:0,hz:0,hzT:0,faz:Math.random()*6.28,coin:0,jz:(Math.random()-.5)*5,bas:1+(Math.random()*5|0)};if(e.foto&&!u.foto)u.foto=e.foto;return u}
+function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,o:null,son:0,msj:'',msjT:0,puan:0,m:null,bek:null,gelinBit:0,ucus:0,ln:2,lnT:0,hz:0,hzT:0,faz:Math.random()*6.28,coin:0,jz:(Math.random()-.5)*5,bas:Math.random()*4|0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
 function katil(u){if(u.o)return true;if(ARAC.length>=MAKS){const e=SIRA.reduce((a,b)=>a.son<b.son?a:b);if(now()-e.son<60000)return false;atil(e)}
  u.dx=(Math.random()-.5)*.4;kuyrugaEkle(u);const zs=ARAC.length?Math.max(...ARAC.map(zp)):0;
  u.o=araba(u);u.o.vx=SX(KS[u.k])+u.dx;u.o.g.position.set(u.o.vx,0,zs+30);u.son=now();ARAC.push(u);OY.akis(`🚗 ${u.ad} konvoya katıldı`,'#bff');KORNA();return true}
@@ -285,7 +283,7 @@ function coinEkle(u,n){u.coin=(u.coin||0)+n;if(u.o){const k=kademe(u);if(k>u.o.k
 /* ---- gelin arabasi: en onde, beyaz, kurdeleli; ustunde cift isimleri. Herkes arkasina gecmeye calisir ---- */
 const PRM=new URLSearchParams(location.search),CIFT=(PRM.get('gelin')||'Gelin')+' ❤ '+(PRM.get('damat')||'Damat');
 const GELIN={id:'__gelin',ad:CIFT,o:null,ln:2,lnT:0,hz:0,coin:0,m:null,dx:0,ara:3,gelin:1,gelinBit:Infinity,son:Infinity,puan:0};
-function gelinKur(){const o=araba(GELIN);GELIN.o=o;o.kad=8;o.renk=BEYAZ;o.beyaz=true;o.key=null;modelKoy(o);
+function gelinKur(){const o=araba(GELIN);GELIN.o=o;o.kad=6;o.renk=BEYAZ;o.beyaz=true;o.key=null;modelKoy(o);
  // kaput ustu kurdele + cicekler
  const pem=new THREE.MeshStandardMaterial({color:0xff7fb0,roughness:.5}),bey=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.6});
  for(const s of[-1,1]){const t=new THREE.Mesh(new THREE.TorusGeometry(.22,.07,8,16),pem);t.position.set(s*.22,1.08,-1.35);t.rotation.set(-1.2,0,s*.6);o.g.add(t)}
@@ -490,7 +488,7 @@ S.add(gun.target);
 function sirali(){return SIRA.filter(u=>u.o)}
 gelinKur();
 // tum arabalari basta yukle ve ekran kartinda onceden derle (yayin sirasinda takilma olmasin)
-Promise.all(KADEME.map(k=>sablon(k).catch(()=>null))).then(ts=>{const g=new THREE.Group();ts.forEach((t,i)=>{if(!t)return;for(const r of(i===0?RENK:RENK.slice(0,2))){const m=boyali(t,KADEME[i],r);m.traverse(x=>{if(x.isMesh)x.castShadow=true});g.add(m)}});
+Promise.all(KADEME.map(k=>sablon(k).catch(()=>null))).then(ts=>{const g=new THREE.Group();ts.forEach((t,i)=>{if(!t)return;for(const r of RENK.slice(0,2)){const m=boyali(t,KADEME[i],r);m.traverse(x=>{if(x.isMesh)x.castShadow=true});g.add(m)}});
  // kameranin onune dizip birkac kare ciz: dokular ve golge/efekt malzemeleri ekran kartina yuklensin
  g.children.forEach((m,i)=>{m.position.set((i%6-2.5)*2.6,0,-(i/6|0)*5)});K.updateMatrixWorld();const ileri=new THREE.Vector3(0,0,-1).applyQuaternion(K.quaternion);
  g.position.copy(K.position).addScaledVector(ileri,14);g.position.y=Math.max(0,g.position.y-6);g.lookAt(K.position.x,g.position.y,K.position.z);S.add(g);
