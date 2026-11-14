@@ -208,7 +208,7 @@ function kolEt(u,onceki,sonraki,t,b){const o=u.o;if(!o||o.yuk)return;const B=o.B
 /* ---------------- ortada gelin & damat (gercek dans kaydi) + davulcu, zurnaci ---------------- */
 const CIFT={o:[null,null],kim:[null,null],dans:null};
 const duvak=new THREE.Mesh(new THREE.CylinderGeometry(.09,.32,1.05,20,1,true,Math.PI*.15,Math.PI*.7),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.55,side:THREE.DoubleSide,roughness:.6}));S.add(duvak);duvak.material.opacity=.7;
-const tac=new THREE.Mesh(new THREE.TorusGeometry(.1,.018,6,20),new THREE.MeshStandardMaterial({color:0xfff2c0,metalness:.9,roughness:.2,emissive:0x443300}));S.add(tac);
+const tac=new THREE.Mesh(new THREE.TorusGeometry(.075,.012,6,20),new THREE.MeshStandardMaterial({color:0xfff2c0,metalness:.9,roughness:.2,emissive:0x443300}));S.add(tac);
 
 Promise.all([insan('manuel'),insan('claudia')]).then(([d,g])=>{CIFT.o=[d,g];const klip=d.anim[0];
  [[d,-.7],[g,.7]].forEach(([m,x],i)=>{m.g.position.set(x,0,0);S.add(m.g);if(klip){const mx=new THREE.AnimationMixer(m.kok);const a=mx.clipAction(klip);a.play();a.time=i*1.3;m.mix=mx}})});
@@ -234,7 +234,7 @@ function ciftGuncelle(t,dt){const ilk=Object.values(U).filter(u=>u.puan>0&&u.o).
  for(let i=0;i<2;i++){const m=CIFT.o[i];if(!m)continue;if(m.mix)m.mix.update(dt);m.g.rotation.y+=dt*.25;
   const u=ilk[i]||null;if(CIFT.kim[i]!==u){CIFT.kim[i]=u;if(u)OY.akis(`${i?'👰':'🤵'} ${u.ad} ortaya geçti: ${i?'GELİN':'DAMAT'}!`,'#ffd84a')}}
  const g=CIFT.o[1];if(g){g.kok.updateMatrixWorld(true);g.B.head.getWorldPosition(_a);g.B.head.getWorldQuaternion(_q2);
-  duvak.position.copy(_a).add(_b.set(0,-.42,0));const gy=g.g.rotation.y;duvak.rotation.set(0,gy+Math.PI,0);duvak.position.x-=Math.sin(gy)*.05;duvak.position.z-=Math.cos(gy)*.05;tac.position.copy(_a).add(_b.set(0,.12,0));tac.rotation.x=Math.PI/2}
+  duvak.position.copy(_a).add(_b.set(0,-.42,0));const gy=g.g.rotation.y;duvak.rotation.set(0,gy+Math.PI,0);duvak.position.x-=Math.sin(gy)*.05;duvak.position.z-=Math.cos(gy)*.05;tac.position.copy(_a).add(_b.set(0,.03,0));tac.rotation.x=Math.PI/2.4}
 }
 
 /* ---------------- efektler ---------------- */
@@ -317,15 +317,15 @@ function planBasla(t){const tip=ORTAM[pi++%ORTAM.length];PLAN={tip,t0:t,sure:{ge
 function kamHedef(t){let fov=45;
  if(SINE&&SINE.u.o&&!SINE.u.o.yuk){const p=SINE.u.o.g.position,f=SINE.u.o.yon||_f.set(0,0,-1),s=(t-SINE.t0)/(SINE.bit-SINE.t0);
   // halkanin icinden, yukaridan hafif egik: hediye atanin yuzu + iki yanindakiler kadrajda
-  const r=_r.set(-f.z,0,f.x);TP.copy(p).addScaledVector(f,3.4-s*.4).addScaledVector(r,SINE.yan*.7);TP.y=2.3-s*.2;TL.copy(p).setY(1.25);fov=42;return fov}
+  const r=_r.set(-f.z,0,f.x);TP.copy(p).addScaledVector(f,2.3-s*.25).addScaledVector(r,SINE.yan*.5);TP.y=1.95-s*.15;TL.copy(p).setY(1.3);fov=44;return fov}
  const P=PLAN,s=Math.min(1,(t-P.t0)/P.sure),y=P.y;
  switch(P.tip){
   case'genel':{const a=P.a0+s*.35*y,r=RAD+9;TP.set(Math.sin(a)*r,6.5,Math.cos(a)*r);TL.set(0,.6,0);fov=46;break}
   case'yuz':case'yuz2':{// merkezin ustunden halkanin bir yayina bak: yuzler + isimler net
-   const a=P.a0+s*.45*y;TP.set(Math.sin(a+Math.PI)*.6,4.4,Math.cos(a+Math.PI)*.6);TL.set(Math.sin(a)*RAD,.9,Math.cos(a)*RAD);fov=50;break}
+   const a=P.a0+s*.45*y,rc=Math.max(2.6,RAD-3.2);TP.set(Math.sin(a)*rc,2.9,Math.cos(a)*rc);TL.set(Math.sin(a)*(RAD+1),1.0,Math.cos(a)*(RAD+1));fov=52;break}
   case'halaybasi':{const L=lider&&lider.o&&!lider.o.yuk?lider:sira.find(x=>x.o&&!x.o.yuk);if(!L){P.t0=-1e9;break}const p=L.o.g.position,f=L.o.yon||_f.set(0,0,-1),r=_r.set(-f.z,0,f.x);
    TP.copy(p).addScaledVector(f,3.6).addScaledVector(r,1.4);TP.y=2.4;TL.copy(p).addScaledVector(r,-1.4).setY(1.15);fov=46;break}
-  default:{const a=P.a0+s*.6*y;TP.set(Math.sin(a)*3.6,2.2,Math.cos(a)*3.6);TL.set(0,1.1,0);fov=42}}
+  default:{const a=P.a0+s*.5*y;TP.set(Math.sin(a)*4.3,2.7,Math.cos(a)*4.3);TL.set(0,1.0,0);fov=42}}
  return fov}
 // kamera hicbir insanin 1.3 m icine girmez (gerekirse yukari/disari itilir)
 function carpismaYok(p){const hep=[];for(const u of HALKA)if(u.o&&!u.o.yuk)hep.push(u.o.g.position);for(const m of CIFT.o)if(m)hep.push(m.g.position);for(const c of CALGI)hep.push(c.m.g.position);
@@ -342,7 +342,7 @@ function etiket(u){let e=ET[u.id];if(!e){const el=document.createElement('div');
 const _v=new V3();function ekran(p){_v.copy(p).project(K);return{x:(_v.x*.5+.5)*W(),y:(-_v.y*.5+.5)*H(),on:_v.z<1&&_v.z>-1}}
 function etiketler(t,ilk3){const yer=[],ust=H()*.15,alt=H()*.86;
  const lis=sira.filter(u=>u.o&&!u.o.yuk).map(u=>({u,r:ilk3.indexOf(u),c:CIFT.kim.indexOf(u)})).sort((a,b)=>((a.r<0?9:a.r)-(b.r<0?9:b.r))||(b.u.son-a.u.son));
- for(const{u,r,c}of lis){const e=etiket(u);u.o.B.head.getWorldPosition(_a);_a.y+=.32;const s=ekran(_a);
+ for(const{u,r,c}of lis){const e=etiket(u);u.o.B.head.getWorldPosition(_a);_a.y+=.24;const s=ekran(_a);
   const durum=(korunur(u)?'🧿':'')+(u.zilgit>t?'💖':'')+(DAVUL.some(x=>x.u===u)?'🥁':'')+(u.dusuk>t?'😵':'')+(c===0?'🤵':c===1?'👰':'');
   const key=u.id+'|'+Math.round(u.puan)+'|'+durum+'|'+r+'|'+foto(u).length;
   if(e.key!==key){e.key=key;e.img.src=foto(u);e.b.textContent=(r===0?'👑 ':'')+durum+OY.kisaAd(u.ad,r===0?12:9);e.i.textContent=Math.round(u.puan);e.el.className='et'+(r>=0?' r'+(r+1):'');e.w=e.el.offsetWidth;e.h=e.el.offsetHeight}
