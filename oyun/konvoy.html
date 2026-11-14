@@ -412,6 +412,7 @@ function hediyeVer(u,h){if(!u.o)return;const t=now();KORNA();const kamBos=!SINE|
 function hediyeSirasi(t){if(!HQ.length||(SINE&&t<SINE.bit))return;
  while(HQ.length){const q=HQ.shift();if(!q.u.o||(!q.buyuk&&t-q.t>7000))continue;const u=q.u;if(!q.buyuk&&!u.m&&!u.tr&&t-q.t>4000)continue;aksiyon(u,u.m?Math.max(3000,Math.min(6000,u.m.bit-t+600)):4000);break}}
 function aracGuncelle(t,dt){
+ IZG.position.z+=VD*dt;
  for(const u of ARAC){const o=u.o;if(!o)continue;const p=o.g.position;
   let m=u.m;if(m&&t>m.bit){if(m.sonra&&m.yan)m.sonra();m=u.m=null}if(!m&&u.bek){manevra(u,u.bek,2);u.bek=null;m=u.m}
   const a=m?(t-m.t0)/(m.bit-m.t0):0,env=m?Math.min(1,a/.15,(1-a)/.2):0;
@@ -441,22 +442,37 @@ function aracGuncelle(t,dt){
     vmax=13;if(!m.yan)m.bit=Math.max(m.bit,Math.min(m.t0+9000,t+1500));const yakin=(ayni&&p.z-hz-lim<2.4)||t-m.t0>4500;if(yakin&&!m.yan){m.yan=t;m.bit=Math.min(m.bit,t+3600);KORNA(1)}
     const ph=(t-(m.yan||t))%850;flas=!!m.yan&&ph<520&&((ph/90|0)%2===0);if(m.yan&&t-m.yan>1700&&!m.k2){m.k2=1;KORNA(1)}}
    else if(m.tip==='drift'){
-    // tek tarafa savrul, karsi direksiyonla tut, toparlan
-    const k=a<.18?Math.sin(a/.18*Math.PI/2):a<.75?1:Math.cos((a-.75)/.25*Math.PI/2);
-    if(!u.tr){const sx=Math.sin((t-m.t0)/1900*Math.PI)*m.yon;if((sx>0&&yanSerbest(u,1))||(sx<0&&yanSerbest(u,-1)))tx+=sx*SG*.85*k}
-    else tx+=Math.sin((t-m.t0)/1500*Math.PI)*m.yon*.5*k;
-    const ak=Math.atan2(o.lv,VD+Math.max(0,-o.zv));yaw=-Math.max(-.75,Math.min(.75,ak*3.2+Math.sign(o.lv||m.yon)*Math.min(1,Math.abs(o.lv)*.6)*.25))*k;
-    const c=Math.cos(yaw),sn=Math.sin(yaw);
-    for(const lx of[-.82,.82]){const lz=1.45,wx=p.x+lx*c+lz*sn,wz=p.z-lx*sn+lz*c;iz(wx,wz,yaw);
-     if(Math.random()<.75)duman(wx+(Math.random()-.5)*.4,.3,wz+.5,0xf2f2f2,1.2+k*.9,2200)}
+    // drift: yana kayarak bosluga savrulur (tek tarafa, bir kez), govde acisi asagida yay ile
+    if(m.ys==null){if(!yanSerbest(u,-m.yon)&&yanSerbest(u,m.yon))m.yon=-m.yon;m.ys=yanSerbest(u,-m.yon)}
+    if(!u.tr&&m.ys)tx+=-m.yon*SG*.8*Math.sin(Math.min(1,a/.85)*Math.PI);
     if(Math.random()<dt*3)EGZ(.35)}
    else if(m.tip==='alev'){if(Math.random()<.18)alev(p,.6);if(a<.92&&Math.random()<dt*3.5)patlat(p,1)}}
   if(u.tr&&u.tr.faz===1&&Math.random()<dt*1.2)EGZ(.22);
   if(u.tr&&u.tr.faz===1&&Math.random()<.35)for(const lx of[-.8,.8])duman(p.x+lx,.2,p.z+1.6,0xe8e8e8,.55,700);
   const vd=Math.max(-vmax,Math.min(vmax,(tz-p.z)*(vmax>8?1.3:.8)));o.zv+=(vd-o.zv)*Math.min(1,dt*2.2);p.z+=o.zv*dt;
-  const drf=m&&m.tip==='drift',sert=!drf&&(u.tr||(u.gos&&t<u.gos))?1:0;const kk=drf?3.2:sert?18:7,dd=drf?3.6:sert?8:5;o.lv+=((tx-o.vx)*kk-o.lv*dd)*dt;o.lv=Math.max(-6,Math.min(6,o.lv));o.vx+=o.lv*dt;
-  if(o.tek){const dr=Math.max(-.55,Math.min(.55,-(o.yaw||0)*.9-(o.lv||0)*.06));o.dir=(o.dir||0)+(dr-(o.dir||0))*Math.min(1,dt*6);for(const w of o.tek){w.rotation.x-=(VD-o.zv)/w.userData.tek*dt;if(w.userData.on)w.rotation.y=o.dir}}
-  {const hy=(m&&m.tip==='drift')?yaw:Math.max(-.45,Math.min(.45,-Math.atan2(o.lv,VD)*(u.tr?2.0:1.4)));o.yaw=(o.yaw||0)+(hy-(o.yaw||0))*Math.min(1,dt*2);}p.x=o.vx;p.y=0;o.g.rotation.y=o.yaw;
+  const drf=m&&m.tip==='drift',sert=(u.tr||(u.gos&&t<u.gos))?1:0;
+  // kayma acisi (beta): drift'te once ters silkme, sonra savrulup karsi direksiyonla sabit tutar, sonunda toparlar
+  {let bT=0,wn=3.2,ze=.75;if(drf){const yn=m.yon,bm=u.tr&&u.tr.faz===1?.38:.6;bT=a<.07?-.14*yn:a<.8?(bm+.07*Math.sin((t-m.t0)/430))*yn:0;wn=a<.8?4.2:3.2;ze=a<.8?.42:.7}
+   o.bw=(o.bw||0)+((bT-(o.b||0))*wn*wn-2*ze*wn*(o.bw||0))*dt;o.b=(o.b||0)+o.bw*dt}
+  // yanal hareket: kinematik bisiklet modeli; araba direksiyonla doner, gittigi yone bakar
+  const V=Math.max(4,VD-o.zv),th0=o.th||0;
+  {const kp=sert?2.6:drf?1.2:1.65,lvM=sert?7:drf?4:3.2,thM=sert?.32:drf?.24:.2,ks=sert?3.2:2.4,dr=sert?3.5:2;
+   const lvD=Math.max(-lvM,Math.min(lvM,(tx-o.vx)*kp)),thD=Math.max(-thM,Math.min(thM,-Math.asin(Math.max(-.9,Math.min(.9,lvD/V)))));
+   const dD=Math.max(-.5,Math.min(.5,(thD-th0)*ks));o.st=(o.st||0)+Math.max(-dr*dt,Math.min(dr*dt,dD-(o.st||0)));o.th=th0+V/2.7*Math.tan(o.st)*dt}
+  o.lv=-V*Math.sin(o.th);o.vx+=o.lv*dt;
+  const B=o.b||0,db=Math.abs(B),thd=(o.th-th0)/Math.max(dt,1e-3);o.yaw=o.th+B;
+  // tekerler: on teker direksiyon (+drift'te karsi direksiyon), arka teker kayarken patinaj
+  if(o.tek){const fd=Math.max(-.6,Math.min(.6,o.st-B*.9));o.dir=(o.dir||0)+(fd-(o.dir||0))*Math.min(1,dt*10);
+   for(const w of o.tek){const sp=w.userData.on?1:1+db*6;w.rotation.x-=V*sp/w.userData.tek*dt;if(w.userData.on)w.rotation.y=o.dir}}
+  // govde: virajda disa yatar, gazda arkaya coker
+  {const acc=-(o.zv-(o.zv0==null?o.zv:o.zv0))/Math.max(dt,1e-3);o.zv0=o.zv;
+   o.rl=(o.rl||0)+(Math.max(-.075,Math.min(.075,-V*thd*.012-B*.07))-(o.rl||0))*Math.min(1,dt*5);
+   o.pt=(o.pt||0)+(Math.max(-.035,Math.min(.035,acc*.004))-(o.pt||0))*Math.min(1,dt*4);
+   if(o.model){o.model.rotation.order='YXZ';o.model.rotation.x=o.pt;o.model.rotation.z=o.rl}}
+  p.x=o.vx;p.y=0;o.g.rotation.y=o.yaw;
+  // arka tekerden duman + yolda lastik izi (kayma acisina gore)
+  if(db>.12){const c=Math.cos(o.yaw),sn=Math.sin(o.yaw),lz=boyU(u)*.3;for(const lx of[-.8,.8]){const wx=p.x+lx*c+lz*sn,wz=p.z-lx*sn+lz*c;iz(wx,wz,o.th);
+    if(Math.random()<Math.min(.85,db*1.5))duman(wx+(Math.random()-.5)*.4,.3,wz+.3,0xf2f2f2,.9+db*1.6,2200)}}
   if(o.ak){const yan=!!(m&&m.tip==='alev'&&a<.95&&Math.random()<.8);for(const c of o.ak){c.visible=yan;if(yan){const L=.5+Math.random()*1.1;c.scale.set(.8+Math.random()*.6,.8+Math.random()*.6,L)}}}
   if(o.parl){const on=(u.parlBit>t)||(t-(u.begT||-1e9)<900);o.parl.visible=on;if(on){o.parl.material.color.setHex(u.parlBit>t?u.parl:PARILTI.begeni);o.parl.material.opacity=.85+Math.sin(t/120)*.15}}
   const fo=flas?1:0,fs=flas?9:.6;for(const sp of o.sp){sp.material.opacity=fo;sp.scale.set(fs,fs,1)}o.farM.opacity=flas?1:farBaz;o.isin.visible=flas;
@@ -478,8 +494,8 @@ function dumanGuncelle(t,dt){for(const d of DM){if(!d.s.visible)continue;const a
  d.s.position.x+=d.vx*dt;d.s.position.y+=d.vy*dt;d.s.position.z+=d.vz*dt;const s=(.7+Math.sqrt(a)*2.4)*d.b;d.s.scale.set(s,s,1);d.s.material.rotation=d.r+a*.6;d.s.material.opacity=.62*(1-a)*Math.min(1,a*8)}}
 /* ---- lastik izi ---- */
 const IZN=500,izM=new THREE.MeshBasicMaterial({color:0x111111,transparent:true,opacity:.55,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}),
- IZ=new THREE.InstancedMesh(new THREE.PlaneGeometry(.26,.55).rotateX(-Math.PI/2),izM,IZN);IZ.frustumCulled=false;IZ.count=0;CEV.add(IZ);let izI=0;const IZO=new THREE.Object3D();
-function iz(){return;IZO.position.set(x,.025,z-CEV.position.z);IZO.rotation.set(0,yaw,0);IZO.updateMatrix();IZ.setMatrixAt(izI%IZN,IZO.matrix);izI++;IZ.count=Math.min(IZN,izI);IZ.instanceMatrix.needsUpdate=true}
+ IZ=new THREE.InstancedMesh(new THREE.PlaneGeometry(.24,.6).rotateX(-Math.PI/2),izM,IZN),IZG=new THREE.Group();IZ.frustumCulled=false;IZ.count=0;IZG.add(IZ);S.add(IZG);let izI=0;const IZO=new THREE.Object3D();
+function iz(x,z,yaw){IZO.position.set(x,.03,z-IZG.position.z);IZO.rotation.set(0,yaw,0);IZO.updateMatrix();IZ.setMatrixAt(izI%IZN,IZO.matrix);izI++;IZ.count=Math.min(IZN,izI);IZ.instanceMatrix.needsUpdate=true}
 /* ---- egzoz alevi ---- */
 const alevTx=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d'),r=g.createRadialGradient(32,32,1,32,32,32);
  r.addColorStop(0,'rgba(255,240,170,1)');r.addColorStop(.18,'rgba(255,150,30,.95)');r.addColorStop(.5,'rgba(230,60,0,.45)');r.addColorStop(1,'rgba(150,20,0,0)');g.fillStyle=r;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)})();
