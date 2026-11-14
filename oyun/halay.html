@@ -29,7 +29,7 @@
    Sira = coşku puani. En ondeki mendilli HALAYBAŞI. En coşkulu 2 kisi ortada GELİN ve DAMAT.
    Hediyeler sirayla oynar, kamera hediye atana keser, bitince sakin planlara doner. */
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now(),V3=THREE.Vector3,Q4=THREE.Quaternion;
-const QS=new URLSearchParams(location.search),DAR=Math.min(innerWidth,innerHeight)<700;
+const QS=new URLSearchParams(location.search),DAR=Math.min(document.documentElement.clientWidth||innerWidth,innerHeight)<700;
 const HED=[['🌹','Gül','para saç +20'],['💖','Kalp','zılgıt: 15 sn 2x'],['💐','Parfüm','mendili kap %12'],['🍩','Donut','davulcu ol 30 sn 🥁'],['🎩','Şapka','geline altın tak +150'],['🌌','Galaksi','damat / gelin ol 👰🤵']];
 OY.hud({baslik:'HALAY MEYDANI',alt:'💬 Yorum yaz → halaya katıl · ❤ Beğen → öne geç · En coşkulu 2 kişi GELİN ve DAMAT 👰🤵',renk:'#ffc94a',hediyeler:HED});
 OY.demoYorum=()=>['Halaya ben de varım!','Hadi davul!','Mendil bende','Oyy oy','Kim halaybaşı?','Zılgıt çekin!','Çek halayı!','Yaşasın gelin damat'][Math.random()*8|0];
@@ -147,7 +147,7 @@ const MAKS=DAR?18:30,ARA=.62;
 function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,puan:0,son:0,giris:now(),o:null,slot:-1};if(e.foto&&!u.foto)u.foto=e.foto;return u}
 function katil(u){if(u.o)return true;
  if(HALKA.length>=MAKS){const eski=HALKA.filter(x=>x!==lider&&!CIFT.kim.includes(x)).reduce((a,b)=>!a||b.son<a.son?b:a,null);if(!eski||now()-eski.son<15000)return false;cik(eski)}
- const ad=MODEL[hash(u.id)%MODEL.length][0];u.o={yuk:true,g:new THREE.Group()};S.add(u.o.g);u.slot=HALKA.length;HALKA.push(u);
+ const ad=MODEL[hash(u.id)%MODEL.length][0];u.o={yuk:true,g:new THREE.Group()};S.add(u.o.g);u.slot=HALKA.length+.9;HALKA.push(u);
  insan(ad).then(m=>{if(!u.o)return;const{g:_g,...geri}=m;Object.assign(u.o,geri,{yuk:false});u.o.g.add(m.kok)});
  if(HALKA.length<=12||Math.random()<.4)OY.akis(`💃 ${u.ad} halaya katıldı`,'#aef');OY.ses.davul();document.getElementById('bos').style.display='none';return true}
 function cik(u){if(u.o)S.remove(u.o.g);u.o=null;HALKA.splice(HALKA.indexOf(u),1);const e=ET[u.id];if(e){e.el.remove();delete ET[u.id]}}
@@ -167,7 +167,7 @@ function adimPoz(b,ADIM){const k=Math.floor(b/4),ph=b-k*4,i=Math.floor(ph),e=ss(
  return{sag,sol,govde,sagK:(i===0||i===2)?Math.sin(e*Math.PI):0,solK:(i===1)?Math.sin(e*Math.PI):0,tekme:i===3?Math.sin(e*Math.PI):0,dip:Math.abs(Math.cos((ph%1)*Math.PI)),i,e}}
 function dansEt(u,i,t,A,b,tempo){const o=u.o;if(!o||o.yuk)return;
  const base=TETA-u.slot*ARA/RAD;
- const gecis=Math.max(0,Math.min(1,(Math.abs(u.hedefSlot-u.slot)-1.15)*1.6));o.gecis=gecis;
+ const df=Math.abs(u.hedefSlot-u.slot);if(df>1.15)u.gec=1;else if(df<.04)u.gec=0;const gecis=u.gec?Math.min(1,df*3):0;/* sira degistiren tam yerine varana kadar disaridan gecer */o.gecis=gecis;
  cember(base,_p);const ac=base;_f.set(-Math.sin(ac),0,-Math.cos(ac));// iceri bakis
  _p.addScaledVector(_f,-gecis*1.1);// sira degistiren disaridan gecer
  const dus=u.dusuk>t?Math.sin(Math.min(1,(u.dusuk-t)/2600)*Math.PI):0;
@@ -298,8 +298,13 @@ function hediye(u,h){const t=now(),ad=OY.kisaAd(u.ad,10);puanEkle(u,10*h.adet+h.
  }
  if(h.sinif!=='kalp'&&h.sinif!=='gul')konfeti(P,12+(h.seviye||1)*6);
  return et}
-function hediyeSirasi(t){if(!HQ.length||t<hqBit)return;const{u,h}=HQ.shift();if(!u.o)return;const k=HED.find(x=>x[1].toLowerCase().startsWith((h.sinif||'').slice(0,3)))||['🎁','Hediye'];
- const et=hediye(u,h);if(h.sinif==='sapka'||h.sinif==='galaksi'){SINE=null;PLAN={tip:'cift',t0:t,sure:6500,y:1,a0:Math.random()*6.28};kes=true}else aksiyon(u,4500);hqBit=t+(h.sinif==='galaksi'?6000:4500)+300;OY.vitrin(u,h.ikon||k[0],h.ad||k[1],et);OY.akis(`${h.ikon||k[0]} ${u.ad} → ${et}`,'#ffd84a')}
+// hediye ANINDA uygulanir; HQ sadece kameranin sirayla gosterecegi hediyeler
+function hediyeVer(u,h){if(!u.o)return;const t=now(),k=HED.find(x=>x[1].toLowerCase().startsWith((h.sinif||'').slice(0,3)))||['🎁','Hediye'];
+ const et=hediye(u,h);OY.vitrin(u,h.ikon||k[0],h.ad||k[1],et);OY.akis(`${h.ikon||k[0]} ${u.ad} → ${et}`,'#ffd84a');
+ const buyuk=h.sinif==='sapka'||h.sinif==='galaksi';if(HQ.length<12||buyuk)HQ.push({u,h,t,buyuk})}
+function hediyeSirasi(t){if(!HQ.length||t<hqBit)return;
+ while(HQ.length){const q=HQ.shift();if(!q.u.o||(!q.buyuk&&t-q.t>6000))continue;
+  if(q.buyuk){SINE=null;PLAN={tip:'cift',t0:t,sure:6000,y:1,a0:Math.random()*6.28};kes=true;hqBit=t+6000}else{aksiyon(q.u,3800);hqBit=t+3800}break}}
 
 /* ---------------- olaylar ---------------- */
 let bitis=0;
@@ -310,7 +315,7 @@ OY.basla({muzik:'halay',olay:e=>{
  else if(e.t==='yorum'){puanEkle(u,3);u.msj=String(e.metin||'').slice(0,40);u.msjT=now()}
  else if(e.t==='takip'){puanEkle(u,10);OY.akis(`➕ ${u.ad} takip etti · +10 coşku`,'#8cf')}
  else if(e.t==='paylasim'){puanEkle(u,8);OY.akis(`🔁 ${u.ad} paylaştı · +8 coşku`,'#8cf')}
- else if(e.t==='hediye'){const h=OY.hediye(e);if(u.o&&HQ.length<25)HQ.push({u,h});else puanEkle(u,10*h.adet+h.elmas*h.adet)}
+ else if(e.t==='hediye'){const h=OY.hediye(e);if(u.o)hediyeVer(u,h);else puanEkle(u,10*h.adet+h.elmas*h.adet)}
 }});
 
 /* ---------------- tur ---------------- */
@@ -419,7 +424,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
 if(QS.get('demo')){const d=document.createElement('div');d.style.cssText='position:fixed;right:1vh;top:30vh;z-index:60;display:flex;flex-direction:column;gap:.6vh';
  [['🌹','gul',1],['💖','kalp',5],['💐','parfum',20],['🍩','donut',30],['🎩','sapka',99],['🌌','galaksi',1000]].forEach(([e,sn,el])=>{const bt=document.createElement('button');bt.textContent=e;bt.title='Test hediyesi';
   bt.style.cssText='font-size:3.2vh;width:6vh;height:6vh;border-radius:1.5vh;border:2px solid #fff6;background:#0009;cursor:pointer';
-  bt.onclick=()=>{const L=HALKA.filter(x=>x.o);if(!L.length)return;const u=L[Math.random()*L.length|0];HQ.push({u,h:{sinif:sn,adet:1,elmas:el,ad:sn,ikon:e,seviye:2}})};d.appendChild(bt)});document.body.appendChild(d)}
+  bt.onclick=()=>{const L=HALKA.filter(x=>x.o);if(!L.length)return;const u=L[Math.random()*L.length|0];hediyeVer(u,{sinif:sn,adet:1,elmas:el,ad:sn,ikon:e,seviye:2})};d.appendChild(bt)});document.body.appendChild(d)}
 // modelleri bastan yukle + ekran kartinda derle (yayinda takilma olmasin)
 Promise.all(MODEL.map(m=>sablon(m[0]).catch(()=>null))).then(()=>{try{R.compile(S,K)}catch(e){}const h=document.getElementById('hazir');if(h)h.remove()});
 setTimeout(()=>{const h=document.getElementById('hazir');if(h)h.remove()},15000);
