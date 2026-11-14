@@ -30,7 +30,7 @@
    Hediyeler sirayla oynar, kamera hediye atana keser, bitince sakin planlara doner. */
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now(),V3=THREE.Vector3,Q4=THREE.Quaternion;
 const QS=new URLSearchParams(location.search),DAR=Math.min(innerWidth,innerHeight)<700;
-const HED=[['🌹','Gül','mendil salla +20'],['💖','Kalp','zılgıt: 15 sn 2x'],['💐','Parfüm','mendili kap %12'],['🍩','Donut','davul çalar +160'],['🎩','Şapka','halaybaşını sendelet'],['🌌','Galaksi','halaybaşı ol 👑']];
+const HED=[['🌹','Gül','para saç +20'],['💖','Kalp','zılgıt: 15 sn 2x'],['💐','Parfüm','mendili kap %12'],['🍩','Donut','davulcu ol 30 sn 🥁'],['🎩','Şapka','geline altın tak +150'],['🌌','Galaksi','damat / gelin ol 👰🤵']];
 OY.hud({baslik:'HALAY MEYDANI',alt:'💬 Yorum yaz → halaya katıl · ❤ Beğen → öne geç · En coşkulu 2 kişi GELİN ve DAMAT 👰🤵',renk:'#ffc94a',hediyeler:HED});
 OY.demoYorum=()=>['Halaya ben de varım!','Hadi davul!','Mendil bende','Oyy oy','Kim halaybaşı?','Zılgıt çekin!','Çek halayı!','Yaşasın gelin damat'][Math.random()*8|0];
 OY.muzikListe=['ses/konvoy_m1.mp3'];
@@ -210,8 +210,18 @@ const CIFT={o:[null,null],kim:[null,null],dans:null};
 const duvak=new THREE.Mesh(new THREE.CylinderGeometry(.09,.32,1.05,20,1,true,Math.PI*.15,Math.PI*.7),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.55,side:THREE.DoubleSide,roughness:.6}));S.add(duvak);duvak.material.opacity=.7;
 const tac=new THREE.Mesh(new THREE.TorusGeometry(.075,.012,6,20),new THREE.MeshStandardMaterial({color:0xfff2c0,metalness:.9,roughness:.2,emissive:0x443300}));S.add(tac);
 
-Promise.all([insan('manuel'),insan('claudia')]).then(([d,g])=>{CIFT.o=[d,g];const klip=d.anim[0];
- [[d,-.7],[g,.7]].forEach(([m,x],i)=>{m.g.position.set(x,0,0);S.add(m.g);if(klip){const mx=new THREE.AnimationMixer(m.kok);const a=mx.clipAction(klip);a.play();a.time=i*1.3;m.mix=mx}})});
+Promise.all([insan('manuel'),insan('claudia')]).then(([d,g])=>{CIFT.o=[d,g];S.add(d.g);S.add(g.g)});
+CIFT.zorla=[null,null];let ciftA=0;const DAVULCU={u:null,bit:0};
+// gelin-damat: karsilikli, kollar havada oyun havasi, yavasca birbirinin etrafinda doner
+function ciftDans(m,i,b){const a=ciftA+(i?Math.PI:0),r=.62;m.g.position.set(Math.sin(a)*r,0,Math.cos(a)*r);
+ const yaw=Math.atan2(-Math.sin(a),-Math.cos(a))+Math.sin(b*Math.PI*.5)*.3;m.g.rotation.y=yaw;const f=_f.set(Math.sin(yaw),0,Math.cos(yaw));
+ sifirla(m);m.g.position.y=-Math.abs(Math.sin(b*Math.PI))*.03;m.g.updateMatrixWorld(true);_r.set(-f.z,0,f.x);const B=m.B;
+ dunyaDon(B.spine_01,f,Math.sin(b*Math.PI)*.07);dunyaDon(B.spine_03,YUKARI,Math.sin(b*Math.PI)*.12);
+ for(const[sg,ust,alt,el]of[[1,B.upperarm_r,B.lowerarm_r,B.hand_r],[-1,B.upperarm_l,B.lowerarm_l,B.hand_l]]){ust.getWorldPosition(_s1);
+  _h.copy(_s1).addScaledVector(_r,sg*(.3+Math.sin(b*Math.PI+sg)*.06)).addScaledVector(f,.12);_h.y+=.26+Math.sin(b*Math.PI*2+(sg>0?0:1.5))*.06;
+  _k.set(0,-1,0).addScaledVector(_r,sg*.9).addScaledVector(f,-.3);ik(ust,alt,el,_h,_k,m.L.kolU,m.L.kolA)}
+ for(const[sg,ust,alt,ay,key]of[[1,B.upperleg_r,B.lowerleg_r,B.foot_r,'foot_r'],[-1,B.upperleg_l,B.lowerleg_l,B.foot_l,'foot_l']]){_h.copy(m.g.position).addScaledVector(_r,sg*m.L.adim*1.05);_h.y=m.L.ayakY+((Math.floor(b)%2===(sg>0?0:1))?Math.sin((b%1)*Math.PI)*.07:0);
+  ik(ust,alt,ay,_h,f,m.L.bacU,m.L.bacA);_q2.setFromAxisAngle(YUKARI,yaw);dunyaYon(ay,_qa.copy(_q2).multiply(m.ayakQ[key]))}}
 const CALGI=[];
 Promise.all([insan('eric'),insan('nathan')]).then(ms=>ms.forEach((m,i)=>{S.add(m.g);m.g.position.set(i?2.9:-2.9,0,i?-1.2:1.2);
  const alet=i===0?(()=>{const g=new THREE.Group();const gv=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,.32,20),new THREE.MeshStandardMaterial({color:0x8a1a12,roughness:.6}));gv.rotation.x=Math.PI/2;g.add(gv);
@@ -230,16 +240,17 @@ function cagiEt(t,b,dt){for(const c of CALGI){const m=c.m;c.a+=dt*.05;const R0=1
   for(const[s,ust,alt,el]of[[1,B.upperarm_r,B.lowerarm_r,B.hand_r],[-1,B.upperarm_l,B.lowerarm_l,B.hand_l]]){_h.lerpVectors(ag,uc,s>0?.75:.45);_h.addScaledVector(_r,s*.02);_k.set(0,-1,0).addScaledVector(_r,s*.8);ik(ust,alt,el,_h,_k,m.L.kolU,m.L.kolA)}}
  // ayaklar: yerinde hafif tempo
  for(const[s,ust,alt,ay]of[[1,B.upperleg_r,B.lowerleg_r,B.foot_r],[-1,B.upperleg_l,B.lowerleg_l,B.foot_l]]){_h.copy(m.g.position).addScaledVector(_r,s*m.L.adim*1.1).addScaledVector(f,.03);_h.y=m.L.ayakY+((Math.floor(b)%2===(s>0?0:1))?Math.sin((b%1)*Math.PI)*.05:0);ik(ust,alt,ay,_h,f,m.L.bacU,m.L.bacA)}}}
-function ciftGuncelle(t,dt){const ilk=Object.values(U).filter(u=>u.puan>0&&u.o).sort((a,b)=>b.puan-a.puan).slice(0,2);
- for(let i=0;i<2;i++){const m=CIFT.o[i];if(!m)continue;if(m.mix)m.mix.update(dt);m.g.rotation.y+=dt*.25;
-  const u=ilk[i]||null;if(CIFT.kim[i]!==u){CIFT.kim[i]=u;if(u)OY.akis(`${i?'👰':'🤵'} ${u.ad} ortaya geçti: ${i?'GELİN':'DAMAT'}!`,'#ffd84a')}}
+function ciftGuncelle(t,dt){const zor=CIFT.zorla.map(z=>z&&t<z.bit&&z.u.o?z.u:null);const ilk=Object.values(U).filter(u=>u.puan>0&&u.o&&!zor.includes(u)).sort((a,b)=>b.puan-a.puan);
+ ciftA+=dt*.3;const bb=vurus(t);
+ for(let i=0;i<2;i++){const m=CIFT.o[i];if(!m)continue;ciftDans(m,i,bb);
+  const u=zor[i]||ilk.shift()||null;if(CIFT.kim[i]!==u){CIFT.kim[i]=u;if(u)OY.akis(`${i?'👰':'🤵'} ${u.ad} ortaya geçti: ${i?'GELİN':'DAMAT'}!`,'#ffd84a')}}
  const g=CIFT.o[1];if(g){g.kok.updateMatrixWorld(true);g.B.head.getWorldPosition(_a);g.B.head.getWorldQuaternion(_q2);
   duvak.position.copy(_a).add(_b.set(0,-.42,0));const gy=g.g.rotation.y;duvak.rotation.set(0,gy+Math.PI,0);duvak.position.x-=Math.sin(gy)*.05;duvak.position.z-=Math.cos(gy)*.05;tac.position.copy(_a).add(_b.set(0,.03,0));tac.rotation.x=Math.PI/2.4}
 }
 
 /* ---------------- efektler ---------------- */
 function emojiTex(e,boy=64){const c=document.createElement('canvas');c.width=c.height=boy;const g=c.getContext('2d');g.font=`${boy*.8}px serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(e,boy/2,boy*.56);return new THREE.CanvasTexture(c)}
-const TX={kalp:emojiTex('💖'),nazar:emojiTex('🧿'),gul:emojiTex('🌹'),toz:emojiTex('💨'),para:emojiTex('🪙')};
+const TX={kalp:emojiTex('💖'),nazar:emojiTex('🧿'),gul:emojiTex('🌹'),toz:emojiTex('💨'),para:emojiTex('🪙'),nakit:emojiTex('💵')};
 const mendilTex=new THREE.CanvasTexture(tuval(64,64,g=>{g.fillStyle='#d80e2c';g.fillRect(0,0,64,64);g.strokeStyle='#ffd34a';g.lineWidth=6;g.strokeRect(4,4,56,56);g.fillStyle='#ffd34a';for(let i=0;i<4;i++){g.beginPath();g.arc(16+i%2*32,16+(i>>1)*32,5,0,7);g.fill()}}));
 const mendilGeo=new THREE.PlaneGeometry(.3,.3,4,4),mendilMat=new THREE.MeshStandardMaterial({map:mendilTex,side:THREE.DoubleSide,roughness:.8});
 const MENDIL=new THREE.Mesh(mendilGeo,mendilMat);MENDIL.castShadow=true;S.add(MENDIL);
@@ -258,7 +269,7 @@ const davulG=()=>{const g=new THREE.Group();const gv=new THREE.Mesh(new THREE.Cy
 
 /* ---------------- bant + puan ---------------- */
 const BANT=document.getElementById('bant');let bantBit=0,ipucuI=0,ipucuT=0;
-const IPUCU=['💬 Yorum yaz → halaya katıl','❤ Her beğeni = +1 coşku · yorum +3 · takip +10','📈 Coşkun arttıkça halayda ÖNE geçersin','👑 En öndeki mendilli = HALAYBAŞI','👰🤵 En coşkulu 2 kişi ortada GELİN ve DAMAT','🏆 3 dk sonunda halaybaşı kazanır!'];
+const IPUCU=['💬 Yorum yaz → halaya katıl','❤ Her beğeni = +1 coşku · yorum +3 · takip +10','📈 Coşkun arttıkça halayda ÖNE geçersin','👑 En öndeki mendilli = HALAYBAŞI','👰🤵 En coşkulu 2 kişi ortada GELİN ve DAMAT','🍩 Donut at → 30 sn DAVULCU sen ol','🎩 Şapka at → geline altın tak','🌌 Galaksi at → DAMAT ya da GELİN ol','🏆 3 dk sonunda halaybaşı kazanır!'];
 function bant(yazi,sure=3000){BANT.textContent=yazi;BANT.className='bant buyuk';BANT.style.opacity=1;bantBit=now()+sure}
 let akt=0;
 function puanEkle(u,n){if(n<=0)return 0;if(u.zilgit>now())n*=2;u.puan+=n;u.son=now();akt+=n;return n}
@@ -271,25 +282,24 @@ const DAVUL=[];let dalga=null;const HQ=[];let hqBit=0;
 function hediye(u,h){const t=now(),ad=OY.kisaAd(u.ad,10);puanEkle(u,10*h.adet+h.elmas*h.adet);OY.ses.para();
  const L=liderBul(u);let et='';const P=govdeP(u,1.9);
  switch(h.sinif){
-  case 'gul':{puanEkle(u,20*h.adet);u.mendilBit=t+5000;for(let i=0;i<10;i++)sprt(TX.gul,P.clone(),.3,new V3(rnd(-.03,.03),rnd(.02,.045),rnd(-.03,.03)),80,.0008);et='mendil salladı · +20 coşku';break}
+  case 'gul':{puanEkle(u,20*h.adet);u.mendilBit=t+5000;for(let i=0;i<16;i++)sprt(TX.nakit,P.clone().setY(2.3),.28,new V3(rnd(-.035,.035),rnd(.02,.045),rnd(-.035,.035)),110,.0009);et='PARA SAÇTI 💸 · +20 coşku';break}
   case 'kalp':{u.zilgit=t+15000;dalga={k:u,t0:t};OY.ses.ton(1400,.9,'sine',.12,1.3);OY.ses.ton(1700,.9,'sine',.08,1.25,undefined,.15);
    for(let i=0;i<12;i++)sprt(TX.kalp,P.clone().setY(1.6+Math.random()*.6),.32,new V3(rnd(-.02,.02),rnd(.015,.03),rnd(-.02,.02)),110,0);et='ZILGIT! 15 sn beğenilerin 2x';break}
   case 'parfum':{if(!L||L.puan<=u.puan){puanEkle(u,40);et='halaybaşı zaten sensin · +40';break}
    if(korunur(L)){et=`${OY.kisaAd(L.ad,10)} nazarlı 🧿 kapamadın!`;break}
    const c=Math.round(L.puan*.12);L.puan-=c;u.puan+=c;u.son=t;et=`${OY.kisaAd(L.ad,10)}'in mendilini kaptı · ${c} coşku`;
    if(L.o){const m=new THREE.Mesh(mendilGeo,mendilMat);ucur(m,govdeP(L,2),u,1100,1.5,()=>{if(u.o)konfeti(govdeP(u,2),25)})}OY.ses.ton(900,.25,'triangle',.18,1.6);break}
-  case 'donut':{let d=DAVUL.find(x=>x.u===u);if(d)d.bit+=10000;else{const g=davulG();S.add(g);DAVUL.push({u,g,bit:t+10000})}et='DAVUL çalıyor · 10 sn her vuruş +8';break}
-  case 'sapka':{if(!L||L.puan<=u.puan){u.nazar=t+30000;et='halaybaşına NAZAR BONCUĞU · 30 sn korunur 🧿';break}
-   if(korunur(L)){et=`${OY.kisaAd(L.ad,10)} nazarlı 🧿 sendelemedi!`;break}
-   const c=Math.round(L.puan*.25);L.puan-=c;puanEkle(u,Math.round(c/2));et=`HALAYBAŞINI SENDELETTİ! ${OY.kisaAd(L.ad,10)} −${c}`;
-   if(L.o){L.dusuk=t+2600;for(let i=0;i<6;i++)sprt(TX.toz,govdeP(L,.3),.5,new V3(rnd(-.03,.03),.01,rnd(-.03,.03)),45,0)}OY.ses.patla();break}
+  case 'donut':{DAVULCU.bit=(DAVULCU.u===u&&DAVULCU.bit>t?DAVULCU.bit:t)+30000*h.adet;DAVULCU.u=u;et='DAVULCU oldu 🥁 · 30 sn her vuruş +6';bant(`🥁 ${ad} DAVULU ALDI!`,3000);break}
+  case 'sapka':{puanEkle(u,150*h.adet);const g=CIFT.o[1];if(g){g.B.spine_03.getWorldPosition(_a);for(let i=0;i<18;i++)sprt(TX.para,_a.clone().add(_b.set(rnd(-.22,.22),rnd(-.25,.05),rnd(-.22,.22))),.08,new V3(rnd(-.006,.006),rnd(.002,.006),rnd(-.006,.006)),130,0)}
+   et='GELİNE ALTIN TAKTI 💰 · +150 coşku';bant(`🎩 ${ad} GELİNE ALTIN TAKTI!`,3500);OY.ses.zafer();break}
   case 'galaksi':{const lp=L?L.puan:0;if(lp>=u.puan)u.puan=lp+100;u.nazar=t+20000;u.son=t;fisekler(7);konfeti(P,90);
-   et='DÜĞÜN HAVASI! Halaybaşı oldu · 20 sn 🧿';bant(`🌌 ${ad} DÜĞÜN HAVASI ÇALDIRDI!`,3500);OY.ses.zafer();break}
+   const z0=CIFT.zorla[0],gi=(z0&&z0.bit>t&&z0.u!==u)?1:0;CIFT.zorla[gi]={u,bit:t+90000};
+   et=`${gi?'GELİN':'DAMAT'} oldu ${gi?'👰':'🤵'} · 90 sn ortada · halaybaşı`;bant(`🌌 ${ad} ${gi?'GELİN':'DAMAT'} OLDU!`,3500);OY.ses.zafer();break}
  }
  if(h.sinif!=='kalp'&&h.sinif!=='gul')konfeti(P,12+(h.seviye||1)*6);
  return et}
 function hediyeSirasi(t){if(!HQ.length||t<hqBit)return;const{u,h}=HQ.shift();if(!u.o)return;const k=HED.find(x=>x[1].toLowerCase().startsWith((h.sinif||'').slice(0,3)))||['🎁','Hediye'];
- const et=hediye(u,h);aksiyon(u,h.sinif==='galaksi'?6000:4500);hqBit=t+(h.sinif==='galaksi'?6000:4500)+300;OY.vitrin(u,h.ikon||k[0],h.ad||k[1],et);OY.akis(`${h.ikon||k[0]} ${u.ad} → ${et}`,'#ffd84a')}
+ const et=hediye(u,h);if(h.sinif==='sapka'||h.sinif==='galaksi'){SINE=null;PLAN={tip:'cift',t0:t,sure:6500,y:1,a0:Math.random()*6.28};kes=true}else aksiyon(u,4500);hqBit=t+(h.sinif==='galaksi'?6000:4500)+300;OY.vitrin(u,h.ikon||k[0],h.ad||k[1],et);OY.akis(`${h.ikon||k[0]} ${u.ad} → ${et}`,'#ffd84a')}
 
 /* ---------------- olaylar ---------------- */
 let bitis=0;
@@ -343,10 +353,10 @@ const _v=new V3();function ekran(p){_v.copy(p).project(K);return{x:(_v.x*.5+.5)*
 function etiketler(t,ilk3){const yer=[],ust=H()*.15,alt=H()*.86;
  const lis=sira.filter(u=>u.o&&!u.o.yuk).map(u=>({u,r:ilk3.indexOf(u),c:CIFT.kim.indexOf(u)})).sort((a,b)=>((a.r<0?9:a.r)-(b.r<0?9:b.r))||(b.u.son-a.u.son));
  for(const{u,r,c}of lis){const e=etiket(u);u.o.B.head.getWorldPosition(_a);_a.y+=.24;const s=ekran(_a);
-  const durum=(korunur(u)?'🧿':'')+(u.zilgit>t?'💖':'')+(DAVUL.some(x=>x.u===u)?'🥁':'')+(u.dusuk>t?'😵':'')+(c===0?'🤵':c===1?'👰':'');
+  const durum=(korunur(u)?'🧿':'')+(u.zilgit>t?'💖':'')+(DAVULCU.u===u&&DAVULCU.bit>t?'🥁':'')+(u.dusuk>t?'😵':'')+(c===0?'🤵':c===1?'👰':'');
   const key=u.id+'|'+Math.round(u.puan)+'|'+durum+'|'+r+'|'+foto(u).length;
   if(e.key!==key){e.key=key;e.img.src=foto(u);e.b.textContent=(r===0?'👑 ':'')+durum+OY.kisaAd(u.ad,r===0?12:9);e.i.textContent=Math.round(u.puan);e.el.className='et'+(r>=0?' r'+(r+1):'');e.w=e.el.offsetWidth;e.h=e.el.offsetHeight}
-  if(!s.on||s.y<ust*.6||s.y>alt+40){e.el.style.display='none';continue}e.el.style.display='flex';
+  if(!s.on||s.y<ust*.6||s.y>alt+40||s.x<-e.w*.3||s.x>W()+e.w*.3){e.el.style.display='none';continue}e.el.style.display='flex';
   let x=Math.max(e.w/2+4,Math.min(W()-e.w/2-4,s.x)),y=s.y;
   {let carp=null;for(const q of yer)if(Math.abs(q.x-x)<(q.w+e.w)/2+2&&y>q.y-q.h-2&&y-e.h<q.y+2){carp=q;break}if(carp){const sx=x<carp.x?-1:1;x=carp.x+sx*((carp.w+e.w)/2+2);if(Math.abs(x-s.x)>e.w*.9){x=s.x;y=carp.y-carp.h-2}}}
   y=Math.max(e.h+ust,y);yer.push({x,y,w:e.w,h:e.h});e.el.style.transform=`translate(${(x-e.w/2)|0}px,${(y-e.h)|0}px)`;
@@ -354,10 +364,10 @@ function etiketler(t,ilk3){const yer=[],ust=H()*.15,alt=H()*.86;
    const by=y-e.h-3;let ok=true;for(const q of yer)if(Math.abs(q.x-x)<(q.w+b._w)/2&&by>q.y-q.h&&by-b._h<q.y){ok=false;break}
    if(ok&&by-b._h>ust){b.style.display='block';b.style.transform=`translate(${(x-b._w/2)|0}px,${(by-b._h)|0}px)`;yer.push({x,y:by,w:b._w,h:b._h})}else b.style.display='none'}else if(b){b.remove();delete BAL[u.id]}}
  ciftEtiket(yer,ust)}
-const CE=[0,1].map(i=>{const el=document.createElement('div');el.className='et gd';el.innerHTML='<img><b></b>';el.style.display='none';ETKD.appendChild(el);return el});
-function ciftEtiket(yer,ust){for(let i=0;i<2;i++){const el=CE[i],u=CIFT.kim[i],m=CIFT.o[i];if(!u||!m){el.style.display='none';continue}
-  const k=u.id+'|'+i;if(el.k!==k){el.k=k;el.firstChild.src=foto(u);el.children[1].textContent=(i?'👰 GELİN · ':'🤵 DAMAT · ')+OY.kisaAd(u.ad,10);el._w=el.offsetWidth||160;el._h=el.offsetHeight||28}
-  m.B.head.getWorldPosition(_a);_a.y+=.4;const s=ekran(_a);if(!s.on){el.style.display='none';continue}el.style.display='flex';if(!el._w||el._w<20){el._w=el.offsetWidth;el._h=el.offsetHeight}
+const CE=[0,1,2].map(i=>{const el=document.createElement('div');el.className='et gd';el.innerHTML='<img><b></b>';el.style.display='none';ETKD.appendChild(el);return el});
+function ciftEtiket(yer,ust){for(let i=0;i<3;i++){const el=CE[i],u=i<2?CIFT.kim[i]:(DAVULCU.u&&now()<DAVULCU.bit&&DAVULCU.u.o?DAVULCU.u:null),m=i<2?CIFT.o[i]:(CALGI[0]&&CALGI[0].m);if(!u||!m){el.style.display='none';continue}
+  const k=u.id+'|'+i;if(el.k!==k){el.k=k;el.firstChild.src=foto(u);el.children[1].textContent=(i===2?'🥁 DAVULCU · ':i?'👰 GELİN · ':'🤵 DAMAT · ')+OY.kisaAd(u.ad,10);el._w=el.offsetWidth||160;el._h=el.offsetHeight||28}
+  m.B.head.getWorldPosition(_a);_a.y+=.4;const s=ekran(_a);if(!s.on||s.x<0||s.x>W()){el.style.display='none';continue}el.style.display='flex';if(!el._w||el._w<20){el._w=el.offsetWidth;el._h=el.offsetHeight}
   let x=Math.max(el._w/2+4,Math.min(W()-el._w/2-4,s.x)),y=s.y;for(let it=0;it<10;it++){let c=null;for(const q of yer)if(Math.abs(q.x-x)<(q.w+el._w)/2+2&&y>q.y-q.h-2&&y-el._h<q.y+2){c=q;break}if(!c)break;y=c.y-c.h-3}
   y=Math.max(el._h+ust,y);yer.push({x,y,w:el._w,h:el._h});el.style.transform=`translate(${(x-el._w/2)|0}px,${(y-el._h)|0}px)`}}
 
@@ -381,7 +391,7 @@ function kare(){requestAnimationFrame(kare);const t=now(),dt=Math.min(.05,(t-son
  const A=adimPoz(b,ADIM);if(oncG!==null){const dG=A.govde-oncG;if(dG>0&&dG<.5)TETA+=dG/RAD}oncG=A.govde;
  sira.forEach((u,i)=>{u.hedefSlot=i;if(u.slot<0)u.slot=i;const f=i-u.slot;u.slot+=Math.sign(f)*Math.min(Math.abs(f),dt*(1.6+Math.abs(f)*.8))});
  // davul hediyesi: her vurusta puan
- const bi=Math.floor(b);if(bi!==sonB){sonB=bi;for(const d of DAVUL){if(t<d.bit){puanEkle(d.u,8);OY.ses.davul();d.g.scale.setScalar(1.25)}}}
+ const bi=Math.floor(b);if(bi!==sonB){sonB=bi;if(DAVULCU.u&&t<DAVULCU.bit&&DAVULCU.u.o){puanEkle(DAVULCU.u,6);OY.ses.davul()}}
  for(let i=DAVUL.length-1;i>=0;i--){const d=DAVUL[i];if(t>d.bit||!d.u.o){S.remove(d.g);DAVUL.splice(i,1);continue}d.g.scale.multiplyScalar(1-(d.g.scale.x-1)*.2);if(d.u.o.B){d.u.o.B.spine_03.getWorldPosition(_a);d.g.position.copy(_a).addScaledVector(d.u.o.yon,.28).setY(_a.y-.25);d.g.rotation.y=d.u.o.g.rotation.y}}
  for(let i=0;i<sira.length;i++)dansEt(sira[i],i,t,A,b,tempo);
  for(let i=0;i<sira.length;i++)kolEt(sira[i],sira[i-1],sira[i+1],t,b);
