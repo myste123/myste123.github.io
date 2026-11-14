@@ -248,7 +248,7 @@ function tekerAyir(kok,L){const Q={},v=new THREE.Vector3(),c=new THREE.Vector3()
    const key=(c.x<0?'L':'R')+(c.z<0?'F':'B');let g=Q[key];if(!g)g=Q[key]=new Map();let a=g.get(o.material);if(!a)g.set(o.material,a={P:[],N:[],U:[]});
    id.forEach((q,k)=>{a.P.push(P3[k].x,P3[k].y,P3[k].z);if(na){v.set(oku(na,q,0),oku(na,q,1),oku(na,q,2)).applyMatrix3(nm).normalize();a.N.push(v.x,v.y,v.z)}else{a.N.push(0,1,0);a.nyok=true}a.U.push(ua?oku(ua,q,0):0,ua?oku(ua,q,1):0)})}}
  const T=[];for(const key in Q){const bx=new THREE.Box3();for(const a of Q[key].values())for(let i=0;i<a.P.length;i+=3)bx.expandByPoint(v.set(a.P[i],a.P[i+1],a.P[i+2]));
-  const m=bx.getCenter(new THREE.Vector3()),sz=bx.getSize(new THREE.Vector3());if(sz.y<.2)continue;const pv=new THREE.Group();pv.position.copy(m);pv.userData.tek=sz.y/2;pv.userData.alt=bx.min.y;
+  const m=bx.getCenter(new THREE.Vector3()),sz=bx.getSize(new THREE.Vector3());if(sz.y<.2)continue;const pv=new THREE.Group();pv.position.copy(m);pv.userData.tek=sz.y/2;pv.userData.alt=bx.min.y;pv.userData.on=key[1]==='F';pv.rotation.order='YXZ';
   for(const[mat,a]of Q[key]){for(let i=0;i<a.P.length;i+=3){a.P[i]-=m.x;a.P[i+1]-=m.y;a.P[i+2]-=m.z}const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(a.P,3));
    bg.setAttribute('normal',new THREE.Float32BufferAttribute(a.N,3));bg.setAttribute('uv',new THREE.Float32BufferAttribute(a.U,2));if(a.nyok)bg.computeVertexNormals();pv.add(new THREE.Mesh(bg,mat))}T.push(pv)}
  return T}
@@ -340,7 +340,7 @@ setInterval(()=>{if(GELIN.cift[0]||GELIN.cift[1])tabelaYaz()},2500);
 const SURE={yapis:9000,drift:6500,makas:7000,alev:4300};
 const xp=u=>u.o.g.position.x,zp=u=>u.o.g.position.z;
 const genis=u=>u.m&&u.m.tip==='drift'?(u.tr?2.8:3.4):2.1;
-const KS=[1,2,3],KQ=[[],[],[]],SIRA=[],SATIR=8.5;
+const KS=[1,2,3],KQ=[[],[],[]],SIRA=[],SATIR=11;
 const slotZ=(k,r)=>r*SATIR+(k===1?0:SATIR/2);
 function sirala(){KQ.forEach((q,k)=>q.forEach((u,r)=>{u.k=k;u.r=r}));SIRA.length=0;for(const q of KQ)SIRA.push(...q);SIRA.sort((a,b)=>slotZ(a.k,a.r)-slotZ(b.k,b.r))}
 function kuyrugaEkle(u){const k=[1,0,2].reduce((a,b)=>KQ[b].length<KQ[a].length?b:a);KQ[k].push(u);sirala()}
@@ -414,12 +414,13 @@ function aracGuncelle(t,dt){
     const c=Math.cos(yaw),sn=Math.sin(yaw);
     for(const lx of[-.82,.82]){const lz=1.45,wx=p.x+lx*c+lz*sn,wz=p.z-lx*sn+lz*c;iz(wx,wz,yaw);
      if(Math.random()<.35)duman(wx+(Math.random()-.5)*.4,.3,wz+.6,0xf4f4f4,.9+k*.6,1800)}
-    if(Math.random()<dt*1.5)EGZ(.3)}
+    if(Math.random()<dt*3)EGZ(.35)}
    else if(m.tip==='alev'){if(Math.random()<.45)alev(p,.75);if(a<.92&&Math.random()<dt*3.5)patlat(p,1)}}
+  if(u.tr&&u.tr.faz===1&&Math.random()<dt*1.2)EGZ(.22);
   if(u.tr&&u.tr.faz===1&&Math.random()<.6)for(const lx of[-.8,.8])duman(p.x+lx,.25,p.z+1.6,0xe0e0e0,1.1,1400);
   const vd=Math.max(-vmax,Math.min(vmax,(tz-p.z)*(vmax>8?1.3:.8)));o.zv+=(vd-o.zv)*Math.min(1,dt*2.2);p.z+=o.zv*dt;
   const drf=m&&m.tip==='drift',sert=!drf&&(u.tr||(u.gos&&t<u.gos))?1:0;const kk=drf?3.2:sert?18:7,dd=drf?3.6:sert?8:5;o.lv+=((tx-o.vx)*kk-o.lv*dd)*dt;o.lv=Math.max(-6,Math.min(6,o.lv));o.vx+=o.lv*dt;
-  if(o.tek)for(const w of o.tek)w.rotation.x-=(VD-o.zv)/w.userData.tek*dt;
+  if(o.tek){const dr=Math.max(-.55,Math.min(.55,-(o.yaw||0)*.9-(o.lv||0)*.06));o.dir=(o.dir||0)+(dr-(o.dir||0))*Math.min(1,dt*6);for(const w of o.tek){w.rotation.x-=(VD-o.zv)/w.userData.tek*dt;if(w.userData.on)w.rotation.y=o.dir}}
   {const hy=(m&&m.tip==='drift')?yaw:Math.max(-.32,Math.min(.32,-Math.atan2(o.lv,VD)*1.4));o.yaw=(o.yaw||0)+(hy-(o.yaw||0))*Math.min(1,dt*2);}p.x=o.vx;p.y=0;o.g.rotation.y=o.yaw;
   const fo=flas?1:0,fs=flas?9:.6;for(const sp of o.sp){sp.material.opacity=fo;sp.scale.set(fs,fs,1)}o.farM.opacity=flas?1:farBaz;o.isin.visible=flas;
   const gel=false;
@@ -567,7 +568,7 @@ let dtY=1/60;const TANI=new URLSearchParams(location.search).get('tani')?(()=>{c
   f.P.geometry.attributes.position.needsUpdate=true;f.P.material.opacity=1-a/1.7;return true});
  kamGuncelle(t,dt);if(GELIN.pank){const d=K.position.distanceTo(GELIN.o.g.position);GELIN.pank.material.opacity=Math.max(0,Math.min(1,(d-9)/8))}
  {const ts=68/1024,sx=Math.round(LK.x/ts)*ts,sz=Math.round(LK.z/ts)*ts;gun.position.set(sx+48,17,sz-22);gun.target.position.set(sx,0,sz)}
- cevreGuncelle(t,dt);R.render(S,K);
+ if(GELIN.o&&GELIN.o.tek)for(const w of GELIN.o.tek)w.rotation.x-=VD/w.userData.tek*dt;cevreGuncelle(t,dt);R.render(S,K);
  const sr=sirali();etiketler(sr,t);
  if(t-sonBilgi>250){sonBilgi=t;if(TANI)TANI.textContent=`FPS ${__fps}  kalite ${kalite}  PR ${PR}
 ${innerWidth}x${innerHeight}
