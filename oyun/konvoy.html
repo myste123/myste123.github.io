@@ -471,21 +471,30 @@ function aracGuncelle(t,dt){
     const ph=(t-(m.yan||t))%850;flas=!!m.yan&&ph<520&&((ph/90|0)%2===0);if(m.yan&&t-m.yan>1700&&!m.k2){m.k2=1;KORNA(1)}}
    else if(m.tip==='drift'){
     // drift: yana kayarak bosluga savrulur (tek tarafa, bir kez), govde acisi asagida yay ile
-    if(m.ys==null){if(!yanSerbest(u,-m.yon)&&yanSerbest(u,m.yon))m.yon=-m.yon;m.ys=yanSerbest(u,-m.yon)}
-    if(!u.tr&&m.ys)tx+=-m.yon*SG*.8*Math.sin(Math.min(1,a/.85)*Math.PI);
+    // yaninda yer yoksa drift baslamaz, yer acilana kadar (en fazla 4 sn) bekler
+    if(!m.go){m.ilk=m.ilk||t;if((t>m.ilk&&(o.bmS==null?1:o.bmS)>=.5)||t-m.ilk>4000)m.go=1;else{m.t0+=dt*1000;m.bit+=dt*1000}}
+    if(m.go&&m.ys==null){if(!yanSerbest(u,-m.yon)&&yanSerbest(u,m.yon))m.yon=-m.yon;m.ys=yanSerbest(u,-m.yon)}
+    if(m.go&&!u.tr&&m.ys)tx+=-m.yon*SG*.8*Math.sin(Math.min(1,a/.85)*Math.PI);
     if(Math.random()<dt*3)EGZ(.35)}
    else if(m.tip==='alev'){if(Math.random()<.18)alev(p,.6);if(a<.92&&Math.random()<dt*3.5)patlat(p,1)}}
   if(u.tr&&u.tr.faz===1&&Math.random()<dt*1.2)EGZ(.22);
   if(u.tr&&u.tr.faz===1&&Math.random()<.35)for(const lx of[-.8,.8])duman(p.x+lx,.2,p.z+1.6,0xe8e8e8,.55,700);
   const vd=Math.max(-vmax,Math.min(vmax,(tz-p.z)*(vmax>8?1.3:.8)));o.zv+=(vd-o.zv)*Math.min(1,dt*2.2);p.z+=o.zv*dt;
+  let yanBos=9;
+  if(!u.gelin)for(const v of ARAC){if(v===u||!v.o)continue;const dz=Math.abs(zp(v)-p.z);if(dz>(boyU(u)+boyU(v))/2+.8)continue;const vx=xp(v),sd=Math.sign(vx-p.x)||1,vb=Math.min(1.2,Math.abs((v.o.b||0)+(v.o.th||0))),ev=Math.min(boyU(v)/2*Math.sin(vb)+1.05*Math.cos(vb),2.6);yanBos=Math.min(yanBos,Math.abs(vx-p.x)-ev);const mn=1.05+ev+.2+(Math.sign(v.o.lv||0)===-sd&&Math.abs(v.o.lv||0)>.5?.2:0);
+   if(Math.abs(vx-p.x)>=mn-.05){if(sd>0)tx=Math.min(tx,vx-mn);else tx=Math.max(tx,vx+mn)}}
   const drf=m&&m.tip==='drift',sert=(u.tr||(u.gos&&t<u.gos))?1:0;
   // kayma acisi (beta): drift'te once ters silkme, sonra savrulup karsi direksiyonla sabit tutar, sonunda toparlar
-  {let bT=0,wn=3.2,ze=.75;if(drf){const yn=m.yon,bm=u.tr&&u.tr.faz===1?.38:.6;bT=a<.07?-.14*yn:a<.8?(bm+.07*Math.sin((t-m.t0)/430))*yn:0;wn=a<.8?4.2:3.2;ze=a<.8?.42:.7}
+  {let bT=0,wn=3.2,ze=.75;if(drf&&m.go){const yn=m.yon,bm=u.tr&&u.tr.faz===1?.38:.6;bT=a<.07?-.14*yn:a<.8?(bm+.07*Math.sin((t-m.t0)/430))*yn:0;wn=a<.8?4.2:3.2;ze=a<.8?.42:.7}
+   // yandaki bosluga gore en fazla aci: donuk govde (yari boy*sin + yari en*cos) komsuya degmesin
+   if(drf||Math.abs(o.b||0)>.04){const hl=boyU(u)/2;let bm=1;for(const v of ARAC){if(v===u||!v.o)continue;const dz=Math.abs(zp(v)-p.z);if(dz>hl+boyU(v)/2+1)continue;const vb=Math.abs(v.o.b||0),vh=Math.min(boyU(v)/2*Math.sin(vb)+1.05*Math.cos(vb),2.6);
+     const gap=Math.abs(xp(v)-p.x)-vh-.25;bm=Math.min(bm,gap<=1.05?0:Math.asin(Math.min(1,(gap-1.05)/hl)))}
+    o.bmS=bm;bT=Math.sign(bT)*Math.min(Math.abs(bT),bm);if(Math.abs(o.b||0)>bm+.02){o.b=Math.sign(o.b)*Math.max(bm,Math.abs(o.b)-dt*2.5);o.bw=0}}
    o.bw=(o.bw||0)+((bT-(o.b||0))*wn*wn-2*ze*wn*(o.bw||0))*dt;o.b=(o.b||0)+o.bw*dt}
   // yanal hareket: kinematik bisiklet modeli; araba direksiyonla doner, gittigi yone bakar
   const V=Math.max(4,VD-o.zv),th0=o.th||0;
   {const kp=sert?2.6:drf?1.2:1.65,lvM=sert?7:drf?4:3.2,thM=sert?.32:drf?.24:.2,ks=sert?3.2:2.4,dr=sert?3.5:2;
-   const lvD=Math.max(-lvM,Math.min(lvM,(tx-o.vx)*kp)),thD=Math.max(-thM,Math.min(thM,-Math.asin(Math.max(-.9,Math.min(.9,lvD/V)))));
+   const thY=Math.max(.04,Math.asin(Math.max(0,Math.min(1,(yanBos-1.05-.2)/(boyU(u)/2)))));const lvD=Math.max(-lvM,Math.min(lvM,(tx-o.vx)*kp)),thD=Math.max(-Math.min(thM,thY),Math.min(Math.min(thM,thY),-Math.asin(Math.max(-.9,Math.min(.9,lvD/V)))));
    const dD=Math.max(-.5,Math.min(.5,(thD-th0)*ks));o.st=(o.st||0)+Math.max(-dr*dt,Math.min(dr*dt,dD-(o.st||0)));o.th=th0+V/2.7*Math.tan(o.st)*dt}
   o.lv=-V*Math.sin(o.th);o.vx+=o.lv*dt;
   const B=o.b||0,db=Math.abs(B),thd=(o.th-th0)/Math.max(dt,1e-3);o.yaw=o.th+B;
@@ -507,7 +516,7 @@ function aracGuncelle(t,dt){
   const gel=false;
   if(gel&&Math.random()<.25)duman(p.x+(Math.random()-.5)*1.6,1.3,p.z+1.5,Math.random()<.5?0xffc2d9:0xffffff,.45,1300)}
  // guvenlik: ust uste binen olursa arkadaki geri itilir
- for(const u of ARAC){if(!u.o)continue;for(const v of ARAC){if(v===u||!v.o||v.gelin)continue;if(u.tr||v.tr)continue;if(Math.abs(xp(u)-xp(v))>(genis(u)+genis(v))/2)continue;
+ for(const u of ARAC){if(!u.o)continue;for(const v of ARAC){if(v===u||!v.o||v.gelin)continue;if(Math.abs(xp(u)-xp(v))>(genis(u)+genis(v))/2)continue;
   const lim=(boyU(u)+boyU(v))/2+.4,dz=zp(v)-zp(u);if(dz>=0&&dz<lim){v.o.g.position.z+=(zp(u)+lim-zp(v))*.5;v.o.zv=Math.max(v.o.zv,u.o.zv*.5)}}}}
 
 /* ---- efektler: lastik dumani, polis, havai fisek ---- */
