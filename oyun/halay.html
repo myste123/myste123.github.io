@@ -22,7 +22,7 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
-<script src="core.js?v=5"></script><script src="hud.js?v=9"></script>
+<script src="core.js?v=6"></script><script src="hud.js?v=10"></script>
 <script>
 /* HALAY MEYDANI v2 — gun batiminda koy meydani, gercek insan taramalari (Renderpeople, CC BY) el ele halay.
    Dans tamamen kodla: muzigin vurusuna bagli adim (sag-sol-sag-vurus), ayaklar yere basar (IK), eller komsunun eline gider (IK).
@@ -31,10 +31,10 @@
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now(),V3=THREE.Vector3,Q4=THREE.Quaternion;
 const QS=new URLSearchParams(location.search),DAR=Math.min(document.documentElement.clientWidth||innerWidth,innerHeight)<700;
 const HED=[['🌹','Gül','para saç +20'],['💖','Kalp','zılgıt: 15 sn 2x'],['💐','Parfüm','mendili kap %12'],['🍩','Donut','davulcu ol 30 sn 🥁'],['🎩','Şapka','geline altın tak +150'],['🌌','Galaksi','damat / gelin ol 👰🤵']];
-OY.hud({baslik:'HALAY MEYDANI',alt:'💬 Yorum yaz → halaya katıl · ❤ Beğen → öne geç · En coşkulu 2 kişi GELİN ve DAMAT 👰🤵',renk:'#ffc94a',hediyeler:HED});
+OY.hud({baslik:'HALAY MEYDANI',alt:'❤ Beğen → halaya katıl · 💬 Yorumun isminin üstünde çıkar · En coşkulu 2 kişi GELİN ve DAMAT 👰🤵',renk:'#ffc94a',hediyeler:HED});
 OY.demoYorum=()=>['Halaya ben de varım!','Hadi davul!','Mendil bende','Oyy oy','Kim halaybaşı?','Zılgıt çekin!','Çek halayı!','Yaşasın gelin damat'][Math.random()*8|0];
-OY.muzikListe=['ses/konvoy_m1.mp3'];
-const MUZIK_RITIM={'konvoy_m1.mp3':{p:.5341,o:.743},'konvoy_m2.mp3':{p:.5108,o:.534}};
+OY.muzikListe=['ses/konvoy_m1.mp3','ses/halay_befran.mp3','ses/halay_miran.mp3','ses/halay_arian.mp3','ses/halay_alav.mp3','ses/halay_berfhat.mp3'];
+const MUZIK_RITIM={'konvoy_m1.mp3':{p:.5341,o:.743},'halay_befran.mp3':{p:.5108,o:.116},'halay_miran.mp3':{p:.5805,o:.093},'halay_arian.mp3':{p:.836,o:.07},'halay_alav.mp3':{p:.6269,o:.163},'halay_berfhat.mp3':{p:.6037,o:3.576}};
 
 /* ---------------- render ---------------- */
 let PR=Math.min(2,devicePixelRatio||1);
@@ -269,7 +269,7 @@ const davulG=()=>{const g=new THREE.Group();const gv=new THREE.Mesh(new THREE.Cy
 
 /* ---------------- bant + puan ---------------- */
 const BANT=document.getElementById('bant');let bantBit=0,ipucuI=0,ipucuT=0;
-const IPUCU=['💬 Yorum yaz → halaya katıl','❤ Her beğeni = +1 coşku · yorum +3 · takip +10','📈 Coşkun arttıkça halayda ÖNE geçersin','👑 En öndeki mendilli = HALAYBAŞI','👰🤵 En coşkulu 2 kişi ortada GELİN ve DAMAT','🍩 Donut at → 30 sn DAVULCU sen ol','🎩 Şapka at → geline altın tak','🌌 Galaksi at → DAMAT ya da GELİN ol','🏆 3 dk sonunda halaybaşı kazanır!'];
+const IPUCU=['❤ Beğen → halaya katıl, beğendikçe öne geç','❤ Her beğeni = +1 coşku · yorum +3 · takip +10','📈 Coşkun arttıkça halayda ÖNE geçersin','👑 En öndeki mendilli = HALAYBAŞI','👰🤵 En coşkulu 2 kişi ortada GELİN ve DAMAT','🍩 Donut at → 30 sn DAVULCU sen ol','🎩 Şapka at → geline altın tak','🌌 Galaksi at → DAMAT ya da GELİN ol','🏆 3 dk sonunda halaybaşı kazanır!'];
 function bant(yazi,sure=3000){BANT.textContent=yazi;BANT.className='bant buyuk';BANT.style.opacity=1;bantBit=now()+sure}
 let akt=0;
 function puanEkle(u,n){if(n<=0)return 0;if(u.zilgit>now())n*=2;u.puan+=n;u.son=now();akt+=n;return n}
@@ -300,7 +300,7 @@ function hediye(u,h){const t=now(),ad=OY.kisaAd(u.ad,10);puanEkle(u,10*h.adet+h.
  return et}
 // hediye ANINDA uygulanir; HQ sadece kameranin sirayla gosterecegi hediyeler
 function hediyeVer(u,h){if(!u.o)return;const t=now(),k=HED.find(x=>x[1].toLowerCase().startsWith((h.sinif||'').slice(0,3)))||['🎁','Hediye'];
- const et=hediye(u,h);OY.vitrin(u,h.ikon||k[0],h.ad||k[1],et);OY.akis(`${h.ikon||k[0]} ${u.ad} → ${et}`,'#ffd84a');
+ const et=hediye(u,h);OY.vitrin(u,h.resim||h.sinif||h.ikon||k[0],h.ad||k[1],et);OY.akis(`${h.ikon||k[0]} ${u.ad} → ${et}`,'#ffd84a');
  const buyuk=h.sinif==='sapka'||h.sinif==='galaksi';if(HQ.length<12||buyuk)HQ.push({u,h,t,buyuk})}
 function hediyeSirasi(t){if(!HQ.length||t<hqBit)return;
  while(HQ.length){const q=HQ.shift();if(!q.u.o||(!q.buyuk&&t-q.t>6000))continue;

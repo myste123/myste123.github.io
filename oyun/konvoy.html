@@ -24,24 +24,24 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
-<script src="core.js?v=5"></script><script src="uc.js?v=3"></script><script src="hud.js?v=9"></script>
+<script src="core.js?v=6"></script><script src="uc.js?v=3"></script><script src="hud.js?v=10"></script>
 <script>
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
 /* ---- ses: gercek davul-zurna + korna + egzoz patlamasi (Pixabay lisansi) ---- */
-OY.muzikListe=['ses/konvoy_m2.mp3'];
+OY.muzikListe=['ses/konvoy_m2.mp3','ses/k_zurnafire.mp3','ses/k_turkey433.mp3','ses/k_upbeat2.mp3','ses/k_nadu.mp3','ses/k_istanbul1.mp3'];
 let kornaT=0;function KORNA(z=0){const t=now();if(t-kornaT<350&&!z)return;kornaT=t;OY.ses.dosya('ses/korna.mp3',.5,.88+Math.random()*.25)}
 let egzT=0;function EGZ(v=.55){const t=now();if(t-egzT<120)return;egzT=t;OY.ses.dosya('ses/egzoz.mp3',v,.9+Math.random()*.3)}
 /* ---- hediyeler: konvoya ozgu ---- */
 const HED_K={gul:['💨','DRIFT','arabaların arasından'],kalp:['💡','SELEKTÖR','en yakına yapışır'],parfum:['↪️','MAKAS','araya gire gire'],
  donut:['🔥','EGZOZ PATLAT','alev alev'],sapka:['⬆️','ARABA YÜKSELT','konvoy coşar'],galaksi:['👰','GELİN / DAMAT OL','adın gelin arabasında']};
-OY.hud({baslik:'DÜĞÜN KONVOYU',alt:'Yorum yaz → konvoya katıl · "korna" "drift" "selektör" "gaz" yaz',renk:'#ff8fc7',
+OY.hud({baslik:'DÜĞÜN KONVOYU',alt:'❤ Beğen → konvoya katıl · 💬 Yorumun arabanın üstünde çıkar',renk:'#ff8fc7',
  hediyeler:[['🌹','Gül','💨 Drift at'],['💖','Kalp','💡 Yapış + selektör'],['💐','Parfüm','↪️ Makas at'],
   ['🍩','Donut','🔥 Egzoz patlat'],['🎩','Şapka','⬆️ Araba yükselt + konvoy coşar'],['🌌','Galaksi','👰 Damat / gelin ol, adın gelin arabasında']]});
 OY.demoYorum=()=>['Korna çalın!','drift at','Selektör yak','Gaz gaz!','makas at','Korna çalın!','Alev patlat','Maşallah 🧿','Hadi hadi!'][Math.random()*9|0];
 /* ---- render: gercek gokyuzu isigi (HDRI), gunes golgesi, ACES ton ---- */
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true,powerPreference:'high-performance'});R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.15;
 R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFShadowMap;
-let PR=Math.min(2,Math.max(1,devicePixelRatio||1));
+const PR0=()=>Math.min(2.5,Math.max(devicePixelRatio||1,1080/Math.max(1,innerWidth)));let PR=PR0();
 const S=new THREE.Scene();S.background=new THREE.Color(0xb7c9dc);S.fog=new THREE.Fog(0xc2d2e2,140,430);
 const VFOV=46,PITCH=.72,BANT=.48,KAY=.14;
 const K=new THREE.PerspectiveCamera(VFOV,1,.5,700),KF=new THREE.PerspectiveCamera(VFOV,1,.5,700);
@@ -369,7 +369,7 @@ setInterval(()=>{if(GELIN.cift[0]||GELIN.cift[1])tabelaYaz()},2500);
 const SURE={yapis:9000,drift:6500,makas:7000,alev:4300};
 const xp=u=>u.o.g.position.x,zp=u=>u.o.g.position.z;
 const genis=u=>u.m&&u.m.tip==='drift'?(u.tr?2.8:3.4):2.1;
-const KS=[1,2,3],KQ=[[],[],[]],SIRA=[],SATIR=11;
+const KS=[1,2,3],KQ=[[],[],[]],SIRA=[],SATIR=13.5;
 const slotZ=(k,r)=>r*SATIR+(k===1?0:SATIR/2);
 function sirala(){KQ.forEach((q,k)=>q.forEach((u,r)=>{u.k=k;u.r=r}));SIRA.length=0;for(const q of KQ)SIRA.push(...q);SIRA.sort((a,b)=>slotZ(a.k,a.r)-slotZ(b.k,b.r))}
 function kuyrugaEkle(u){const k=[1,0,2].reduce((a,b)=>KQ[b].length<KQ[a].length?b:a);KQ[k].push(u);sirala()}
@@ -405,7 +405,7 @@ const HQ=[];let hqBit=0;
 function hediyeVer(u,h){if(!u.o)return;const t=now();KORNA();const kamBos=!SINE||t>SINE.bit;u.m=null;u.bek=null;const k0=u.o.kad,et=hediye(u,h),k=HED_K[h.sinif]||['🎁','Hediye'];const n=u.coinB||0;u.coinB=0;coinEkle(u,n);
  if(kamBos&&!(SINE&&SINE.u===u))aksiyon(u,u.o.kad>k0?4500:4000);
  if(!(SINE&&SINE.u===u))HQ.push({u,t,buyuk:h.sinif==='galaksi'||h.sinif==='sapka'});
- OY.vitrin(u,k[0],k[1],et);OY.akis(`${k[0]} ${u.ad}: ${et}`,'#ffd84a')}
+ OY.vitrin(u,h.resim||h.sinif,k[1],et);OY.akis(`${k[0]} ${u.ad}: ${et}`,'#ffd84a')}
 function hediyeSirasi(t){if(!HQ.length||(SINE&&t<SINE.bit))return;
  while(HQ.length){const q=HQ.shift();if(!q.u.o||(!q.buyuk&&t-q.t>7000))continue;const u=q.u;if(!q.buyuk&&!u.m&&!u.tr&&t-q.t>4000)continue;aksiyon(u,u.m?Math.max(3000,Math.min(6000,u.m.bit-t+600)):4000);break}}
 function aracGuncelle(t,dt){
@@ -427,8 +427,8 @@ function aracGuncelle(t,dt){
     if(Math.abs(p.z-hz)<1.5){const xs=SX(KS[u.k]),dolu=ARAC.some(v=>v!==u&&v.o&&!v.tr&&Math.abs(xp(v)-xs)<2.2&&Math.abs(zp(v)-hz)<(boyU(u)+boyU(v))/2+.6);if(!dolu||T.hay)T.faz=2,T.t2=t}}
    else{tx=SX(KS[u.k]);tz=hz;if(Math.abs(p.x-tx)<.3||t-(T.t2||t)>3500)u.tr=null}}
   else if(u.gos&&t<u.gos){const g=1-(u.gos-t)/5200;tz=-7;vmax=6;tx=SX(2)+Math.sin(g*Math.PI*5)*SG*1.6*Math.min(1,g*4,(1-g)*4);if(Math.random()<.5)for(const lx of[-.8,.8])duman(p.x+lx,.25,p.z+1.6,0xe0e0e0,1,1300)}
-  else{tx=SX(KS[u.k])+u.dx;tz=slotZ(u.k,u.r)+u.jz*.4+Math.sin(t/3800+u.faz)*.8;vmax=2.5+Math.min(8,Math.max(0,Math.abs(tz-p.z)-3)*.3)}
-  let yaw=0,flas=false;
+  else{const bg=Math.max(0,1-(t-(u.begT||-1e9))/1400);tx=SX(KS[u.k])+u.dx+Math.sin(t/2700+u.faz*1.7)*.45;tz=slotZ(u.k,u.r)+u.jz*.6+Math.sin(t/3900+u.faz)*1.8-Math.sin(bg*Math.PI)*2.2;vmax=2.5+Math.min(8,Math.max(0,Math.abs(tz-p.z)-3)*.3)}
+  let yaw=0,flas=!m&&t-(u.begT||-1e9)<450&&((t-u.begT)/90|0)%2===0;
   if(m){if(m.tip==='yapis'&&m.on&&m.on.o){const h=m.on,hx=xp(h),hz=zp(h),lim=(boyU(u)+boyU(h))/2,ayni=Math.abs(p.x-hx)<.6;
     // hedef seride gec (yan serit bossa), degilse once hedefin arkasina dogru yaklas
     if(!ayni){const bos=!ARAC.some(v=>v!==u&&v!==h&&v.o&&Math.abs(xp(v)-hx)<3&&zp(v)>hz-1&&zp(v)<p.z+(boyU(u)+boyU(v))/2+3);if(bos)tx=hx;else tx=p.x}else tx=hx;
@@ -508,8 +508,8 @@ function hediye(u,h){const t=now(),ad=x=>OY.kisaAd(x.ad,10);let et='';
 const BAL={};
 OY.basla({muzik:'dugun',olay:e=>{
  if(!e.id)return;const u=kul(e);if(!katil(u))return;u.son=now();const t=now();
- if(e.t==='begeni')puanEkle(u,(e.adet||1)*.5);
- else if(e.t==='yorum'){puanEkle(u,2);u.msj=String(e.metin||'').slice(0,40);u.msjT=t;const ym=String(e.metin||'').toLocaleLowerCase('tr');
+ if(e.t==='begeni'){puanEkle(u,(e.adet||1)*.5);if(t-(u.begT||0)>1600){u.begT=t;KORNA()}}
+ else if(e.t==='yorum'){puanEkle(u,2);u.msj=String(e.metin||'').slice(0,40);u.msjT=t;if(t-(u.kT||0)>2500){u.kT=t;KORNA(1)}const ym=String(e.metin||'').toLocaleLowerCase('tr');
   if(/korna|d[iı]t|bip/.test(ym)&&t-(u.kT||0)>2500){u.kT=t;KORNA(1)}}
  else if(e.t==='takip'){puanEkle(u,15);OY.akis(`➕ ${u.ad} takip etti · konvoyda!`,'#8cf')}
  else if(e.t==='paylasim'){puanEkle(u,10);OY.akis(`🔁 ${u.ad} paylaştı`,'#8cf')}
@@ -589,7 +589,7 @@ let fpsN=0,fpsT=now();window.__fps=0;
 // otomatik kalite: kasarsa once golge, sonra cozunurluk, sonra duman azalir
 let kalite=3,dusukN=0;
 function fpsKontrol(t){fpsN++;if(t-fpsT>2000){const f=fpsN*1000/(t-fpsT);window.__fps=Math.round(f);fpsN=0;fpsT=t;
- if(f<42&&kalite>0){if(++dusukN>=2){dusukN=0;kalite--;if(kalite===2)gun.castShadow=false;else if(kalite===1&&PR>1){PR=Math.max(1,PR*.75);boyut()}}}else dusukN=0}}
+ if(f<42&&kalite>0){if(++dusukN>=2){dusukN=0;kalite--;if(kalite===2)gun.castShadow=false;else if(kalite===1&&PR>PR0()*.9){PR=Math.max(PR0()*.85,PR*.9);boyut()}}}else dusukN=0}}
 let son=now(),sonBilgi=0,yolZ=0;
 let dtY=1/60;const TANI=new URLSearchParams(location.search).get('tani')?(()=>{const d=document.createElement('div');d.style.cssText='position:fixed;left:8px;top:40%;z-index:999;background:rgba(0,0,0,.75);color:#0f0;font:600 14px monospace;padding:8px;border-radius:6px;white-space:pre';document.body.appendChild(d);const g=R.getContext(),x=g.getExtension('WEBGL_debug_renderer_info');d.dataset.gpu=x?g.getParameter(x.UNMASKED_RENDERER_WEBGL):'?';return d})():null;function kare(){requestAnimationFrame(kare);const t=now();dtY+=(Math.min(.05,(t-son)/1000)-dtY)*.15;const dt=dtY;son=t;fpsKontrol(t);
  yolZ=(yolZ+VD*dt)%P;CEV.position.z=yolZ;

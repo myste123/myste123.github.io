@@ -18,7 +18,7 @@
   const SINIF = [['gul', '🌹', 1], ['kalp', '💖', 5], ['parfum', '💐', 20], ['donut', '🍩', 30], ['sapka', '🎩', 99], ['galaksi', '🌌', 1000]];
   OY.hediye = e => { const h = HED[e.hediye] || [e.hediye || 'Hediye', e.elmas || 1]; const el = e.elmas || h[1] || 1;
     let s = SINIF[0]; for (const x of SINIF) if (el >= x[2]) s = x; if (e.hediye === 'Finger Heart' || e.hediye === 'Heart Me') s = SINIF[1];
-    return { ad: h[0], elmas: el, seviye: el >= 1000 ? 4 : el >= 99 ? 3 : el >= 20 ? 2 : 1, adet: e.adet || 1, sinif: s[0], ikon: s[1] } };
+    return { resim: e.resim || '', ad: h[0], elmas: el, seviye: el >= 1000 ? 4 : el >= 99 ? 3 : el >= 20 ? 2 : 1, adet: e.adet || 1, sinif: s[0], ikon: s[1] } };
 
   // ---- profil fotografi (yuklenemezse bas harfli renkli daire) ----
   const FOTO = {};

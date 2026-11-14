@@ -7,6 +7,8 @@
 /* Ortak sade arayuz (tum oyunlar): ust serit, ilk 3, alt olay akisi + hediye seridi.
    OY.hud({baslik, alt, renk, hediyeler:[['🌹','Gül','+10']...]})  ->  OY.akis(t,renk) OY.ilk3([{ad,foto,id,puan}]) OY.bilgi(sol,sag) OY.kazanan(html) */
 (function () {
+  const HED_IMG = { '🌹': 'gul', '💖': 'kalp', '💐': 'parfum', '🍩': 'donut', '🎩': 'sapka', '🌌': 'galaksi', gul: 'gul', kalp: 'kalp', parfum: 'parfum', donut: 'donut', sapka: 'sapka', galaksi: 'galaksi' };
+  OY.hedImg = x => { if (!x) return ''; if (/^https?:/.test(x)) return `<img class="hd-im" src="${x}">`; const k = HED_IMG[x]; return k ? `<img class="hd-im" src="doku/hediye/${k}.png">` : x };
   const css = `
   .h-ust{position:fixed;top:1.6vh;left:calc(3*var(--vw));right:calc(3*var(--vw));display:flex;align-items:center;gap:1.4vh;pointer-events:none;z-index:20}
   .h-bas{flex:1;min-width:0}
@@ -30,7 +32,9 @@
   @keyframes hg{from{transform:translateY(1vh);opacity:0}}
   .h-hed{display:grid;grid-template-columns:repeat(3,1fr);gap:.6vh}
   .h-hed div{background:rgba(8,10,25,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);border-radius:1.3vh;padding:.6vh .4vh;text-align:center;font:600 1.25vh/1.25 Segoe UI,Arial;color:rgba(255,255,255,.85)}
-  .h-hed b{display:block;font-size:1.5vh;color:var(--r)}
+  .h-hed b{display:flex;align-items:center;justify-content:center;gap:.4vh;font-size:1.5vh;color:var(--r)}
+  .hd-im{width:2.6vh;height:2.6vh;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 .2vh .3vh rgba(0,0,0,.5))}
+  .ik .hd-im{width:5vh;height:5vh}
   .h-rkz{position:fixed;right:calc(3*var(--vw));bottom:15.2vh;z-index:19;display:flex;align-items:center;gap:.8vh;background:linear-gradient(135deg,rgba(124,92,255,.85),rgba(255,77,141,.85));border-radius:1.6vh;padding:.7vh 1.2vh;pointer-events:none;animation:rkz 4s ease-in-out infinite;box-shadow:0 .6vh 2vh rgba(0,0,0,.35)}.h-rkz b{font-size:2.4vh}.h-rkz span{font:800 1.25vh/1.25 Nunito;color:#fff}.h-rkz i{font-style:normal;font-weight:900;font-size:1.4vh}@keyframes rkz{0%,100%{transform:translateY(0)}50%{transform:translateY(-.8vh)}}
   .h-rek{text-align:center;font:600 1.15vh Segoe UI,Arial;color:rgba(255,255,255,.55);margin-top:.7vh}
   .h-kaz{position:fixed;inset:0;display:none;place-items:center;background:radial-gradient(rgba(0,0,0,.25),rgba(0,0,0,.7));z-index:30;text-align:center;color:#fff}
@@ -46,7 +50,7 @@
     const d = document.createElement('div'); d.innerHTML = `
      <div class="h-ust"><div class="h-bas"><b style="font-size:${cfg.baslik.length>13?"min(2.5vh,calc(4.6*var(--vw)))":""}">${cfg.baslik}</b><span>${cfg.alt || ''}</span></div><div class="h-cip" id="hSol">⏱ 3:00</div><div class="h-cip" id="hSag">👥 0</div></div>
      <div class="h-ilk" id="hIlk"></div>
-     <div class="h-alt"><div class="h-akis" id="hAkis"></div><div class="h-hed">${(cfg.hediyeler || []).map(h => `<div><b>${h[0]} ${h[1]}</b>${h[2]}</div>`).join('')}</div>
+     <div class="h-alt"><div class="h-akis" id="hAkis"></div><div class="h-hed">${(cfg.hediyeler || []).map(h => `<div><b>${OY.hedImg(h[0])} ${h[1]}</b>${h[2]}</div>`).join('')}</div>
      </div>
      <div class="h-vit" id="hVit"></div><div class="h-kaz" id="hKaz"><div id="hKazI"></div></div>`;
     d.insertAdjacentHTML('beforeend','<div class="h-rkz"><b>🎮</b><span>Bu oyunu yayınına kirala<br><i>TT @bilesikyatirim</i></span></div>');document.body.appendChild(d); AK = d.querySelector('#hAkis'); IL = d.querySelector('#hIlk'); SOL = d.querySelector('#hSol'); SAG = d.querySelector('#hSag'); KZ = d.querySelector('#hKaz');
@@ -61,7 +65,7 @@
   const VQ=[];let vAktif=0;
   OY.vitrin = (u, ikon, ad, etki) => { VQ.push({ u, ikon, ad, etki }); if (VQ.length > 4) VQ.splice(0, VQ.length - 4); if (!vAktif) vSonraki() };
   function vSonraki() { const V = document.getElementById('hVit'), v = VQ.shift(); if (!V || !v) { vAktif = 0; return } vAktif = 1;
-    V.innerHTML = `<div class="kart"><img src="${OY.foto(v.u, 96).toDataURL()}"><div class="y"><b>${OY.kisaAd(v.u.ad, 14)} · ${v.ad}</b><span>${v.etki}</span></div><div class="ik">${v.ikon}</div></div>`;
+    V.innerHTML = `<div class="kart"><img src="${OY.foto(v.u, 96).toDataURL()}"><div class="y"><b>${OY.kisaAd(v.u.ad, 14)} · ${v.ad}</b><span>${v.etki}</span></div><div class="ik">${OY.hedImg(v.ikon)}</div></div>`;
     setTimeout(vSonraki, VQ.length ? 1800 : 3700) }
   OY.sure = sn => `⏱ ${Math.floor(sn / 60)}:${String(Math.floor(sn % 60)).padStart(2, '0')}`;
 })();
