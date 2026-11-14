@@ -250,7 +250,7 @@ function kirikNormal(geo,aci){const ge=geo.index?geo.toNonIndexed():geo.clone(),
  const cs=Math.cos(aci),nor=new Float32Array(n*3);
  for(let i=0;i<n;i++){const f=(i/3)|0,x0=FN[f*3],y0=FN[f*3+1],z0=FN[f*3+2];let sx=0,sy=0,sz=0;for(const g of M.get(key(i))){const x=FN[g*3],y=FN[g*3+1],z=FN[g*3+2];if(x*x0+y*y0+z*z0>=cs){sx+=x;sy+=y;sz+=z}}
   const l=Math.hypot(sx,sy,sz)||1;nor[i*3]=sx/l;nor[i*3+1]=sy/l;nor[i*3+2]=sz/l}
- ge.setAttribute('normal',new THREE.BufferAttribute(nor,3));return ge}
+ ge.setAttribute('normal',new THREE.BufferAttribute(nor,3));return THREE.BufferGeometryUtils.mergeVertices(ge,1e-4)}
 // teker: adi/malzemesi k.teker'e uyan parcalar ayrilir, ucgenler 4 koseye bolunur, her teker kendi ekseninde doner
 function tekerMi(o,re){for(let x=o;x;x=x.parent)if(re.test(x.name||''))return true;return re.test(o.material&&o.material.name||'')}
 function tekerAyir(kok,L){const Q={},v=new THREE.Vector3(),c=new THREE.Vector3(),nm=new THREE.Matrix3();const P3=[new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()],N3=[[],[],[]];
@@ -389,7 +389,7 @@ function tqIsle(){while(TQ.length&&aktifTr()<2){const q=TQ.shift();if(q.u.o)maka
 function makasAt(u,n){const r=SIRA.indexOf(u);if(r<=0)return 0;if(aktifTr()>=2||TQ.length){if(!TQ.some(q=>q.u===u))TQ.push({u,n,t:now()});return Math.min(n,r)}return makasAt0(u,n)}
 function makasAt0(u,n){const r=SIRA.indexOf(u);if(r<=0)return 0;const r2=Math.max(0,r-n),hedef=SIRA[r2],zg=slotZ(hedef.k,hedef.r)-.5;
  // once baska bir kolonda hedefin ONUNE dusen bir yer ara; yoksa hedefin kendi kolonunda hemen onune gir (her zaman gercekten gecer)
- const ad=[0,1,2].filter(k=>k!==u.k).sort(()=>Math.random()-.5).map(k=>{const idx=KQ[k].filter(x=>x!==u&&slotZ(x.k,x.r)<zg).length;return{k,idx,z:slotZ(k,idx)}}).filter(a=>a.z<zg+.5);
+ const ad=[0,1,2].filter(k=>Math.abs(k-u.k)===1).sort(()=>Math.random()-.5).map(k=>{const idx=KQ[k].filter(x=>x!==u&&slotZ(x.k,x.r)<zg).length;return{k,idx,z:slotZ(k,idx)}}).filter(a=>a.z<zg+.5);
  let k2,idx;if(ad.length){k2=ad[0].k;idx=ad[0].idx}else{k2=hedef.k;idx=KQ[k2].indexOf(hedef);if(k2===u.k){const q=KQ[k2];if(q.indexOf(u)<idx)idx--}}
  tasi(u,k2,idx);return Math.max(0,r-SIRA.indexOf(u))}
 // selektor: ayni seritte ondeki varsa ona yapisir, sonra o yol verir (dis seritten arkaya gecer)
@@ -418,10 +418,10 @@ function aracGuncelle(t,dt){
   let tz,tx,vmax=2.5;
   if(u.gelin){tz=0;tx=SX(2)}
   else if(u.tr){const T=u.tr,hz=slotZ(u.k,u.r),ileri=hz<p.z;
-   if(T.faz===1){tz=hz;vmax=ileri?16:6;T.hay=t-(T.t0||t)>14000;
+   if(T.faz===1){tz=hz;vmax=ileri?11:6;T.hay=t-(T.t0||t)>14000;
     // serit arasi hat: iki seridin ortasi (yan yana arabalarin arasi). Gecilen her arabada karsi hatta kir (zikzak)
-    if(T.x==null)T.x=Math.max(-1.5*SG,Math.min(1.5*SG,SX(KS[u.k])+(Math.random()<.5?-1:1)*SG/2));
-    if(t>T.kir&&ileri){const H=[-1.5,-.5,.5,1.5].map(v=>v*SG),ci=H.indexOf(T.x),ad=[ci-1,ci+1].filter(q=>q>=0&&q<4).sort(()=>Math.random()-.5);let ok=false;
+    if(T.x==null){const sx=SX(T.ln),hx=SX(KS[u.k]);T.x=Math.max(-1.5*SG,Math.min(1.5*SG,hx===sx?sx+(sx<=0?1:-1)*SG/2:sx+Math.sign(hx-sx)*SG/2))}// serit kesmeyen tek hat
+    if(false&&t>T.kir&&ileri){const H=[-1.5,-.5,.5,1.5].map(v=>v*SG),ci=H.indexOf(T.x),ad=[ci-1,ci+1].filter(q=>q>=0&&q<4).sort(()=>Math.random()-.5);let ok=false;
      for(const q of ad){const xl=H[q];if(!ARAC.some(v=>v!==u&&v.o&&xp(v)>Math.min(xl,T.x)-1.3&&xp(v)<Math.max(xl,T.x)+1.3&&zp(v)<p.z+3&&zp(v)>p.z-(boyU(u)+boyU(v))/2-10)){T.x=xl;T.kir=t+(u.m&&u.m.tip==='drift'?1700:850);ok=true;break}}
      if(!ok)T.kir=t+250}
     // hat uzerinde (kayan/drift eden) biri varsa arkasinda kal
@@ -430,8 +430,10 @@ function aracGuncelle(t,dt){
     if(Math.abs(p.z-hz)<1.5){const xs=SX(KS[u.k]),dolu=ARAC.some(v=>v!==u&&v.o&&!v.tr&&Math.abs(xp(v)-xs)<2.2&&Math.abs(zp(v)-hz)<(boyU(u)+boyU(v))/2+.6);if(!dolu||T.hay)T.faz=2,T.t2=t}}
    else{tx=SX(KS[u.k]);tz=hz;if(Math.abs(p.x-tx)<.3||t-(T.t2||t)>3500)u.tr=null}}
   else if(u.gos&&t<u.gos){const g=1-(u.gos-t)/5200;tz=-7;vmax=6;tx=SX(2)+Math.sin(g*Math.PI*5)*SG*1.6*Math.min(1,g*4,(1-g)*4);if(Math.random()<.5)for(const lx of[-.8,.8])duman(p.x+lx,.25,p.z+1.6,0xe0e0e0,1,1300)}
-  else{const bg=Math.max(0,1-(t-(u.begT||-1e9))/1400);tx=SX(KS[u.k])+u.dx+Math.sin(t/2700+u.faz*1.7)*.45;tz=slotZ(u.k,u.r)+u.jz*.6+Math.sin(t/3900+u.faz)*1.8-Math.sin(bg*Math.PI)*2.2;vmax=2.5+Math.min(8,Math.max(0,Math.abs(tz-p.z)-3)*.3)}
-  let yaw=0,flas=!m&&t-(u.begT||-1e9)<450&&((t-u.begT)/90|0)%2===0;
+  else{// yakindan sollayan varsa salinma ve one atilma durur: serit ortasinda kalip yol verir
+   const yak=ARAC.some(v=>v!==u&&v.tr&&v.o&&Math.abs(zp(v)-p.z)<16&&Math.abs(xp(v)-p.x)<5.5);u.sal=(u.sal==null?1:u.sal)+((yak?0:1)-(u.sal==null?1:u.sal))*Math.min(1,dt*4);const sl=u.sal;
+   const bg=Math.max(0,1-(t-(u.begT||-1e9))/1400);tx=SX(KS[u.k])+u.dx*sl+Math.sin(t/2700+u.faz*1.7)*.45*sl;tz=slotZ(u.k,u.r)+u.jz*.6+Math.sin(t/3900+u.faz)*1.8-Math.sin(bg*Math.PI)*2.2*sl;vmax=2.5+Math.min(8,Math.max(0,Math.abs(tz-p.z)-3)*.3)}
+  let yaw=0,flas=false;
   if(m){if(m.tip==='yapis'&&m.on&&m.on.o){const h=m.on,hx=xp(h),hz=zp(h),lim=(boyU(u)+boyU(h))/2,ayni=Math.abs(p.x-hx)<.6;
     // hedef seride gec (yan serit bossa), degilse once hedefin arkasina dogru yaklas
     if(!ayni){const bos=!ARAC.some(v=>v!==u&&v!==h&&v.o&&Math.abs(xp(v)-hx)<3&&zp(v)>hz-1&&zp(v)<p.z+(boyU(u)+boyU(v))/2+3);if(bos)tx=hx;else tx=p.x}else tx=hx;
@@ -442,11 +444,11 @@ function aracGuncelle(t,dt){
     // tek tarafa savrul, karsi direksiyonla tut, toparlan
     const k=a<.18?Math.sin(a/.18*Math.PI/2):a<.75?1:Math.cos((a-.75)/.25*Math.PI/2);
     if(!u.tr){const sx=Math.sin((t-m.t0)/1900*Math.PI)*m.yon;if((sx>0&&yanSerbest(u,1))||(sx<0&&yanSerbest(u,-1)))tx+=sx*SG*.85*k}
-    else tx+=Math.sin((t-m.t0)/1500*Math.PI)*m.yon*1.0*k;
+    else tx+=Math.sin((t-m.t0)/1500*Math.PI)*m.yon*.5*k;
     const ak=Math.atan2(o.lv,VD+Math.max(0,-o.zv));yaw=-Math.max(-.75,Math.min(.75,ak*3.2+Math.sign(o.lv||m.yon)*Math.min(1,Math.abs(o.lv)*.6)*.25))*k;
     const c=Math.cos(yaw),sn=Math.sin(yaw);
     for(const lx of[-.82,.82]){const lz=1.45,wx=p.x+lx*c+lz*sn,wz=p.z-lx*sn+lz*c;iz(wx,wz,yaw);
-     if(Math.random()<.35)duman(wx+(Math.random()-.5)*.4,.3,wz+.6,0xf4f4f4,.9+k*.6,1800)}
+     if(Math.random()<.75)duman(wx+(Math.random()-.5)*.4,.3,wz+.5,0xf2f2f2,1.2+k*.9,2200)}
     if(Math.random()<dt*3)EGZ(.35)}
    else if(m.tip==='alev'){if(Math.random()<.18)alev(p,.6);if(a<.92&&Math.random()<dt*3.5)patlat(p,1)}}
   if(u.tr&&u.tr.faz===1&&Math.random()<dt*1.2)EGZ(.22);
@@ -454,7 +456,7 @@ function aracGuncelle(t,dt){
   const vd=Math.max(-vmax,Math.min(vmax,(tz-p.z)*(vmax>8?1.3:.8)));o.zv+=(vd-o.zv)*Math.min(1,dt*2.2);p.z+=o.zv*dt;
   const drf=m&&m.tip==='drift',sert=!drf&&(u.tr||(u.gos&&t<u.gos))?1:0;const kk=drf?3.2:sert?18:7,dd=drf?3.6:sert?8:5;o.lv+=((tx-o.vx)*kk-o.lv*dd)*dt;o.lv=Math.max(-6,Math.min(6,o.lv));o.vx+=o.lv*dt;
   if(o.tek){const dr=Math.max(-.55,Math.min(.55,-(o.yaw||0)*.9-(o.lv||0)*.06));o.dir=(o.dir||0)+(dr-(o.dir||0))*Math.min(1,dt*6);for(const w of o.tek){w.rotation.x-=(VD-o.zv)/w.userData.tek*dt;if(w.userData.on)w.rotation.y=o.dir}}
-  {const hy=(m&&m.tip==='drift')?yaw:Math.max(-.45,Math.min(.45,-Math.atan2(o.lv,VD)*(u.tr?2.4:1.4)));o.yaw=(o.yaw||0)+(hy-(o.yaw||0))*Math.min(1,dt*2);}p.x=o.vx;p.y=0;o.g.rotation.y=o.yaw;
+  {const hy=(m&&m.tip==='drift')?yaw:Math.max(-.45,Math.min(.45,-Math.atan2(o.lv,VD)*(u.tr?2.0:1.4)));o.yaw=(o.yaw||0)+(hy-(o.yaw||0))*Math.min(1,dt*2);}p.x=o.vx;p.y=0;o.g.rotation.y=o.yaw;
   if(o.ak){const yan=!!(m&&m.tip==='alev'&&a<.95&&Math.random()<.8);for(const c of o.ak){c.visible=yan;if(yan){const L=.5+Math.random()*1.1;c.scale.set(.8+Math.random()*.6,.8+Math.random()*.6,L)}}}
   if(o.parl){const on=(u.parlBit>t)||(t-(u.begT||-1e9)<900);o.parl.visible=on;if(on){o.parl.material.color.setHex(u.parlBit>t?u.parl:PARILTI.begeni);o.parl.material.opacity=.85+Math.sin(t/120)*.15}}
   const fo=flas?1:0,fs=flas?9:.6;for(const sp of o.sp){sp.material.opacity=fo;sp.scale.set(fs,fs,1)}o.farM.opacity=flas?1:farBaz;o.isin.visible=flas;
@@ -462,7 +464,7 @@ function aracGuncelle(t,dt){
   if(gel&&Math.random()<.25)duman(p.x+(Math.random()-.5)*1.6,1.3,p.z+1.5,Math.random()<.5?0xffc2d9:0xffffff,.45,1300)}
  // guvenlik: ust uste binen olursa arkadaki geri itilir
  for(const u of ARAC){if(!u.o)continue;for(const v of ARAC){if(v===u||!v.o||v.gelin)continue;if(u.tr||v.tr)continue;if(Math.abs(xp(u)-xp(v))>(genis(u)+genis(v))/2)continue;
-  const lim=(boyU(u)+boyU(v))/2+.4,dz=zp(v)-zp(u);if(dz>=0&&dz<lim){v.o.g.position.z=zp(u)+lim;v.o.zv=Math.max(v.o.zv,u.o.zv)}}}}
+  const lim=(boyU(u)+boyU(v))/2+.4,dz=zp(v)-zp(u);if(dz>=0&&dz<lim){v.o.g.position.z+=(zp(u)+lim-zp(v))*.5;v.o.zv=Math.max(v.o.zv,u.o.zv*.5)}}}}
 
 /* ---- efektler: lastik dumani, polis, havai fisek ---- */
 const dumanTx=(()=>{const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');
@@ -473,7 +475,7 @@ let dmI=0;
 function duman(x,y,z,renk=0xd9d9d9,boy=1,omur=1000){if(kalite<2&&Math.random()<.5)return;const d=DM[dmI++%DM.length];d.s.visible=true;d.s.position.set(x,y,z);d.s.material.color.setHex(renk);d.t0=now();d.om=omur;d.b=boy;
  d.r=Math.random()*6.28;d.vx=(Math.random()-.5)*1;d.vy=.25+Math.random()*.45;d.vz=VD*.9+Math.random()*1.5}
 function dumanGuncelle(t,dt){for(const d of DM){if(!d.s.visible)continue;const a=(t-d.t0)/d.om;if(a>=1){d.s.visible=false;continue}
- d.s.position.x+=d.vx*dt;d.s.position.y+=d.vy*dt;d.s.position.z+=d.vz*dt;const s=(.7+Math.sqrt(a)*2.4)*d.b;d.s.scale.set(s,s,1);d.s.material.rotation=d.r+a*.6;d.s.material.opacity=.5*(1-a)*Math.min(1,a*8)}}
+ d.s.position.x+=d.vx*dt;d.s.position.y+=d.vy*dt;d.s.position.z+=d.vz*dt;const s=(.7+Math.sqrt(a)*2.4)*d.b;d.s.scale.set(s,s,1);d.s.material.rotation=d.r+a*.6;d.s.material.opacity=.62*(1-a)*Math.min(1,a*8)}}
 /* ---- lastik izi ---- */
 const IZN=500,izM=new THREE.MeshBasicMaterial({color:0x111111,transparent:true,opacity:.55,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}),
  IZ=new THREE.InstancedMesh(new THREE.PlaneGeometry(.26,.55).rotateX(-Math.PI/2),izM,IZN);IZ.frustumCulled=false;IZ.count=0;CEV.add(IZ);let izI=0;const IZO=new THREE.Object3D();
@@ -514,7 +516,7 @@ function hediye(u,h){const t=now(),ad=x=>OY.kisaAd(x.ad,10);let et='';u.parl=PAR
 const BAL={};
 OY.basla({muzik:'dugun',olay:e=>{
  if(!e.id)return;const u=kul(e);if(!katil(u))return;u.son=now();const t=now();
- if(e.t==='begeni'){puanEkle(u,(e.adet||1)*.5);begOne(u,t);if(t-(u.begT||0)>1600){u.begT=t;KORNA()}}
+ if(e.t==='begeni'){puanEkle(u,(e.adet||1)*.5);begOne(u,t);if(t-(u.begT||0)>3000){u.begT=t;KORNA()}}
  else if(e.t==='yorum'){puanEkle(u,2);u.msj=String(e.metin||'').slice(0,40);u.msjT=t;if(t-(u.kT||0)>2500){u.kT=t;KORNA(1)}const ym=String(e.metin||'').toLocaleLowerCase('tr');
   if(/korna|d[iı]t|bip/.test(ym)&&t-(u.kT||0)>2500){u.kT=t;KORNA(1)}}
  else if(e.t==='takip'){puanEkle(u,15);OY.akis(`➕ ${u.ad} takip etti · konvoyda!`,'#8cf')}
@@ -589,8 +591,9 @@ function kamGuncelle(t,dt){
   if(gor)PLANG.bos=0;else if(!PLANG.bos)PLANG.bos=t;else if(t-PLANG.bos>400){planBasla(t);PLANG.tip='arka';PLANG.sure=9000;PLANG.bos=0}}
  if(!PLANG||t>PLANG.t0+PLANG.sure)planBasla(t);
  const fov=kamHedef(t);
+ if(kes&&!ilkKam&&KPr.distanceTo(TP)<45){kes=false;window.__yum=1}
  if(kes||ilkKam){KPr.copy(TP);KLr.copy(TL);kfov=fov;kes=false;ilkKam=false}
- else{const f=Math.min(1,dt*(SINE?6:4));KPr.lerp(TP,f);KLr.lerp(TL,f);kfov+=(fov-kfov)*Math.min(1,dt*3)}
+ else{const f=Math.min(1,dt*(window.__yum?3.2:SINE?6:4));if(window.__yum&&KPr.distanceTo(TP)<1.2)window.__yum=0;KPr.lerp(TP,f);KLr.lerp(TL,f);kfov+=(fov-kfov)*Math.min(1,dt*3)}
  if(Math.abs(K.fov-kfov)>.01){K.fov=kfov;K.updateProjectionMatrix()}
  K.position.copy(KPr);LK.copy(KLr);K.lookAt(LK);K.updateMatrixWorld()}
 /* ---- performans: FPS dusukse piksel oranini dusur ---- */
