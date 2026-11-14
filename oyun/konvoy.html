@@ -33,10 +33,10 @@ let kornaT=0;function KORNA(z=0){const t=now();if(t-kornaT<350&&!z)return;kornaT
 let egzT=0;function EGZ(v=.55){const t=now();if(t-egzT<120)return;egzT=t;OY.ses.dosya('ses/egzoz.mp3',v,.9+Math.random()*.3)}
 /* ---- hediyeler: konvoya ozgu ---- */
 const HED_K={gul:['💨','DRIFT','arabaların arasından'],kalp:['💡','SELEKTÖR','en yakına yapışır'],parfum:['↪️','MAKAS','araya gire gire'],
- donut:['🔥','EGZOZ PATLAT','alev alev'],sapka:['⬆️','ARABA YÜKSELT','konvoy coşar'],galaksi:['👰','GELİN ARABASI','en öne geçer']};
+ donut:['🔥','EGZOZ PATLAT','alev alev'],sapka:['⬆️','ARABA YÜKSELT','konvoy coşar'],galaksi:['👰','GELİN / DAMAT OL','adın gelin arabasında']};
 OY.hud({baslik:'DÜĞÜN KONVOYU',alt:'Yorum yaz → konvoya katıl · "korna" "drift" "selektör" "gaz" yaz',renk:'#ff8fc7',
  hediyeler:[['🌹','Gül','💨 Drift at'],['💖','Kalp','💡 Yapış + selektör'],['💐','Parfüm','↪️ Makas at'],
-  ['🍩','Donut','🔥 Egzoz patlat'],['🎩','Şapka','⬆️ Araba yükselt + konvoy coşar'],['🌌','Galaksi','👰 En öne geç, gelin arabası ol']]});
+  ['🍩','Donut','🔥 Egzoz patlat'],['🎩','Şapka','⬆️ Araba yükselt + konvoy coşar'],['🌌','Galaksi','👰 Damat / gelin ol, adın gelin arabasında']]});
 OY.demoYorum=()=>['Korna çalın!','drift at','Selektör yak','Gaz gaz!','makas at','Korna çalın!','Alev patlat','Maşallah 🧿','Hadi hadi!'][Math.random()*9|0];
 /* ---- render: gercek gokyuzu isigi (HDRI), gunes golgesi, ACES ton ---- */
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true,powerPreference:'high-performance'});R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.15;
@@ -307,7 +307,7 @@ function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,
 function katil(u){if(u.o)return true;if(ARAC.length>=MAKS){const e=SIRA.reduce((a,b)=>a.son<b.son?a:b);if(now()-e.son<60000)return false;atil(e)}
  u.dx=(Math.random()-.5)*.4;kuyrugaEkle(u);const zs=slotZ(u.k,u.r);
  u.o=araba(u);u.o.vx=SX(KS[u.k])+u.dx;u.o.g.position.set(u.o.vx,0,zs+30);u.son=now();ARAC.push(u);OY.akis(`🚗 ${u.ad} konvoya katıldı`,'#bff');KORNA();return true}
-function atil(e){S.remove(e.o.g);e.o=null;e.m=null;e.bek=null;ARAC.splice(ARAC.indexOf(e),1);kuyruktanCik(e);if(ET[e.id]){ET[e.id].el.remove();delete ET[e.id]}}
+function atil(e){for(let i=0;i<2;i++)if(GELIN.cift[i]===e){GELIN.cift[i]=null;tabelaYaz()}S.remove(e.o.g);e.o=null;e.m=null;e.bek=null;ARAC.splice(ARAC.indexOf(e),1);kuyruktanCik(e);if(ET[e.id]){ET[e.id].el.remove();delete ET[e.id]}}
 function yukselt(u,k){if(!u.o||k<=u.o.kad)return;const o=u.o;o.kad=k;o.key=null;{let r;do r=RENK[Math.random()*RENK.length|0];while(r===o.renk);o.renk=r}modelKoy(o);{const p=o.g.position;flasYak(p);fisek(p.x,5,p.z)}OY.ses.zafer&&OY.ses.zafer();OY.akis(`🚗 ${u.ad} artık ${KADEME[k].ad.replace(/['’].*$/,'')} ile konvoyda!`,'#ffd84a');KORNA();
  const p=u.o.g.position;for(let i=0;i<14;i++)duman(p.x+(Math.random()-.5)*3,.4,p.z+(Math.random()-.5)*4,0xeeeeee,1.4);sineBasla(u,4500,1,'yukselt')}
 const FLS=new THREE.Sprite(new THREE.SpriteMaterial({map:farTx,color:0xfff4d8,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:0}));FLS.visible=false;S.add(FLS);let flsT=0;
@@ -323,11 +323,17 @@ function gelinKur(){const o=araba(GELIN);GELIN.o=o;o.kad=5;o.renk=BEYAZ;o.beyaz=
  for(const s of[-1,1]){const t=new THREE.Mesh(new THREE.TorusGeometry(.22,.07,8,16),pem);t.position.set(s*.22,1.08,-1.35);t.rotation.set(-1.2,0,s*.6);o.g.add(t)}
  const d=new THREE.Mesh(new THREE.SphereGeometry(.12,10,8),pem);d.position.set(0,1.06,-1.35);o.g.add(d);
  for(let i=0;i<9;i++){const c=new THREE.Mesh(new THREE.SphereGeometry(.09,8,6),i%2?bey:pem);c.position.set(-.5+i*.125,1.02,-1.15);o.g.add(c)}
- // isim pankarti
- const cv=document.createElement('canvas');cv.width=768;cv.height=150;const g=cv.getContext('2d');g.fillStyle='rgba(120,20,40,.92)';g.beginPath();g.roundRect?g.roundRect(6,6,756,138,60):g.rect(6,6,756,138);g.fill();
- g.strokeStyle='#ffd27a';g.lineWidth=7;g.stroke();g.fillStyle='#fff';g.font='900 74px Nunito,Segoe UI,Arial';g.textAlign='center';g.textBaseline='middle';g.fillText(CIFT,384,80);
- const tx=new THREE.CanvasTexture(cv);tx.encoding=THREE.sRGBEncoding;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,depthTest:false}));sp.scale.set(5.2,1.02,1);sp.position.set(0,3.2,0);sp.renderOrder=6;o.g.add(sp);GELIN.pank=sp;
- o.vx=SX(2);o.g.position.set(SX(2),0,-14);o.g.visible=false}
+ // isim tabelasi (galaksi atan damat / gelin olur, adi ve fotografi burada yazar)
+ GELIN.cv=document.createElement('canvas');GELIN.cv.width=900;GELIN.cv.height=170;GELIN.tx=new THREE.CanvasTexture(GELIN.cv);GELIN.tx.encoding=THREE.sRGBEncoding;
+ const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:GELIN.tx,depthTest:false}));sp.scale.set(5.6,1.06,1);sp.position.set(0,3.2,0);sp.renderOrder=6;o.g.add(sp);GELIN.pank=sp;tabelaYaz();
+ o.vx=SX(2);o.g.position.set(SX(2),0,-11);o.g.visible=true}
+GELIN.cift=[null,null];GELIN.ciftT=[0,0];// [damat, gelin]
+function tabelaYaz(){const cv=GELIN.cv;if(!cv)return;const g=cv.getContext('2d');g.clearRect(0,0,900,170);g.fillStyle='rgba(120,20,40,.93)';g.beginPath();g.roundRect?g.roundRect(6,6,888,158,72):g.rect(6,6,888,158);g.fill();g.strokeStyle='#ffd27a';g.lineWidth=7;g.stroke();
+ const[d,gl]=GELIN.cift,dAd=d?OY.kisaAd(d.ad,9):(PRM.get('damat')||'Damat'),gAd=gl?OY.kisaAd(gl.ad,9):(PRM.get('gelin')||'Gelin');
+ const foto=(u,x)=>{if(!u)return;g.save();g.beginPath();g.arc(x+62,85,62,0,7);g.clip();g.drawImage(OY.foto(u,128),x,23,124,124);g.restore();g.beginPath();g.arc(x+62,85,62,0,7);g.strokeStyle='#ffd27a';g.lineWidth=5;g.stroke()};
+ foto(gl,20);foto(d,756);const yazi=gAd+' ❤ '+dAd;let fs=70;g.font=`900 ${fs}px Nunito,Segoe UI,Arial`;while(g.measureText(yazi).width>560&&fs>34){fs-=2;g.font=`900 ${fs}px Nunito,Segoe UI,Arial`}
+ g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(yazi,450,88);GELIN.tx.needsUpdate=true}
+setInterval(()=>{if(GELIN.cift[0]||GELIN.cift[1])tabelaYaz()},2500);
 
 /* ---- konvoy duzeni: gelin arabasinin arkasinda 3 serit kuyruk. Seritteki arabalar sadece ileri-geri kayar (yanal carpisma olmaz).
    Sira degistiren araba dis seride (0 ya da 4) cikip yeni yerine gider, sonra seridine girer. ---- */
@@ -416,7 +422,7 @@ function aracGuncelle(t,dt){
   if(o.tek)for(const w of o.tek)w.rotation.x-=(VD-o.zv)/w.userData.tek*dt;
   {const hy=(m&&m.tip==='drift')?yaw:Math.max(-.32,Math.min(.32,-Math.atan2(o.lv,VD)*1.4));o.yaw=(o.yaw||0)+(hy-(o.yaw||0))*Math.min(1,dt*2);}p.x=o.vx;p.y=0;o.g.rotation.y=o.yaw;
   const fo=flas?1:0,fs=flas?9:.6;for(const sp of o.sp){sp.material.opacity=fo;sp.scale.set(fs,fs,1)}o.farM.opacity=flas?1:farBaz;o.isin.visible=flas;
-  const gel=u===SIRA[0]&&!u.gelin&&!u.tr;if(gel!==o.beyaz){o.beyaz=gel;modelKoy(o)}
+  const gel=false;
   if(gel&&Math.random()<.25)duman(p.x+(Math.random()-.5)*1.6,1.3,p.z+1.5,Math.random()<.5?0xffc2d9:0xffffff,.45,1300)}
  // guvenlik: ust uste binen olursa arkadaki geri itilir
  for(const u of ARAC){if(!u.o)continue;for(const v of ARAC){if(v===u||!v.o||v.gelin)continue;if(u.tr||v.tr)continue;if(Math.abs(xp(u)-xp(v))>(genis(u)+genis(v))/2)continue;
@@ -462,7 +468,8 @@ function hediye(u,h){const t=now(),ad=x=>OY.kisaAd(x.ad,10);let et='';
   case'parfum':{const n=makasAt(u,3+h.adet*2);if(!n){u.gos=now()+5200}aksiyon(u,6500);et=n?`↪️ makas attı, ${n} aracı geçti!`:'↪️ en önde makas şov!';break}
   case'donut':iste(u,'alev',1);if(u.o)patlat(u.o.g.position,Math.min(6,h.adet*2));et='🔥 egzoz patlattı';break;
   case'sapka':{const k0=u.o.kad;if(k0<KADEME.length-1){u.coin=Math.max(u.coin||0,KADEME[k0+1].p);yukselt(u,k0+1)}for(let k=0;k<4;k++)setTimeout(()=>KORNA(1),k*420);SIRA.forEach((x,i)=>setTimeout(()=>{if(x.o)patlat(x.o.g.position,1)},300+i*90));const p=u.o.g.position;for(let k=0;k<3;k++)setTimeout(()=>fisek(p.x+(Math.random()-.5)*10,7,p.z-6),k*400);et='⬆️ arabasını yükseltti, konvoy coştu!';break}
-  case'galaksi':{if(SIRA.indexOf(u)>0){const i=TQ.findIndex(q=>q.u===u);if(i>=0)TQ.splice(i,1);makasAt0(u,SIRA.indexOf(u))}aksiyon(u,6500);const p=GELIN.o.g.position;for(let k=0;k<6;k++)setTimeout(()=>fisek(p.x+(Math.random()-.5)*14,8+Math.random()*5,p.z-4-Math.random()*10),k*350);for(let k=0;k<4;k++)setTimeout(()=>KORNA(1),k*500);et='👰 en öne geçti, gelin arabası oldu!';break}
+  case'galaksi':{if(SIRA.indexOf(u)>0){const i=TQ.findIndex(q=>q.u===u);if(i>=0)TQ.splice(i,1);makasAt0(u,SIRA.indexOf(u))}aksiyon(u,6500);const p=GELIN.o.g.position;for(let k=0;k<6;k++)setTimeout(()=>fisek(p.x+(Math.random()-.5)*14,8+Math.random()*5,p.z-4-Math.random()*10),k*350);for(let k=0;k<4;k++)setTimeout(()=>KORNA(1),k*500);const gi=!GELIN.cift[0]?0:!GELIN.cift[1]?1:(GELIN.ciftT[0]<=GELIN.ciftT[1]?0:1);if(GELIN.cift[0]===u||GELIN.cift[1]===u){}else{GELIN.cift[gi]=u;GELIN.ciftT[gi]=t}tabelaYaz();
+   const rol=GELIN.cift[0]===u?'DAMAT':'GELİN';et=`${rol==='DAMAT'?'🤵':'👰'} ${rol} oldu, adı gelin arabasında!`;OY.akis(`🌌 ${u.ad} ${rol} OLDU! Gelin arabasının arkasına geçti`,'#ffd84a');break}
  }
  return et}
 /* ---- olaylar ---- */
@@ -486,7 +493,7 @@ function etiket(u){let e=ET[u.id];if(!e){const el=document.createElement('div');
  const f=OY.foto(u,64);if(e.fs!==(f.surum||0)){e.fs=f.surum||0;e.img.src=f.toDataURL()}return e}
 function sinifYap(e,c){if(e.cls!==c){e.el.className=c;e.cls=c}}
 function gizBalon(u){const b=BAL[u.id];if(b)b.style.display='none'}
-function durumIkon(u,t){return(t<u.gelinBit?' 👰':'')+(u.m?{yapis:' 💡',drift:' 💨',makas:' ↪️',alev:' 🔥'}[u.m.tip]:'')}
+function durumIkon(u,t){return(GELIN.cift[0]===u?' 🤵':GELIN.cift[1]===u?' 👰':'')+(u.m?{yapis:' 💡',drift:' 💨',makas:' ↪️',alev:' 🔥'}[u.m.tip]:'')}
 const V=new THREE.Vector3();
 function ekranda(x,y,z){V.set(x,y,z).project(K);return{x:(V.x*.5+.5)*W(),y:(-V.y*.5+.5)*H(),on:V.z<1}}
 function cakis(a,L){for(const b of L)if(a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y)return true;return false}
@@ -564,7 +571,7 @@ let dtY=1/60;const TANI=new URLSearchParams(location.search).get('tani')?(()=>{c
  const sr=sirali();etiketler(sr,t);
  if(t-sonBilgi>250){sonBilgi=t;if(TANI)TANI.textContent=`FPS ${__fps}  kalite ${kalite}  PR ${PR}
 ${innerWidth}x${innerHeight}
-${TANI.dataset.gpu}`;OY.bilgi(`👰 Gelin arabası: ${SIRA[0]?OY.kisaAd(SIRA[0].ad,10):'—'}`,`🚗 ${SIRA.length}`);OY.ilk3(sr.slice(0,3).map(u=>({...u,puan:u.coin||0})))}
+${TANI.dataset.gpu}`;OY.bilgi(`🚘 Gelin arabasının arkasında: ${SIRA[0]?OY.kisaAd(SIRA[0].ad,10):'—'}`,`🚗 ${SIRA.length}`);OY.ilk3(sr.slice(0,3).map(u=>({...u,puan:u.coin||0})))}
 }
 S.add(gun.target);
 function sirali(){return SIRA.filter(u=>u.o)}
