@@ -557,7 +557,7 @@ const KPr=new THREE.Vector3(0,30,30),KLr=new THREE.Vector3(),TP=new THREE.Vector
 function sinir(){let a=Infinity,b=-Infinity;for(const u of ARAC){if(!u.o)continue;const z=u.o.g.position.z;if(z<a)a=z;if(z>b)b=z}return isFinite(a)?[a,b]:[0,10]}
 function aksiyon(u,sure,u2){if(!u||!u.o||u.gelin)return;const t=now();if(SINE&&t<SINE.bit)return;SINE={u,u2,t0:t,bit:t+sure,a:xp(u)<0?-1:1};kes=true}
 function sineBasla(u,sure){aksiyon(u,sure||4500)}
-function planBasla(t){const tip=ORTAM[oi++%ORTAM.length],[z0,z1]=sinir(),L=z1-z0,gz=GELIN.o.g.position.z,y=Math.random()<.5?1:-1;
+function planBasla(t){let tip=ORTAM[oi++%ORTAM.length];if(tip==='sabit'&&ARAC.length<6)tip=ORTAM[oi++%ORTAM.length];const [z0,z1]=sinir(),L=z1-z0,gz=GELIN.o.g.position.z,y=Math.random()<.5?1:-1;
  const sure=tip==='sabit'?Math.max(6000,Math.min(13000,(z1-gz+20)/(VD*.45)*1000)):tip==='ustten'?Math.max(7000,Math.min(14000,L/7*1000)):9000;
  PLANG={tip,t0:t,sure,y,gz,z0,z1};kes=true}
 function kamHedef(t){let fov=50;
@@ -571,13 +571,16 @@ function kamHedef(t){let fov=50;
    case'sabit':{const cz=gz-16+(t-P.t0)/1000*VD*.45;TP.set(y*(YARI+.9),2.6,cz);TL.set(y*.3,.8,cz+20);fov=48;break}
    case'sinematik':{const g=(-.35+s*.75)*Math.PI,r=17-s*4,cz=gz+9;TP.set(Math.sin(g)*r*y,2.5+s*6.5,cz-Math.cos(g)*r);TL.set(0,.8,cz);fov=48;break}
    case'ustten':{const cz=gz-4+(L+8)*s;TP.set(Math.sin(t/4000)*2,11,cz-11);TL.set(0,0,cz+12);fov=52;break}
-   default:{const zm=Math.min(z1,gz+45)*.5+gz*.5;TP.set(y*2+Math.sin(t/5000)*2,7.5,zm+17);TL.set(0,0,zm-14);fov=52}}}
+   default:{const zs=Math.min(z1,gz+70);TP.set(y*2+Math.sin(t/5000)*2,7.5,zs+14);TL.set(0,0,Math.max(gz,zs-26));fov=52}}}
  TP.x=Math.max(-(YARI-.3),Math.min(YARI-.3,TP.x));
  for(const v of ARAC){if(!v.o)continue;const q=v.o.g.position;if(Math.abs(TP.x-q.x)<1.6&&Math.abs(TP.z-q.z)<boyU(v)/2+1&&TP.y<2.4)TP.y=2.4}
  return fov}
 function kamGuncelle(t,dt){
  if(SINE&&SINE.u.o&&SINE.u.tr&&t>SINE.bit-400&&t<SINE.t0+12000)SINE.bit=t+600;
  if(SINE&&(t>SINE.bit||!SINE.u.o)){SINE=null;kes=true}
+ // bos kadraj bekcisi: 0.4 sn hic araba gorunmezse arkadan genel plana gec
+ if(PLANG&&!SINE&&ARAC.length){let gor=0;for(const u of ARAC){if(!u.o)continue;V.copy(u.o.g.position).setY(.8).project(K);if(V.z<1&&Math.abs(V.x)<.95&&Math.abs(V.y)<.95){gor=1;break}}
+  if(gor)PLANG.bos=0;else if(!PLANG.bos)PLANG.bos=t;else if(t-PLANG.bos>400){planBasla(t);PLANG.tip='arka';PLANG.sure=9000;PLANG.bos=0}}
  if(!PLANG||t>PLANG.t0+PLANG.sure)planBasla(t);
  const fov=kamHedef(t);
  if(kes||ilkKam){KPr.copy(TP);KLr.copy(TL);kfov=fov;kes=false;ilkKam=false}
