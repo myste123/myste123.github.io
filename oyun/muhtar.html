@@ -47,11 +47,11 @@
 </style></head><body>
 <div id="nasil"></div>
 <div id="sandik"></div><div id="oylar"></div>
-<script src="core.js?v=7"></script><script src="hud.js?v=12"></script>
+<script src="core.js?v=8"></script><script src="hud.js?v=12"></script>
 <script>
 const HED=[['🌹','Gül','📄 Broşür +5'],['💖','Kalp','🤝 Koalisyon +10'],['💐','Parfüm','📰 Skandal: lider -%10'],
  ['🍩','Donut','📣 Miting: 20 sn 2x'],['🎩','Şapka','🚌 Otobüs: %8 topla'],['🌌','Galaksi','⚖ İtiraz: lider -%25']];
-OY.hud({baslik:'MUHTARLIK SEÇİMİ',alt:'"aday" yaz kürsüye çık · numara yaz oy ver · hediye = kampanya',renk:'#ffd84a',hediyeler:HED});
+OY.yuzKonum={top:'67.5vh',right:'calc(2.5*var(--vw,1vw))'};OY.hud({baslik:'MUHTARLIK SEÇİMİ',alt:'"aday" yaz kürsüye çık · numara yaz oy ver · hediye = kampanya',renk:'#ffd84a',hediyeler:HED});
 const RENK=['#ff5d73','#4da3ff','#3ddc97','#ffb02e','#b16cff','#ff7ad9'],now=()=>performance.now(),$=s=>document.getElementById(s);
 const U={},ADAY=[null,null,null,null,null,null];let bitis=0,KAL={muhtar:{}};const TUR=180;let turBas=now();
 const NASIL=`<div><b>💬 aday</b>yaz, kürsüye çık</div><div><b>🔢 1 – 6</b>yaz, adaya +3 oy</div><div><b>❤️ beğeni</b>seçtiğine oy olur</div>`;

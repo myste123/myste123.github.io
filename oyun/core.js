@@ -95,7 +95,7 @@
       if (gr && wsHata >= 6) { const q = new URLSearchParams(location.search); q.delete('geri'); location.href = gr + '?' + q } else setTimeout(bagla, 2000) };
   }
   function sesCal(yol) { const a = new Audio((yol[0]==='/'||yol.startsWith('http')) ? yol : '/' + yol); a.volume = .95; if (MZ) { MZ.gain.value = muzikSes * .15 } if (OY.muzikEl) OY.muzikEl.volume = muzikSes * .2;
-    const bit = () => { if (MZ) MZ.gain.value = muzikSes * .5; if (OY.muzikEl) OY.muzikEl.volume = muzikSes * (OY.muzikListe ? .7 : 1); OY.gonder({ t: 'bitti' }) }; a.onended = bit; a.onerror = bit; a.play().catch(bit) }
+    const bit = () => { if (MZ) MZ.gain.value = muzikSes * .5; if (OY.muzikEl) OY.muzikEl.volume = muzikSes * (OY.muzikListe ? .7 : 1); OY.gonder({ t: 'bitti' }) }; a.onended = bit; a.onerror = bit; a.play().catch(bit); if (OY.yuzKonus) OY.yuzKonus(a) }
 
   // ---- demo / simulasyon ----
   const ADLAR = ['Ayşe', 'Mehmet', 'Zeynep', 'Emre', 'Elif', 'Burak', 'Selin', 'Can', 'Deniz', 'Kerem', 'Ece', 'Mert', 'Derya', 'Oğuz', 'Buse', 'Kaan', 'İrem', 'Yusuf', 'Gizem', 'Arda', 'Nisa', 'Furkan', 'Melis', 'Onur'];
@@ -111,6 +111,56 @@
     OY.ayar = cfg; if (cfg.muzik) OY.muzikStil = cfg.muzik; if (cfg.olay) OY.on(cfg.olay);
     if (OY.kod && !OY.sim) bagla(); else { kalici(); if (OY.demo || (!OY.sim && !OY.kod)) demoDongu() }
   };
+  // ---- yapay zeka sunucu yuz kamerasi (her oyunda ayni; kareler onceden uretildi, agiz sesin siddetine gore acilir) ----
+  // atlas: 6x6 kare; sira = ifade(0 normal,1 gulumse)*18 + goz(0 acik,1 yari,2 kapali)*6 + agiz(0..5)
+  (() => {
+    if (Q.get('yuz') === '0') return;
+    const img = new Image(); img.src = 'doku/sunucu_atlas.jpg';
+    const st2 = document.createElement('style');
+    st2.textContent = '#oyYuz{position:fixed;z-index:18;width:var(--yuzB,15vh);height:var(--yuzB,15vh);border-radius:50%;pointer-events:none;' +
+      'padding:.45vh;background:conic-gradient(from 0deg,#ff3ad8,#7c5cff,#22e5ff,#ff3ad8);box-shadow:0 0 2.2vh rgba(255,58,216,.55),0 .8vh 2vh rgba(0,0,0,.45);opacity:0;transition:opacity .6s}' +
+      '#oyYuz canvas{position:static!important;inset:auto!important;left:auto!important;top:auto!important;width:100%!important;height:100%!important;max-width:none!important;display:block!important;background:#2a1a3a;z-index:auto!important;filter:none!important}' +
+      '#oyYuz i{position:absolute;right:4%;bottom:4%;font:800 1.15vh/1 Nunito,Segoe UI,Arial;font-style:normal;color:#fff;background:rgba(0,0,0,.55);padding:.25vh .5vh;border-radius:.6vh;letter-spacing:.05vh}' +
+      '#oyYuz b{position:absolute;left:50%;bottom:-.9vh;transform:translateX(-50%);width:1.2vh;height:1.2vh;border-radius:50%;background:#ff2d55;box-shadow:0 0 .8vh #ff2d55;opacity:0;transition:opacity .2s}';
+    document.head.appendChild(st2);
+    const S = 320; let cv, g, kutu, isaret;
+    let zarf = null, el = null, agiz = 0, gulT = 0, gozT = 0, gozFaz = 0, sonrakiGoz = 0, konusma = 0;
+    OY.yuzKonus = a => {
+      el = a; zarf = null; const yol = a.src;
+      fetch(yol).then(r => r.arrayBuffer()).then(b => new OfflineAudioContext(1, 1, 22050).decodeAudioData(b)).then(buf => {
+        const d = buf.getChannelData(0), n = Math.floor(buf.sampleRate / 50), Z = [];
+        for (let i = 0; i + n <= d.length; i += n) { let t = 0; for (let j = i; j < i + n; j++) t += d[j] * d[j]; Z.push(Math.sqrt(t / n)) }
+        const sr = Z.slice().sort((x, y) => x - y), ust = sr[Math.floor(sr.length * .95)] || 1; zarf = Z.map(v => Math.min(1, v / ust));
+      }).catch(() => { zarf = null });
+    };
+    OY.on(e => { if (e.t === 'hediye') gulT = performance.now() + 2600; else if ((e.t === 'takip' || e.t === 'paylasim') && Math.random() < .6) gulT = performance.now() + 1500 });
+    function kur() {
+      kutu = document.createElement('div'); kutu.id = 'oyYuz'; const k = OY.yuzKonum || { top: '26vh', right: 'calc(2.5*var(--vw,1vw))' };
+      for (const x in k) kutu.style[x] = k[x];
+      const ic = document.createElement('div'); ic.style.cssText = 'width:100%;height:100%;border-radius:50%;overflow:hidden'; kutu.appendChild(ic);
+      cv = document.createElement('canvas'); cv.width = cv.height = S; g = cv.getContext('2d'); ic.appendChild(cv);
+      const ai = document.createElement('i'); ai.textContent = 'AI'; kutu.appendChild(ai);
+      isaret = document.createElement('b'); kutu.appendChild(isaret); document.body.appendChild(kutu);
+      sonrakiGoz = performance.now() + 2000; requestAnimationFrame(ciz);
+    }
+    function ciz(t) {
+      requestAnimationFrame(ciz); if (!img.complete || !img.naturalWidth) return; if (kutu.style.opacity !== '1') kutu.style.opacity = '1';
+      // agiz: konusurken ses zarfi, susarken kapali
+      let hedef = 0;
+      if (el && !el.paused && !el.ended) { if (zarf) { const i = Math.floor(el.currentTime * 50); const v = (zarf[i] || 0) * .65 + (zarf[i + 1] || 0) * .35; hedef = v < .12 ? 0 : Math.min(5, 1 + (v - .12) / .88 * 4.6) }
+        else { const h = el.currentTime * 5.3; hedef = Math.max(0, Math.sin(h * Math.PI * 2) * 2.6 + Math.sin(h * 2.7) * 1.4 + 1.2) } konusma = t }
+      agiz += (hedef - agiz) * (hedef > agiz ? .55 : .35);
+      // goz kirpma: acik -> yari -> kapali -> yari -> acik
+      if (!gozFaz && t > sonrakiGoz) { gozFaz = 1; gozT = t }
+      let goz = 0; if (gozFaz) { const d = t - gozT; goz = d < 45 ? 1 : d < 120 ? 2 : d < 170 ? 1 : 0; if (d >= 170) { gozFaz = 0; sonrakiGoz = t + 2300 + Math.random() * 3800 } }
+      const gul = (t < gulT || (t - konusma < 400 && Math.sin(t / 1700) > .55)) ? 1 : 0;
+      const idx = gul * 18 + goz * 6 + Math.round(agiz); window.__yuzIdx = idx;
+      g.drawImage(img, (idx % 6) * S, Math.floor(idx / 6) * S, S, S, 0, 0, S, S);
+      const kon = t - konusma < 300 ? 1 : 0; isaret.style.opacity = kon ? '1' : '0';
+      cv.style.transform = `translate(${Math.sin(t / 2900) * 1.2}%,${Math.cos(t / 3300) * .9 + (kon ? Math.sin(t / 160) * .5 : 0)}%) rotate(${Math.sin(t / 2100) * 1.3}deg) scale(1.09)`;
+    }
+    if (document.readyState === 'loading') addEventListener('DOMContentLoaded', kur); else kur();
+  })();
   // kilit / durum katmani (DOM, her oyun icin ayni)
   const st = document.createElement('style'); st.textContent = '#oyKilit{position:fixed;inset:0;display:none;place-items:center;background:rgba(5,8,20,.92);color:#fff;font:700 54px Segoe UI,Arial;text-align:center;z-index:99}#oyKilit small{display:block;font-size:30px;font-weight:400;opacity:.8;margin-top:20px}#oyBekle{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);display:none;z-index:98;pointer-events:none;width:min(78vw,520px);padding:22px 20px;border-radius:22px;background:rgba(8,10,24,.86);border:2px solid rgba(255,64,110,.85);box-shadow:0 10px 40px rgba(0,0,0,.5);color:#fff;text-align:center;font:800 clamp(18px,3.6vh,30px) Nunito,Segoe UI,Arial;line-height:1.25}#oyBekle i{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:#ff2d55;margin-right:.4em;vertical-align:.08em;animation:oyNab 1.1s infinite}#oyBekle small{display:block;margin-top:10px;font-size:.62em;font-weight:600;opacity:.82}@keyframes oyNab{50%{opacity:.25}}';
   document.head.appendChild(st);
