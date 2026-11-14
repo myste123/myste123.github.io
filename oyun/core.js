@@ -88,10 +88,10 @@
   let wsHata = 0;
   function bagla() {
     const h = location.host; OY.ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${h}/ws${location.search}`);
-    OY.ws.onmessage = m => { try { const e = JSON.parse(m.data); if (e.t === 'kilit') OY.kilit = e.metin || 'Süre doldu'; if (e.t === 'durum') OY.durum = e.metin;
+    OY.ws.onmessage = m => { try { const e = JSON.parse(m.data); if (e.t === 'kilit') OY.kilit = e.metin || 'Süre doldu'; if (e.t === 'durum') { OY.durum = e.metin; if ('canli' in e) OY.canli = e.canli } if (e.t === 'yorum' || e.t === 'begeni' || e.t === 'hediye') OY.canli = true;
       if (e.t === 'izleyici') OY.izleyici = e.sayi; if (e.t === 'konus' && e.ses) sesCal(e.ses); dagit(e) } catch (x) { console.log(x) } };
     OY.ws.onopen = () => { wsHata = 0 };
-    OY.ws.onclose = () => { if (OY.kilit) return; wsHata++; const gr = Q.get('geri');
+    OY.ws.onclose = () => { if (OY.kilit) return; OY.canli = false; wsHata++; const gr = Q.get('geri');
       if (gr && wsHata >= 6) { const q = new URLSearchParams(location.search); q.delete('geri'); location.href = gr + '?' + q } else setTimeout(bagla, 2000) };
   }
   function sesCal(yol) { const a = new Audio((yol[0]==='/'||yol.startsWith('http')) ? yol : '/' + yol); a.volume = .95; if (MZ) { MZ.gain.value = muzikSes * .15 } if (OY.muzikEl) OY.muzikEl.volume = muzikSes * .2;
@@ -112,8 +112,9 @@
     if (OY.kod && !OY.sim) bagla(); else { kalici(); if (OY.demo || (!OY.sim && !OY.kod)) demoDongu() }
   };
   // kilit / durum katmani (DOM, her oyun icin ayni)
-  const st = document.createElement('style'); st.textContent = '#oyKilit{position:fixed;inset:0;display:none;place-items:center;background:rgba(5,8,20,.92);color:#fff;font:700 54px Segoe UI,Arial;text-align:center;z-index:99}#oyKilit small{display:block;font-size:30px;font-weight:400;opacity:.8;margin-top:20px}';
+  const st = document.createElement('style'); st.textContent = '#oyKilit{position:fixed;inset:0;display:none;place-items:center;background:rgba(5,8,20,.92);color:#fff;font:700 54px Segoe UI,Arial;text-align:center;z-index:99}#oyKilit small{display:block;font-size:30px;font-weight:400;opacity:.8;margin-top:20px}#oyBekle{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);display:none;z-index:98;pointer-events:none;width:min(78vw,520px);padding:22px 20px;border-radius:22px;background:rgba(8,10,24,.86);border:2px solid rgba(255,64,110,.85);box-shadow:0 10px 40px rgba(0,0,0,.5);color:#fff;text-align:center;font:800 clamp(18px,3.6vh,30px) Nunito,Segoe UI,Arial;line-height:1.25}#oyBekle i{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:#ff2d55;margin-right:.4em;vertical-align:.08em;animation:oyNab 1.1s infinite}#oyBekle small{display:block;margin-top:10px;font-size:.62em;font-weight:600;opacity:.82}@keyframes oyNab{50%{opacity:.25}}';
   document.head.appendChild(st);
   addEventListener('DOMContentLoaded', () => { const k = document.createElement('div'); k.id = 'oyKilit'; document.body.appendChild(k);
-    setInterval(() => { if (OY.kilit) { k.style.display = 'grid'; k.innerHTML = `<div>🔒 ${OY.kilit}<small>Myste Medya · myste123.github.io</small></div>` } }, 1000) });
+    const b = document.createElement('div'); b.id = 'oyBekle'; b.innerHTML = '<i></i>Canlı yayını başlatın<small>Oyun yayınınıza kendiliğinden bağlanacak</small>'; document.body.appendChild(b);
+    setInterval(() => { b.style.display = (OY.kod && !OY.sim && !OY.kilit && !OY.canli) ? 'block' : 'none'; if (OY.kilit) { k.style.display = 'grid'; k.innerHTML = `<div>🔒 ${OY.kilit}<small>Myste Medya · myste123.github.io</small></div>` } }, 1000) });
 })();
