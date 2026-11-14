@@ -1,0 +1,8 @@
+İnsan modelleri (Sketchfab, Renderpeople) — lisans: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+- "Carla Rigged 001 - Rigged 3D Business Women" by Renderpeople (@renderpeople)
+- "Claudia Rigged 002 - 3D Rigged Business Woman" by Renderpeople (@renderpeople)
+- "Eric Rigged 001 - Rigged 3D Business Man" by Renderpeople (@renderpeople)
+- "Nathan Animated 003 - Walking 3D Man" by Renderpeople (@renderpeople)
+- "Sophia Animated 003 - Animated 3D Woman" by Renderpeople (@renderpeople)
+- "Manuel Animated 001 - 3D Dancing Man" by Renderpeople (@renderpeople)
+Değişiklik: dans animasyonu kodla üretildi (IK), modeller ölçeklendi.
