@@ -313,7 +313,7 @@ function turSifirla(){OY.kazanan(null);for(const u of Object.values(U)){u.puan=0
 let SINE=null,PLAN=null,pi=0,kes=true;const ORTAM=['genel','yuz','halaybasi','cift','yuz2'];
 const KP=new V3(0,8,20),KL=new V3(),TP=new V3(),TL=new V3();let kfov=45;
 function aksiyon(u,sure){SINE={u,t0:now(),bit:now()+sure,yan:Math.random()<.5?1:-1};kes=true}
-function planBasla(t){const tip=ORTAM[pi++%ORTAM.length];PLAN={tip,t0:t,sure:{genel:12000,yuz:11000,halaybasi:9000,cift:8000,yuz2:11000}[tip],y:Math.random()<.5?1:-1,a0:Math.random()*6.28};kes=true}
+function planBasla(t){const dolu=HALKA.filter(u=>u.o&&!u.o.yuk);let tip=ORTAM[pi++%ORTAM.length];if(!dolu.length&&tip!=='genel'&&tip!=='cift')tip='genel';const hedef=dolu.length?dolu[Math.random()*dolu.length|0]:null;PLAN={tip,t0:t,sure:{genel:12000,yuz:11000,halaybasi:9000,cift:8000,yuz2:11000}[tip],y:Math.random()<.5?1:-1,a0:Math.random()*6.28,hedef};kes=true}
 function kamHedef(t){let fov=45;
  if(SINE&&SINE.u.o&&!SINE.u.o.yuk){const p=SINE.u.o.g.position,f=SINE.u.o.yon||_f.set(0,0,-1),s=(t-SINE.t0)/(SINE.bit-SINE.t0);
   // halkanin icinden, yukaridan hafif egik: hediye atanin yuzu + iki yanindakiler kadrajda
@@ -321,8 +321,8 @@ function kamHedef(t){let fov=45;
  const P=PLAN,s=Math.min(1,(t-P.t0)/P.sure),y=P.y;
  switch(P.tip){
   case'genel':{const a=P.a0+s*.35*y,r=RAD+9;TP.set(Math.sin(a)*r,6.5,Math.cos(a)*r);TL.set(0,.6,0);fov=46;break}
-  case'yuz':case'yuz2':{// merkezin ustunden halkanin bir yayina bak: yuzler + isimler net
-   const a=P.a0+s*.45*y,rc=Math.max(2.6,RAD-3.2);TP.set(Math.sin(a)*rc,2.9,Math.cos(a)*rc);TL.set(Math.sin(a)*(RAD+1),1.0,Math.cos(a)*(RAD+1));fov=52;break}
+  case'yuz':case'yuz2':{// halkadaki gercek bir oyuncuya ve yanindakilere bak (bos meydana bakmaz)
+   const H0=P.hedef&&P.hedef.o&&!P.hedef.o.yuk?P.hedef:null;if(!H0){P.t0=-1e9;break}const hp=H0.o.g.position;const a=Math.atan2(hp.x,hp.z)+(s-.5)*.25*y,rc=Math.max(2.6,RAD-3.2);TP.set(Math.sin(a)*rc,2.9,Math.cos(a)*rc);TL.set(Math.sin(a)*(RAD+1),1.0,Math.cos(a)*(RAD+1));fov=52;break}
   case'halaybasi':{const L=lider&&lider.o&&!lider.o.yuk?lider:sira.find(x=>x.o&&!x.o.yuk);if(!L){P.t0=-1e9;break}const p=L.o.g.position,f=L.o.yon||_f.set(0,0,-1),r=_r.set(-f.z,0,f.x);
    TP.copy(p).addScaledVector(f,3.6).addScaledVector(r,1.4);TP.y=2.4;TL.copy(p).addScaledVector(r,-1.4).setY(1.15);fov=46;break}
   default:{const a=P.a0+s*.5*y;TP.set(Math.sin(a)*4.3,2.7,Math.cos(a)*4.3);TL.set(0,1.0,0);fov=42}}
