@@ -35,7 +35,8 @@
   .h-hed b{display:flex;align-items:center;justify-content:center;gap:.4vh;font-size:1.5vh;color:var(--r)}
   .hd-im{width:2.6vh;height:2.6vh;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 .2vh .3vh rgba(0,0,0,.5))}
   .ik .hd-im{width:5vh;height:5vh}
-  .h-rkz{position:fixed;right:calc(3*var(--vw));bottom:15.2vh;z-index:19;display:flex;align-items:center;gap:.8vh;background:linear-gradient(135deg,rgba(124,92,255,.85),rgba(255,77,141,.85));border-radius:1.6vh;padding:.7vh 1.2vh;pointer-events:none;animation:rkz 4s ease-in-out infinite;box-shadow:0 .6vh 2vh rgba(0,0,0,.35)}.h-rkz b{font-size:2.4vh}.h-rkz span{font:800 1.25vh/1.25 Nunito;color:#fff}.h-rkz i{font-style:normal;font-weight:900;font-size:1.4vh}@keyframes rkz{0%,100%{transform:translateY(0)}50%{transform:translateY(-.8vh)}}
+  .h-rkz{position:fixed;right:calc(3*var(--vw));bottom:15.2vh;z-index:19;display:flex;align-items:center;gap:.8vh;background:linear-gradient(135deg,rgba(124,92,255,.85),rgba(255,77,141,.85));border-radius:1.6vh;padding:.7vh 1.2vh;pointer-events:none;animation:rkz 4s ease-in-out infinite;box-shadow:0 .6vh 2vh rgba(0,0,0,.35)}.h-rkz b{font-size:2.4vh}
+.h-imza{position:fixed;right:calc(3*var(--vw));bottom:15.2vh;z-index:19;pointer-events:none;font:800 1.35vh Nunito,Segoe UI,Arial;color:rgba(255,255,255,.72);text-shadow:0 .2vh .5vh rgba(0,0,0,.6);letter-spacing:.05vh}.h-rkz span{font:800 1.25vh/1.25 Nunito;color:#fff}.h-rkz i{font-style:normal;font-weight:900;font-size:1.4vh}@keyframes rkz{0%,100%{transform:translateY(0)}50%{transform:translateY(-.8vh)}}
   .h-rek{text-align:center;font:600 1.15vh Segoe UI,Arial;color:rgba(255,255,255,.55);margin-top:.7vh}
   .h-kaz{position:fixed;inset:0;display:none;place-items:center;background:radial-gradient(rgba(0,0,0,.25),rgba(0,0,0,.7));z-index:30;text-align:center;color:#fff}
   .h-kaz div{font:900 4vh/1.2 Segoe UI,Arial;color:var(--r);text-shadow:0 0 3vh rgba(0,0,0,.8)}
@@ -53,7 +54,7 @@
      <div class="h-alt"><div class="h-akis" id="hAkis"></div><div class="h-hed">${(cfg.hediyeler || []).map(h => `<div><b>${OY.hedImg(h[0])} ${h[1]}</b>${h[2]}</div>`).join('')}</div>
      </div>
      <div class="h-vit" id="hVit"></div><div class="h-kaz" id="hKaz"><div id="hKazI"></div></div>`;
-    if(!OY.kod)d.insertAdjacentHTML('beforeend','<div class="h-rkz"><b>🎮</b><span>Bu oyunu yayınına kirala<br><i>TT @bilesikyatirim</i></span></div>');document.body.appendChild(d); AK = d.querySelector('#hAkis'); IL = d.querySelector('#hIlk'); SOL = d.querySelector('#hSol'); SAG = d.querySelector('#hSag'); KZ = d.querySelector('#hKaz');
+    d.insertAdjacentHTML('beforeend',OY.kod?'<div class="h-imza">🎮 Myste Medya</div>':'<div class="h-rkz"><b>🎮</b><span>Bu oyunu yayınına kirala<br><i>TT @bilesikyatirim</i></span></div>');document.body.appendChild(d); AK = d.querySelector('#hAkis'); IL = d.querySelector('#hIlk'); SOL = d.querySelector('#hSol'); SAG = d.querySelector('#hSag'); KZ = d.querySelector('#hKaz');
   };
   OY.akis = (t, renk = '#fff') => { if (!AK) return; const d = document.createElement('div'); d.style.color = renk; d.textContent = t; AK.prepend(d); while (AK.children.length > 3) AK.lastChild.remove() };
   OY.bilgi = (sol, sag) => { if (SOL && SOL.textContent !== sol) SOL.textContent = sol; if (SAG && SAG.textContent !== sag) SAG.textContent = sag };
