@@ -142,7 +142,7 @@
       for (const x in k) kutu.style.setProperty(x.replace(/[A-Z]/g, c => '-' + c.toLowerCase()), k[x]);
       const ic = document.createElement('div'); ic.className = 'ic'; kutu.appendChild(ic);
       cv = document.createElement('canvas'); cv.width = TW; cv.height = TH; g = cv.getContext('2d'); ic.appendChild(cv);
-      v = document.createElement('video'); v.src = 'doku/sunucu_yuz6.mp4?v=4'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto'; v.setAttribute('muted', '');
+      v = document.createElement('video'); v.src = 'doku/sunucu_yuz6.mp4?v=5'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto'; v.setAttribute('muted', '');
       v.style.cssText = 'position:fixed;left:0;top:0;width:2px;height:2px;opacity:.01;pointer-events:none'; document.body.appendChild(v); v.play().catch(() => { });
       const ai = document.createElement('i'); ai.textContent = 'AI'; ic.appendChild(ai);
       const cn = document.createElement('b'); cn.textContent = '● CANLI'; ic.appendChild(cn); document.body.appendChild(kutu);
