@@ -24,13 +24,16 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
-<script src="core.js?v=8"></script><script src="uc.js?v=3"></script><script src="hud.js?v=12"></script>
+<script src="core.js?v=9"></script><script src="uc.js?v=3"></script><script src="hud.js?v=12"></script>
 <script>
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
 /* ---- ses: gercek davul-zurna + korna + egzoz patlamasi (Pixabay lisansi) ---- */
 OY.muzikListe=['ses/konvoy_m2.mp3','ses/k_zurnafire.mp3','ses/k_turkey433.mp3','ses/k_upbeat2.mp3','ses/k_nadu.mp3','ses/k_istanbul1.mp3'];
 function begOne(u,t){const i=SIRA.indexOf(u);if(i<=0||u.tr||t-(u.oneT||0)<6000)return;const o=SIRA[i-1];if((u.puan||0)>(o.puan||0)+6){u.oneT=t;if(makasAt(u,1)){OY.akis(`❤ ${u.ad} beğenilerle ${OY.kisaAd(o.ad,10)}'i geçti!`,'#ff8fc7')}}}
-let kornaT=0;function KORNA(z=0){const t=now();if(t-kornaT<350&&!z)return;kornaT=t;OY.ses.dosya('ses/korna.mp3',.5,.88+Math.random()*.25)}
+let kornaT=0;function KORNA(z=0,u=null){const t=now();if(t-kornaT<(z?1400:4500))return;kornaT=t;const h=u?(u.kornaH||(u.kornaH=.8+Math.random()*.42)):.84+Math.random()*.34,v=.28+Math.random()*.08,r=Math.random();
+ if(r<.45)OY.ses.dosya('ses/korna.mp3',v,h,.28+Math.random()*.35);else if(r<.85){OY.ses.dosya('ses/korna.mp3',v,h,.14);setTimeout(()=>OY.ses.dosya('ses/korna.mp3',v,h,.3),230)}
+ else{OY.ses.dosya('ses/korna.mp3',v,h,.12);setTimeout(()=>OY.ses.dosya('ses/korna.mp3',v,h,.12),190);setTimeout(()=>OY.ses.dosya('ses/korna.mp3',v,h,.4),380)}}
+const LASTIK=OY.ses.dongu('ses/lastik.mp3');let LSK=0,LSK0=0;
 let egzT=0;function EGZ(v=.55){const t=now();if(t-egzT<120)return;egzT=t;OY.ses.dosya('ses/egzoz.mp3',v,.9+Math.random()*.3)}
 /* ---- hediyeler: konvoya ozgu ---- */
 const HED_K={gul:['💨','DRIFT','arabaların arasından'],kalp:['💡','SELEKTÖR','en yakına yapışır'],parfum:['↪️','MAKAS','araya gire gire'],
@@ -365,7 +368,7 @@ function araba(u){const g=new THREE.Group(),o={g,model:null,kad:0,renk:RENK[Math
 function kul(e){let u=U[e.id];if(!u)u=U[e.id]={id:e.id,ad:e.ad||'?',foto:e.foto,o:null,son:0,msj:'',msjT:0,puan:0,m:null,bek:null,gelinBit:0,ucus:0,ln:2,lnT:0,hz:0,hzT:0,faz:Math.random()*6.28,coin:0,jz:(Math.random()-.5)*5,bas:0};if(e.foto&&!u.foto)u.foto=e.foto;return u}
 function katil(u){if(u.o)return true;if(ARAC.length>=MAKS){const e=SIRA.reduce((a,b)=>a.son<b.son?a:b);if(now()-e.son<60000)return false;atil(e)}
  u.dx=(Math.random()-.5)*.4;kuyrugaEkle(u);const zs=slotZ(u.k,u.r);
- u.o=araba(u);u.o.vx=SX(KS[u.k])+u.dx;u.o.g.position.set(u.o.vx,0,zs+30);u.son=now();ARAC.push(u);OY.akis(`🚗 ${u.ad} konvoya katıldı`,'#bff');KORNA();return true}
+ u.o=araba(u);u.o.vx=SX(KS[u.k])+u.dx;u.o.g.position.set(u.o.vx,0,zs+30);u.son=now();ARAC.push(u);OY.akis(`🚗 ${u.ad} konvoya katıldı`,'#bff');KORNA(0,u);return true}
 function atil(e){for(let i=0;i<2;i++)if(GELIN.cift[i]===e){GELIN.cift[i]=null;tabelaYaz()}S.remove(e.o.g);e.o=null;e.m=null;e.bek=null;ARAC.splice(ARAC.indexOf(e),1);kuyruktanCik(e);if(ET[e.id]){ET[e.id].el.remove();delete ET[e.id]}}
 function yukselt(u,k){if(!u.o||k<=u.o.kad)return;const o=u.o;o.kad=k;o.key=null;{let r;do r=RENK[Math.random()*RENK.length|0];while(r===o.renk);o.renk=r}modelKoy(o);{const p=o.g.position;flasYak(p);fisek(p.x,5,p.z)}OY.ses.zafer&&OY.ses.zafer();OY.akis(`🚗 ${u.ad} artık ${KADEME[k].ad.replace(/['’].*$/,'')} ile konvoyda!`,'#ffd84a');KORNA();
  const p=u.o.g.position;for(let i=0;i<14;i++)duman(p.x+(Math.random()-.5)*3,.4,p.z+(Math.random()-.5)*4,0xeeeeee,1.4);sineBasla(u,4500,1,'yukselt')}
@@ -432,14 +435,14 @@ function yanSerbest(u,d){const x=xp(u)+d*SG,z=zp(u);return!ARAC.some(a=>a!==u&&a
 function ambiyans(){}
 const HQ=[];let hqBit=0;
 // hediye ANINDA uygulanir (bekletme yok); HQ sadece kameranin sirayla gosterecegi hediyeler
-function hediyeVer(u,h){if(!u.o)return;const t=now();KORNA();const kamBos=!SINE||t>SINE.bit;u.m=null;u.bek=null;const k0=u.o.kad,et=hediye(u,h),k=HED_K[h.sinif]||['🎁','Hediye'];const n=u.coinB||0;u.coinB=0;coinEkle(u,n);
+function hediyeVer(u,h){if(!u.o)return;const t=now();KORNA(1,u);const kamBos=!SINE||t>SINE.bit;u.m=null;u.bek=null;const k0=u.o.kad,et=hediye(u,h),k=HED_K[h.sinif]||['🎁','Hediye'];const n=u.coinB||0;u.coinB=0;coinEkle(u,n);
  if(kamBos&&!(SINE&&SINE.u===u))aksiyon(u,u.o.kad>k0?4500:4000);
  if(!(SINE&&SINE.u===u))HQ.push({u,t,buyuk:h.sinif==='galaksi'||h.sinif==='sapka'});
  OY.vitrin(u,h.resim||h.sinif,k[1],et);OY.akis(`${k[0]} ${u.ad}: ${et}`,'#ffd84a')}
 function hediyeSirasi(t){if(!HQ.length||(SINE&&t<SINE.bit))return;
  while(HQ.length){const q=HQ.shift();if(!q.u.o||(!q.buyuk&&t-q.t>7000))continue;const u=q.u;if(!q.buyuk&&!u.m&&!u.tr&&t-q.t>4000)continue;aksiyon(u,u.m?Math.max(3000,Math.min(6000,u.m.bit-t+600)):4000);break}}
 function aracGuncelle(t,dt){
- IZG.position.z+=VD*dt;
+ IZG.position.z+=VD*dt;LSK0+=(LSK-LSK0)*Math.min(1,dt*(LSK>LSK0?9:4));LASTIK.ayar(LSK0<.1?0:Math.min(.5,(LSK0-.1)*1.1),.88+Math.min(.3,LSK0*.35));LSK=0;
  for(const u of ARAC){const o=u.o;if(!o||!o.msh)continue;const p=o.g.position,dk=Math.hypot(K.position.x-p.x,K.position.z-p.z),yk=dk<(kalite<=1?14:30)+(o.yakin?4:0);if(o.yakin!==yk){o.yakin=yk;for(const m of o.msh)m.castShadow=yk;for(const m of o.det)m.visible=yk}}
  for(const u of ARAC){const o=u.o;if(!o)continue;const p=o.g.position;
   let m=u.m;if(m&&t>m.bit){if(m.sonra&&m.yan)m.sonra();m=u.m=null}if(!m&&u.bek){manevra(u,u.bek,2);u.bek=null;m=u.m}
@@ -467,14 +470,14 @@ function aracGuncelle(t,dt){
     // hedef seride gec (yan serit bossa), degilse once hedefin arkasina dogru yaklas
     if(!ayni){const bos=!ARAC.some(v=>v!==u&&v!==h&&v.o&&Math.abs(xp(v)-hx)<3&&zp(v)>hz-1&&zp(v)<p.z+(boyU(u)+boyU(v))/2+3);if(bos)tx=hx;else tx=p.x}else tx=hx;
     tz=hz+lim+(ayni?.9:4);
-    vmax=13;if(!m.yan)m.bit=Math.max(m.bit,Math.min(m.t0+9000,t+1500));const yakin=(ayni&&p.z-hz-lim<2.4)||t-m.t0>4500;if(yakin&&!m.yan){m.yan=t;m.bit=Math.min(m.bit,t+3600);KORNA(1)}
-    const ph=(t-(m.yan||t))%850;flas=!!m.yan&&ph<520&&((ph/90|0)%2===0);if(m.yan&&t-m.yan>1700&&!m.k2){m.k2=1;KORNA(1)}}
+    vmax=13;if(!m.yan)m.bit=Math.max(m.bit,Math.min(m.t0+9000,t+1500));const yakin=(ayni&&p.z-hz-lim<2.4)||t-m.t0>4500;if(yakin&&!m.yan){m.yan=t;m.bit=Math.min(m.bit,t+3600);KORNA(1,u)}
+    const ph=(t-(m.yan||t))%850;flas=!!m.yan&&ph<520&&((ph/90|0)%2===0);if(m.yan&&t-m.yan>1700&&!m.k2){m.k2=1;KORNA(1,u)}}
    else if(m.tip==='drift'){
     // drift: yana kayarak bosluga savrulur (tek tarafa, bir kez), govde acisi asagida yay ile
     // yaninda yer yoksa drift baslamaz, yer acilana kadar (en fazla 4 sn) bekler
     if(!m.go){m.ilk=m.ilk||t;if((t>m.ilk&&(o.bmS==null?1:o.bmS)>=.5)||t-m.ilk>4000)m.go=1;else{m.t0+=dt*1000;m.bit+=dt*1000}}
     if(m.go&&m.ys==null){if(!yanSerbest(u,-m.yon)&&yanSerbest(u,m.yon))m.yon=-m.yon;m.ys=yanSerbest(u,-m.yon)}
-    if(m.go&&!u.tr&&m.ys)tx+=-m.yon*SG*.8*Math.sin(Math.min(1,a/.85)*Math.PI);
+    if(m.go&&!u.tr&&m.ys){const q=a<.7?a/.7:a<.8?1:Math.max(0,1-(a-.8)/.2),e=q*q*(3-2*q);tx+=-m.yon*SG*.8*e}
     if(Math.random()<dt*3)EGZ(.35)}
    else if(m.tip==='alev'){if(Math.random()<.18)alev(p,.6);if(a<.92&&Math.random()<dt*3.5)patlat(p,1)}}
   if(u.tr&&u.tr.faz===1&&Math.random()<dt*1.2)EGZ(.22);
@@ -485,11 +488,12 @@ function aracGuncelle(t,dt){
    if(Math.abs(vx-p.x)>=mn-.05){if(sd>0)tx=Math.min(tx,vx-mn);else tx=Math.max(tx,vx+mn)}}
   const drf=m&&m.tip==='drift',sert=(u.tr||(u.gos&&t<u.gos))?1:0;
   // kayma acisi (beta): drift'te once ters silkme, sonra savrulup karsi direksiyonla sabit tutar, sonunda toparlar
-  {let bT=0,wn=3.2,ze=.75;if(drf&&m.go){const yn=m.yon,bm=u.tr&&u.tr.faz===1?.38:.6;bT=a<.07?-.14*yn:a<.8?(bm+.07*Math.sin((t-m.t0)/430))*yn:0;wn=a<.8?4.2:3.2;ze=a<.8?.42:.7}
+  {let bT=0,wn=3.2,ze=.75;if(drf&&m.go){const lv0=o.lv||0,yn=Math.abs(lv0)>.25?Math.max(-1,Math.min(1,-lv0/1.6)):m.yon*.4,bm=u.tr&&u.tr.faz===1?.38:.6;bT=a<.07?-.14*yn:a<.68?(bm+.07*Math.sin((t-m.t0)/430))*yn:0;wn=a<.68?5.6:3.2;ze=a<.68?.42:.7}
    // yandaki bosluga gore en fazla aci: donuk govde (yari boy*sin + yari en*cos) komsuya degmesin
    if(drf||Math.abs(o.b||0)>.04){const hl=boyU(u)/2;let bm=1;for(const v of ARAC){if(v===u||!v.o)continue;const dz=Math.abs(zp(v)-p.z);if(dz>hl+boyU(v)/2+1)continue;const vb=Math.abs(v.o.b||0),vh=Math.min(boyU(v)/2*Math.sin(vb)+1.05*Math.cos(vb),2.6);
      const gap=Math.abs(xp(v)-p.x)-vh-.25;bm=Math.min(bm,gap<=1.05?0:Math.asin(Math.min(1,(gap-1.05)/hl)))}
     o.bmS=bm;bT=Math.sign(bT)*Math.min(Math.abs(bT),bm);if(Math.abs(o.b||0)>bm+.02){o.b=Math.sign(o.b)*Math.max(bm,Math.abs(o.b)-dt*2.5);o.bw=0}}
+   if(!drf&&(o.b||0)*(o.lv||0)>0)o.b*=Math.max(0,1-dt*5);
    o.bw=(o.bw||0)+((bT-(o.b||0))*wn*wn-2*ze*wn*(o.bw||0))*dt;o.b=(o.b||0)+o.bw*dt}
   // yanal hareket: kinematik bisiklet modeli; araba direksiyonla doner, gittigi yone bakar
   const V=Math.max(4,VD-o.zv),th0=o.th||0;
@@ -508,6 +512,7 @@ function aracGuncelle(t,dt){
    if(o.model){o.model.rotation.order='YXZ';o.model.rotation.x=o.pt;o.model.rotation.z=o.rl}}
   p.x=o.vx;p.y=0;o.g.rotation.y=o.yaw;
   // arka tekerden duman + yolda lastik izi (kayma acisina gore)
+  if(db>.1)LSK=Math.max(LSK,db*(o.yakin?1:.6));
   if(db>.12){const c=Math.cos(o.yaw),sn=Math.sin(o.yaw),lz=boyU(u)*.3;for(const lx of[-.8,.8]){const wx=p.x+lx*c+lz*sn,wz=p.z-lx*sn+lz*c;iz(wx,wz,o.th);
     if(Math.random()<Math.min(.85,db*1.5))duman(wx+(Math.random()-.5)*.4,.3,wz+.3,0xf2f2f2,.9+db*1.6,2200)}}
   if(o.ak){const yan=!!(m&&m.tip==='alev'&&a<.95&&Math.random()<.8);for(const c of o.ak){c.visible=yan;if(yan){const L=.5+Math.random()*1.1;c.scale.set(.8+Math.random()*.6,.8+Math.random()*.6,L)}}}
@@ -560,8 +565,8 @@ function hediye(u,h){const t=now(),ad=x=>OY.kisaAd(x.ad,10);let et='';u.parl=PAR
   case'kalp':{selektor(u);et='💡 öndekine selektör yaptı';break}
   case'parfum':{const n=makasAt(u,3+h.adet*2);if(!n){u.gos=now()+5200}aksiyon(u,6500);et=n?`↪️ makas attı, ${n} aracı geçti!`:'↪️ en önde makas şov!';break}
   case'donut':iste(u,'alev',1);if(u.o)patlat(u.o.g.position,Math.min(6,h.adet*2));et='🔥 egzoz patlattı';break;
-  case'sapka':{const k0=u.o.kad;if(k0<KADEME.length-1){u.coin=Math.max(u.coin||0,KADEME[k0+1].p);yukselt(u,k0+1)}for(let k=0;k<4;k++)setTimeout(()=>KORNA(1),k*420);SIRA.forEach((x,i)=>setTimeout(()=>{if(x.o)patlat(x.o.g.position,1)},300+i*90));const p=u.o.g.position;for(let k=0;k<3;k++)setTimeout(()=>fisek(p.x+(Math.random()-.5)*10,7,p.z-6),k*400);et='⬆️ arabasını yükseltti, konvoy coştu!';break}
-  case'galaksi':{if(SIRA.indexOf(u)>0){const i=TQ.findIndex(q=>q.u===u);if(i>=0)TQ.splice(i,1);makasAt0(u,SIRA.indexOf(u))}aksiyon(u,6500);const p=GELIN.o.g.position;for(let k=0;k<6;k++)setTimeout(()=>fisek(p.x+(Math.random()-.5)*14,8+Math.random()*5,p.z-4-Math.random()*10),k*350);for(let k=0;k<4;k++)setTimeout(()=>KORNA(1),k*500);const gi=!GELIN.cift[0]?0:!GELIN.cift[1]?1:(GELIN.ciftT[0]<=GELIN.ciftT[1]?0:1);if(GELIN.cift[0]===u||GELIN.cift[1]===u){}else{GELIN.cift[gi]=u;GELIN.ciftT[gi]=t}tabelaYaz();
+  case'sapka':{const k0=u.o.kad;if(k0<KADEME.length-1){u.coin=Math.max(u.coin||0,KADEME[k0+1].p);yukselt(u,k0+1)}KORNA(1,u);SIRA.forEach((x,i)=>setTimeout(()=>{if(x.o)patlat(x.o.g.position,1)},300+i*90));const p=u.o.g.position;for(let k=0;k<3;k++)setTimeout(()=>fisek(p.x+(Math.random()-.5)*10,7,p.z-6),k*400);et='⬆️ arabasını yükseltti, konvoy coştu!';break}
+  case'galaksi':{if(SIRA.indexOf(u)>0){const i=TQ.findIndex(q=>q.u===u);if(i>=0)TQ.splice(i,1);makasAt0(u,SIRA.indexOf(u))}aksiyon(u,6500);const p=GELIN.o.g.position;for(let k=0;k<6;k++)setTimeout(()=>fisek(p.x+(Math.random()-.5)*14,8+Math.random()*5,p.z-4-Math.random()*10),k*350);KORNA(1,u);const gi=!GELIN.cift[0]?0:!GELIN.cift[1]?1:(GELIN.ciftT[0]<=GELIN.ciftT[1]?0:1);if(GELIN.cift[0]===u||GELIN.cift[1]===u){}else{GELIN.cift[gi]=u;GELIN.ciftT[gi]=t}tabelaYaz();
    const rol=GELIN.cift[0]===u?'DAMAT':'GELİN';aksYaz(rol+'!');setTimeout(()=>aksYaz('EN ÖNDE!'),1800);et=`${rol==='DAMAT'?'🤵':'👰'} ${rol} oldu, adı gelin arabasında!`;OY.akis(`🌌 ${u.ad} ${rol} OLDU! Gelin arabasının arkasına geçti`,'#ffd84a');break}
  }
  return et}
@@ -569,9 +574,9 @@ function hediye(u,h){const t=now(),ad=x=>OY.kisaAd(x.ad,10);let et='';u.parl=PAR
 const BAL={};
 OY.basla({muzik:'dugun',olay:e=>{
  if(!e.id)return;const u=kul(e);if(!katil(u))return;u.son=now();const t=now();
- if(e.t==='begeni'){puanEkle(u,(e.adet||1)*.5);begOne(u,t);if(t-(u.begT||0)>3000){u.begT=t;KORNA()}}
- else if(e.t==='yorum'){puanEkle(u,2);u.msj=String(e.metin||'').slice(0,40);u.msjT=t;if(t-(u.kT||0)>2500){u.kT=t;KORNA(1)}const ym=String(e.metin||'').toLocaleLowerCase('tr');
-  if(/korna|d[iı]t|bip/.test(ym)&&t-(u.kT||0)>2500){u.kT=t;KORNA(1)}}
+ if(e.t==='begeni'){puanEkle(u,(e.adet||1)*.5);begOne(u,t);if(t-(u.begT||0)>3000){u.begT=t}}
+ else if(e.t==='yorum'){puanEkle(u,2);u.msj=String(e.metin||'').slice(0,40);u.msjT=t;const ym=String(e.metin||'').toLocaleLowerCase('tr');
+  if(/korna|d[iı]t|bip/.test(ym)&&t-(u.kT||0)>6000){u.kT=t;KORNA(1,u)}}
  else if(e.t==='takip'){puanEkle(u,15);OY.akis(`➕ ${u.ad} takip etti · konvoyda!`,'#8cf')}
  else if(e.t==='paylasim'){puanEkle(u,10);OY.akis(`🔁 ${u.ad} paylaştı`,'#8cf')}
  else if(e.t==='hediye'){const h=OY.hediye(e),n=h.elmas*h.adet;puanEkle(u,n*5);u.coinB=(u.coinB||0)+n;

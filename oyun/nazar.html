@@ -2,7 +2,7 @@
 <title>Nazar Savunması</title>
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#0b1640;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{position:fixed;inset:0;width:100%;height:100%}</style></head><body>
 <canvas id="a"></canvas><canvas id="c"></canvas>
-<script src="core.js?v=8"></script><script src="hud.js?v=12"></script>
+<script src="core.js?v=9"></script><script src="hud.js?v=12"></script>
 <script>
 /* NAZAR SAVUNMASI - bireysel rekabet
    Her izleyici halkada kendi nazar boncugudur. Ortadaki Kem Goz Anasi kem gozler salar; her goz BIR boncuga yurur.
@@ -11,7 +11,7 @@
    Kem gozler en cok LIDERE saldirir (nazar basarili olana deger). 150 sn'lik tur, en cok puan kazanir. */
 const TUR=+(OY.Q.get('tur')||150),MAXS=20;
 const HED=[['🌹','Gül','Üzerlik: yakını yakar'],['💖','Kalp','Kalkan: 20 sn'],['💐','Parfüm','Tütsü: seri ateş'],['🍩','Donut','Ayna: gözler lidere'],['🎩','Şapka','Dev Nazar: 2x puan'],['🌌','Galaksi','Maşallah: hepsi senin']];
-OY.yuzKonum={top:'64vh',right:'calc(2.5*var(--vw,1vw))'};OY.hud({baslik:'NAZAR SAVUNMASI',alt:'Beğen = mermi · Gözü vuran puanı alır · Kem göz LİDERE saldırır 😠',renk:'#5ec8ff',hediyeler:HED});
+OY.yuzKonum={top:'62vh',right:'calc(2.5*var(--vw,1vw))','--yuzB':'19vh'};OY.hud({baslik:'NAZAR SAVUNMASI',alt:'Beğen = mermi · Gözü vuran puanı alır · Kem göz LİDERE saldırır 😠',renk:'#5ec8ff',hediyeler:HED});
 const A=document.getElementById('a'),C=document.getElementById('c'),g=C.getContext('2d');let W,H,DPR,cx,cy,RX,RY,R=20,UST,ALT,ARA=60;
 const now=()=>performance.now(),FONT='Nunito,Segoe UI,Arial';
 const U={},SLOT=[],GOZ=[],MER=[],PAR=[],YAZ=[],DALGA=[],BAL=[];let turBit=now()+TUR*1000,arada=0,sonDog=0,sonBoss=now(),KAL={gal:{}},LID=null;

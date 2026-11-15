@@ -57,8 +57,12 @@
     yanlis: () => ton(200, .3, 'sawtooth', .12, .6), dogru: () => { ton(784, .1, 'triangle', .2); ton(1175, .3, 'triangle', .2, 0, ANA, .1) },
     ton, gurultu,
     // gercek ses dosyasi (onbellekli, WebAudio): OY.ses.dosya('ses/x.mp3', .8, hiz)
-    dosya: (url, v = 1, hiz = 1) => { if (!AC) return; const c = BUF[url] || (BUF[url] = fetch(url).then(r => r.arrayBuffer()).then(x => AC.decodeAudioData(x)).catch(() => null));
-      c.then(b => { if (!b) return; const n = AC.createBufferSource(), g = AC.createGain(); n.buffer = b; n.playbackRate.value = hiz; g.gain.value = v; n.connect(g); g.connect(ANA); n.start() }) }
+    dosya: (url, v = 1, hiz = 1, sure = 0) => { if (!AC) return; const c = BUF[url] || (BUF[url] = fetch(url).then(r => r.arrayBuffer()).then(x => AC.decodeAudioData(x)).catch(() => null));
+      c.then(b => { if (!b) return; const n = AC.createBufferSource(), g = AC.createGain(); n.buffer = b; n.playbackRate.value = hiz; g.gain.value = v; n.connect(g); g.connect(ANA); if (sure) n.start(0, 0, sure); else n.start() }) },
+    // surekli dongu ses (lastik bagirmasi vb.): const d=OY.ses.dongu('ses/x.mp3'); d.ayar(ses, hiz) her karede
+    dongu: (url) => { let g = null, n = null; return { ayar(v, h = 1) { if (!AC) return; if (!g) { g = AC.createGain(); g.gain.value = 0; g.connect(ANA);
+        (BUF[url] || (BUF[url] = fetch(url).then(r => r.arrayBuffer()).then(x => AC.decodeAudioData(x)).catch(() => null))).then(b => { if (!b) return; n = AC.createBufferSource(); n.buffer = b; n.loop = true; n.connect(g); n.start() }) }
+        g.gain.setTargetAtTime(Math.max(0, v), AC.currentTime, .06); if (n) n.playbackRate.setTargetAtTime(h, AC.currentTime, .1) } } }
   };
   const BUF = {};
 
@@ -111,20 +115,19 @@
     OY.ayar = cfg; if (cfg.muzik) OY.muzikStil = cfg.muzik; if (cfg.olay) OY.on(cfg.olay);
     if (OY.kod && !OY.sim) bagla(); else { kalici(); if (OY.demo || (!OY.sim && !OY.kod)) demoDongu() }
   };
-  // ---- yapay zeka sunucu yuz kamerasi (her oyunda ayni; kareler onceden uretildi, agiz sesin siddetine gore acilir) ----
-  // atlas: 6x6 kare; sira = ifade(0 normal,1 gulumse)*18 + goz(0 acik,1 yari,2 kapali)*6 + agiz(0..5)
+  // ---- yapay zeka sunucu yuz kamerasi (her oyunda ayni; iki dongu video: bekleme = nefes/goz kirpma, konusma = agiz/kafa) ----
+  // ses calarken ve sesin siddeti yuksekken konusma videosu one gecer (capraz gecis), susunca beklemeye doner
   (() => {
     if (Q.get('yuz') === '0') return;
-    const img = new Image(); img.src = 'doku/sunucu_atlas.jpg';
     const st2 = document.createElement('style');
-    st2.textContent = '#oyYuz{position:fixed;z-index:18;width:var(--yuzB,15vh);height:var(--yuzB,15vh);border-radius:50%;pointer-events:none;' +
-      'padding:.45vh;background:conic-gradient(from 0deg,#ff3ad8,#7c5cff,#22e5ff,#ff3ad8);box-shadow:0 0 2.2vh rgba(255,58,216,.55),0 .8vh 2vh rgba(0,0,0,.45);opacity:0;transition:opacity .6s}' +
-      '#oyYuz canvas{position:static!important;inset:auto!important;left:auto!important;top:auto!important;width:100%!important;height:100%!important;max-width:none!important;display:block!important;background:#2a1a3a;z-index:auto!important;filter:none!important}' +
-      '#oyYuz i{position:absolute;right:4%;bottom:4%;font:800 1.15vh/1 Nunito,Segoe UI,Arial;font-style:normal;color:#fff;background:rgba(0,0,0,.55);padding:.25vh .5vh;border-radius:.6vh;letter-spacing:.05vh}' +
-      '#oyYuz b{position:absolute;left:50%;bottom:-.9vh;transform:translateX(-50%);width:1.2vh;height:1.2vh;border-radius:50%;background:#ff2d55;box-shadow:0 0 .8vh #ff2d55;opacity:0;transition:opacity .2s}';
+    st2.textContent = '#oyYuz{position:fixed;z-index:18;height:var(--yuzB,20vh);aspect-ratio:300/372;border-radius:1.6vh;pointer-events:none;' +
+      'padding:.4vh;background:linear-gradient(135deg,#ff3ad8,#7c5cff,#22e5ff);box-shadow:0 0 2.2vh rgba(255,58,216,.5),0 .8vh 2vh rgba(0,0,0,.45);opacity:0;transition:opacity .6s}' +
+      '#oyYuz .ic{position:relative;width:100%;height:100%;border-radius:1.3vh;overflow:hidden;background:#2a1a3a}' +
+      '#oyYuz video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:cover;display:block!important;z-index:auto!important;filter:none!important;transition:opacity .22s linear}' +
+      '#oyYuz i{position:absolute;right:5%;top:4%;font:800 1.05vh/1 Nunito,Segoe UI,Arial;font-style:normal;color:#fff;background:rgba(0,0,0,.45);padding:.22vh .45vh;border-radius:.5vh;letter-spacing:.05vh}' +
+      '#oyYuz b{position:absolute;left:6%;top:4%;font:800 1.05vh/1 Nunito,Segoe UI,Arial;color:#fff;background:#ff2d55;padding:.22vh .5vh;border-radius:.5vh;letter-spacing:.05vh}';
     document.head.appendChild(st2);
-    const S = 320; let cv, g, kutu, isaret;
-    let zarf = null, el = null, agiz = 0, gulT = 0, gozT = 0, gozFaz = 0, sonrakiGoz = 0, konusma = 0;
+    let kutu, vB, vK, zarf = null, el = null, kon = 0, sonKon = 0;
     OY.yuzKonus = a => {
       el = a; zarf = null; const yol = a.src;
       fetch(yol).then(r => r.arrayBuffer()).then(b => new OfflineAudioContext(1, 1, 22050).decodeAudioData(b)).then(buf => {
@@ -133,31 +136,25 @@
         const sr = Z.slice().sort((x, y) => x - y), ust = sr[Math.floor(sr.length * .95)] || 1; zarf = Z.map(v => Math.min(1, v / ust));
       }).catch(() => { zarf = null });
     };
-    OY.on(e => { if (e.t === 'hediye') gulT = performance.now() + 2600; else if ((e.t === 'takip' || e.t === 'paylasim') && Math.random() < .6) gulT = performance.now() + 1500 });
+    const vid = src => { const v = document.createElement('video'); v.src = src; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto'; v.setAttribute('muted', ''); v.play().catch(() => { }); return v };
     function kur() {
-      kutu = document.createElement('div'); kutu.id = 'oyYuz'; const k = OY.yuzKonum || { top: '26vh', right: 'calc(2.5*var(--vw,1vw))' };
-      for (const x in k) kutu.style[x] = k[x];
-      const ic = document.createElement('div'); ic.style.cssText = 'width:100%;height:100%;border-radius:50%;overflow:hidden'; kutu.appendChild(ic);
-      cv = document.createElement('canvas'); cv.width = cv.height = S; g = cv.getContext('2d'); ic.appendChild(cv);
-      const ai = document.createElement('i'); ai.textContent = 'AI'; kutu.appendChild(ai);
-      isaret = document.createElement('b'); kutu.appendChild(isaret); document.body.appendChild(kutu);
-      sonrakiGoz = performance.now() + 2000; requestAnimationFrame(ciz);
+      kutu = document.createElement('div'); kutu.id = 'oyYuz'; const k = OY.yuzKonum || { top: '24vh', right: 'calc(2.5*var(--vw,1vw))' };
+      for (const x in k) kutu.style.setProperty(x.replace(/[A-Z]/g, c => "-" + c.toLowerCase()), k[x]);
+      const ic = document.createElement('div'); ic.className = 'ic'; kutu.appendChild(ic);
+      vB = vid('doku/sunucu_bekle.mp4'); vK = vid('doku/sunucu_konus.mp4'); vK.style.opacity = '0'; ic.appendChild(vB); ic.appendChild(vK);
+      const ai = document.createElement('i'); ai.textContent = 'AI'; ic.appendChild(ai);
+      const cn = document.createElement('b'); cn.textContent = '● CANLI'; ic.appendChild(cn); document.body.appendChild(kutu);
+      vB.addEventListener('playing', () => { kutu.style.opacity = '1' }, { once: true }); setTimeout(() => { kutu.style.opacity = '1' }, 2500);
+      requestAnimationFrame(ciz);
     }
     function ciz(t) {
-      requestAnimationFrame(ciz); if (!img.complete || !img.naturalWidth) return; if (kutu.style.opacity !== '1') kutu.style.opacity = '1';
-      // agiz: konusurken ses zarfi, susarken kapali
-      let hedef = 0;
-      if (el && !el.paused && !el.ended) { if (zarf) { const i = Math.floor(el.currentTime * 50); const v = (zarf[i] || 0) * .65 + (zarf[i + 1] || 0) * .35; hedef = v < .12 ? 0 : Math.min(5, 1 + (v - .12) / .88 * 4.6) }
-        else { const h = el.currentTime * 5.3; hedef = Math.max(0, Math.sin(h * Math.PI * 2) * 2.6 + Math.sin(h * 2.7) * 1.4 + 1.2) } konusma = t }
-      agiz += (hedef - agiz) * (hedef > agiz ? .55 : .35);
-      // goz kirpma: acik -> yari -> kapali -> yari -> acik
-      if (!gozFaz && t > sonrakiGoz) { gozFaz = 1; gozT = t }
-      let goz = 0; if (gozFaz) { const d = t - gozT; goz = d < 45 ? 1 : d < 120 ? 2 : d < 170 ? 1 : 0; if (d >= 170) { gozFaz = 0; sonrakiGoz = t + 2300 + Math.random() * 3800 } }
-      const gul = (t < gulT || (t - konusma < 400 && Math.sin(t / 1700) > .55)) ? 1 : 0;
-      const idx = gul * 18 + goz * 6 + Math.round(agiz); window.__yuzIdx = idx;
-      g.drawImage(img, (idx % 6) * S, Math.floor(idx / 6) * S, S, S, 0, 0, S, S);
-      const kon = t - konusma < 300 ? 1 : 0; isaret.style.opacity = kon ? '1' : '0';
-      cv.style.transform = `translate(${Math.sin(t / 2900) * 1.2}%,${Math.cos(t / 3300) * .9 + (kon ? Math.sin(t / 160) * .5 : 0)}%) rotate(${Math.sin(t / 2100) * 1.3}deg) scale(1.09)`;
+      requestAnimationFrame(ciz);
+      if (vB.paused) vB.play().catch(() => { }); if (vK.paused) vK.play().catch(() => { });
+      // konusuyor mu: ses caliyorsa ve (zarf varsa) son 0,4 sn icinde ses yuksekse
+      let k = 0;
+      if (el && !el.paused && !el.ended) { if (zarf) { const i = Math.floor(el.currentTime * 50); for (let j = i - 4; j <= i + 8; j++) if ((zarf[j] || 0) > .14) { k = 1; break } } else k = 1 }
+      if (k) sonKon = t; const on = t - sonKon < 350 ? 1 : 0;
+      if (on !== kon) { kon = on; vK.style.opacity = on ? '1' : '0'; window.__yuzKon = on }
     }
     if (document.readyState === 'loading') addEventListener('DOMContentLoaded', kur); else kur();
   })();
