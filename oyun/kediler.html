@@ -9,7 +9,7 @@
    Sahipsiz kediler de en dolu kaba gider. Tur sonunda en cok kedisi olan kazanir. Her sey birikimli: zamanlama gerekmez. */
 const TUR=+(OY.Q.get('tur')||180),MAXS=20,KAP=100;
 const HED=[['🌹','Gül','Balık: kap dolar +2 kedi'],['💖','Kalp','Kedi Evi: 25 sn kaçmaz'],['💐','Parfüm','Kedi Otu: liderden 4'],['🍩','Donut','Köpek: lideri dağıt'],['🎩','Şapka','Ciğerci: 15 sn mıknatıs'],['🌌','Galaksi','Sultan: herkesten yarı']];
-OY.hud({baslik:'SOKAK KEDİLERİ',alt:'Beğen = mama · Kabı boşalanın kedisi EN DOLU kaba kaçar 🐈',renk:'#ff9f43',hediyeler:HED});
+OY.yuzKonum={top:'70vh',right:'calc(2.5*var(--vw,1vw))','--yuzB':'13vh'};OY.hud({baslik:'SOKAK KEDİLERİ',alt:'Beğen = mama · Kabı boşalanın kedisi EN DOLU kaba kaçar 🐈',renk:'#ff9f43',hediyeler:HED});
 const A=document.getElementById('a'),C=document.getElementById('c'),g=C.getContext('2d');let W,H,DPR,UST,ALT,KOL=2,SAT=1,CW,CH,CS;
 const now=()=>performance.now(),FONT='Nunito,Segoe UI,Arial';
 const U={},SLOT=[],KEDI=[],BAL=[],OLAY=[];let turBit=now()+TUR*1000,arada=0,sonDog=0,KAL={gal:{}},LID=null,n=0;

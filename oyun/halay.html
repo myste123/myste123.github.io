@@ -240,7 +240,7 @@ function cagiEt(t,b,dt){for(const c of CALGI){const m=c.m;c.a+=dt*.05;const R0=1
   for(const[s,ust,alt,el]of[[1,B.upperarm_r,B.lowerarm_r,B.hand_r],[-1,B.upperarm_l,B.lowerarm_l,B.hand_l]]){_h.lerpVectors(ag,uc,s>0?.75:.45);_h.addScaledVector(_r,s*.02);_k.set(0,-1,0).addScaledVector(_r,s*.8);ik(ust,alt,el,_h,_k,m.L.kolU,m.L.kolA)}}
  // ayaklar: yerinde hafif tempo
  for(const[s,ust,alt,ay]of[[1,B.upperleg_r,B.lowerleg_r,B.foot_r],[-1,B.upperleg_l,B.lowerleg_l,B.foot_l]]){_h.copy(m.g.position).addScaledVector(_r,s*m.L.adim*1.1).addScaledVector(f,.03);_h.y=m.L.ayakY+((Math.floor(b)%2===(s>0?0:1))?Math.sin((b%1)*Math.PI)*.05:0);ik(ust,alt,ay,_h,f,m.L.bacU,m.L.bacA)}}}
-function ciftGuncelle(t,dt){const zor=CIFT.zorla.map(z=>z&&t<z.bit&&z.u.o?z.u:null);const ilk=Object.values(U).filter(u=>u.puan>0&&u.o&&!zor.includes(u)).sort((a,b)=>b.puan-a.puan);
+function ciftGuncelle(t,dt){const zor=CIFT.zorla.map(z=>z&&t<z.bit&&z.u.o?z.u:null);const dv=DAVULCU.bit>t?DAVULCU.u:null;const ilk=Object.values(U).filter(u=>u.puan>0&&u.o&&!zor.includes(u)&&u!==dv).sort((a,b)=>b.puan-a.puan);
  ciftA+=dt*.3;const bb=vurus(t);
  for(let i=0;i<2;i++){const m=CIFT.o[i];if(!m)continue;ciftDans(m,i,bb);
   const u=zor[i]||ilk.shift()||null;if(CIFT.kim[i]!==u){CIFT.kim[i]=u;if(u)OY.akis(`${i?'👰':'🤵'} ${u.ad} ortaya geçti: ${i?'GELİN':'DAMAT'}!`,'#ffd84a')}}
@@ -293,7 +293,7 @@ function hediye(u,h){const t=now(),ad=OY.kisaAd(u.ad,10);puanEkle(u,10*h.adet+h.
   case 'sapka':{puanEkle(u,150*h.adet);const g=CIFT.o[1];if(g){g.B.spine_03.getWorldPosition(_a);for(let i=0;i<18;i++)sprt(TX.para,_a.clone().add(_b.set(rnd(-.22,.22),rnd(-.25,.05),rnd(-.22,.22))),.08,new V3(rnd(-.006,.006),rnd(.002,.006),rnd(-.006,.006)),130,0)}
    et='GELİNE ALTIN TAKTI 💰 · +150 coşku';bant(`🎩 ${ad} GELİNE ALTIN TAKTI!`,3500);OY.ses.zafer();break}
   case 'galaksi':{const lp=L?L.puan:0;if(lp>=u.puan)u.puan=lp+100;u.nazar=t+20000;u.son=t;fisekler(7);konfeti(P,90);
-   const z0=CIFT.zorla[0],gi=(z0&&z0.bit>t&&z0.u!==u)?1:0;CIFT.zorla[gi]={u,bit:t+90000};
+   const zk=CIFT.zorla.map(z=>z&&z.bit>t?z.u:null),z0=CIFT.zorla[0],gi=zk[1]===u?1:zk[0]===u?0:(z0&&z0.bit>t)?1:0;CIFT.zorla[gi]={u,bit:t+90000};if(DAVULCU.u===u)DAVULCU.bit=0;
    et=`${gi?'GELİN':'DAMAT'} oldu ${gi?'👰':'🤵'} · 90 sn ortada · halaybaşı`;bant(`🌌 ${ad} ${gi?'GELİN':'DAMAT'} OLDU!`,3500);OY.ses.zafer();break}
  }
  if(h.sinif!=='kalp'&&h.sinif!=='gul')konfeti(P,12+(h.seviye||1)*6);
@@ -370,7 +370,7 @@ function etiketler(t,ilk3){const yer=[],ust=H()*.15,alt=H()*.86;
    if(ok&&by-b._h>ust){b.style.display='block';b.style.transform=`translate(${(x-b._w/2)|0}px,${(by-b._h)|0}px)`;yer.push({x,y:by,w:b._w,h:b._h})}else b.style.display='none'}else if(b){b.remove();delete BAL[u.id]}}
  ciftEtiket(yer,ust)}
 const CE=[0,1,2].map(i=>{const el=document.createElement('div');el.className='et gd';el.innerHTML='<img><b></b>';el.style.display='none';ETKD.appendChild(el);return el});
-function ciftEtiket(yer,ust){for(let i=0;i<3;i++){const el=CE[i],u=i<2?CIFT.kim[i]:(DAVULCU.u&&now()<DAVULCU.bit&&DAVULCU.u.o?DAVULCU.u:null),m=i<2?CIFT.o[i]:(CALGI[0]&&CALGI[0].m);if(!u||!m){el.style.display='none';continue}
+function ciftEtiket(yer,ust){for(let i=0;i<3;i++){const el=CE[i],u=i<2?CIFT.kim[i]:(DAVULCU.u&&now()<DAVULCU.bit&&DAVULCU.u.o&&!CIFT.kim.includes(DAVULCU.u)?DAVULCU.u:null),m=i<2?CIFT.o[i]:(CALGI[0]&&CALGI[0].m);if(!u||!m){el.style.display='none';continue}
   const k=u.id+'|'+i;if(el.k!==k){el.k=k;el.firstChild.src=foto(u);el.children[1].textContent=(i===2?'🥁 DAVULCU · ':i?'👰 GELİN · ':'🤵 DAMAT · ')+OY.kisaAd(u.ad,10);el._w=el.offsetWidth||160;el._h=el.offsetHeight||28}
   m.B.head.getWorldPosition(_a);_a.y+=.4;const s=ekran(_a);if(!s.on||s.x<0||s.x>W()){el.style.display='none';continue}el.style.display='flex';if(!el._w||el._w<20){el._w=el.offsetWidth;el._h=el.offsetHeight}
   let x=Math.max(el._w/2+4,Math.min(W()-el._w/2-4,s.x)),y=s.y;for(let it=0;it<10;it++){let c=null;for(const q of yer)if(Math.abs(q.x-x)<(q.w+el._w)/2+2&&y>q.y-q.h-2&&y-el._h<q.y+2){c=q;break}if(!c)break;y=c.y-c.h-3}

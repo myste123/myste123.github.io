@@ -6,7 +6,7 @@
 <script src="core.js?v=17"></script><script src="hud.js?v=12"></script>
 <script>
 const W=()=>innerWidth,H=()=>innerHeight,now=()=>performance.now();
-OY.hud({baslik:'MANGAL USTASI',alt:'Yorum yaz → şişin mangala gelsin · Beğen → közü harla, piş & servis et! 🍢',renk:'#ff9f43',hediyeler:OY.REKABET_HED});
+OY.yuzKonum={top:'13vh',right:'calc(2.5*var(--vw,1vw))','--yuzB':'17vh'};OY.hud({baslik:'MANGAL USTASI',alt:'Yorum yaz → şişin mangala gelsin · Beğen → közü harla, piş & servis et! 🍢',renk:'#ff9f43',hediyeler:OY.REKABET_HED});
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('sahne'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1.2:1.5));R.outputEncoding=THREE.sRGBEncoding;
 const S=new THREE.Scene();S.background=new THREE.Color(0x1d1410);S.fog=new THREE.Fog(0x1d1410,30,70);
 const KF0=45,K=new THREE.PerspectiveCamera(45,1,.1,200);function boyut(){R.setSize(W(),H());K.aspect=W()/H();K.fov=Math.max(KF0,Math.min(75,2*Math.atan(Math.tan(52*Math.PI/360)/K.aspect)*180/Math.PI));K.updateProjectionMatrix()}boyut();addEventListener('resize',boyut);

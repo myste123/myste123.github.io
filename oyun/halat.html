@@ -9,7 +9,7 @@
    sure bitince bayrak hangi taraftaysa o takim kazanir. Tum etkiler birikimli; refleks/zamanlama gerekmez. */
 const TUR=+(OY.Q.get('tur')||120);
 const HED=[['🌹','Gül','Eldiven: 15 sn 2x çekiş'],['💖','Kalp','Tezahürat: takıma +30'],['💐','Parfüm','Pehlivan: 15 sn yardım'],['🍩','Donut','Çamur: rakip 10 sn ½'],['🎩','Şapka','Kazık: 10 sn geri gitmez'],['🌌','Galaksi','Traktör: büyük çekiş']];
-OY.hud({baslik:'HALAT ÇEKME',alt:'Yorumda "1" yaz Kırmızı, "2" yaz Mavi · Beğen = çek!',renk:'#ffe066',hediyeler:HED});
+OY.yuzKonum={top:'68vh',right:'calc(2.5*var(--vw,1vw))','--yuzB':'15vh'};OY.hud({baslik:'HALAT ÇEKME',alt:'Yorumda "1" yaz Kırmızı, "2" yaz Mavi · Beğen = çek!',renk:'#ffe066',hediyeler:HED});
 const A=document.getElementById('a'),C=document.getElementById('c'),g=C.getContext('2d');let W,H,DPR,UST,ALT,RY,MY;
 const now=()=>performance.now(),FONT='Nunito,Segoe UI,Arial';
 const TAK=[{ad:'KIRMIZI',r:'#ff4d5e',r2:'#b3122b',uye:[],guc:0,camur:0,kazik:0,peh:0,trak:0,ik:'🔴'},{ad:'MAVİ',r:'#4da3ff',r2:'#1450a8',uye:[],guc:0,camur:0,kazik:0,peh:0,trak:0,ik:'🔵'}];
