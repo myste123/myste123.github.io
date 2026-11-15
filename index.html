@@ -111,6 +111,10 @@ input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--cz2
 select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#9a9fad 50%),linear-gradient(135deg,#9a9fad 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--vurgu);box-shadow:0 0 0 3px rgba(123,108,255,.18)}
 textarea{resize:vertical}
+.aiozel{display:flex;gap:16px;align-items:flex-start;margin-top:22px;padding:18px 20px;border:1px solid var(--cz);border-radius:16px;background:var(--y2)}.aiozel h3{margin:0 0 6px}.aiozel p{margin:0;color:var(--soluk)}.aiik{font-size:30px;line-height:1}
+.secim{margin-top:14px;display:grid;gap:10px}.secim label{display:flex;align-items:center;gap:10px;margin:0;font-size:15px;cursor:pointer;color:inherit}.secim input{width:20px;height:20px;margin:0;accent-color:var(--vurgu);flex:none}
+.secim small{display:block;color:var(--soluk);font-size:12.5px}
+.btn.on{background:transparent;border:1px solid var(--cz);color:inherit}
 .sonuc{margin-top:14px;font-size:14px;display:none;word-break:break-word;color:var(--soluk);background:var(--y2);border:1px solid var(--cz);border-radius:10px;padding:12px}.sonuc code{display:block;margin-top:8px;padding:8px}
 footer{border-top:1px solid var(--cz);padding:32px 0 40px;color:var(--soluk2);font-size:13px}
 footer .kap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
@@ -269,7 +273,9 @@ footer b{color:var(--soluk);font-weight:600}
  <div><small>1</small><h3>Oyununu seç</h3><p>Yayınının havasına uyan oyunu seç, aşağıdan izleyici gibi deneyerek gör.</p></div>
  <div><small>2</small><h3>Linki yayına ekle</h3><p>Sana özel linki LIVE Studio, OBS ya da Android ekran paylaşımına ekle.</p></div>
  <div><small>3</small><h3>İzleyiciler oynasın</h3><p>Beğeni, yorum ve hediyeler oyunda anında karşılık bulur; skorlar kalıcıdır.</p></div>
-</div></div></section>
+</div>
+<div class="aiozel"><div class="aiik">🎙️</div><div><h3>Yapay zekâ sunucu</h3><p>Yayındaki yorumları <b>anlık okur</b>, izleyicilerle <b>sesli sohbet eder</b>, sorulara cevap verir, hediye atana teşekkür eder. İstersen yüz kamerasıyla, istersen sadece sesle. Aşağıdaki oyunlarda yorum yazıp hemen dene.</p></div></div>
+</div></section>
 
 <section id="oyunlar"><div class="kap"><div class="baslik"><div><div class="ust-y">Oyunlar</div><h2>İzleyici gibi dene</h2><p>Bir oyuna dokun: canlı yayın görünümünde açılır. Yorum yaz, beğen, hediye gönder; oyunda anında görürsün.</p></div></div><div id="izgara"><h3 class="bkat"><span>🧊</span>3B Oyunlar<small>Animasyonlu 3B karakterler · 350₺/ay</small></h3><div class="izgara" id="iz3"></div><h3 class="bkat"><span>🎨</span>2B Oyunlar<small>Hızlı ve hafif · 250₺/ay</small></h3><div class="izgara" id="iz2"></div></div></div></section>
 
@@ -295,7 +301,10 @@ footer b{color:var(--soluk);font-weight:600}
  <div class="form-y"><div class="ust-y">Ücretsiz deneme</div><h2>2 gün ücretsiz kullan</h2><p>TikTok kullanıcı adını yaz, deneme linkin anında oluşsun. Gerçek yayınında 48 saat boyunca kullan.</p>
   <ul><li>Kart veya ödeme bilgisi istenmez</li><li>Her hesap için bir kez geçerlidir</li><li>Beğenirsen aynı oyunla devam edersin</li></ul></div>
  <div class="kutu"><label for="dTik">TikTok kullanıcı adı</label><input id="dTik" placeholder="@kullaniciadi" autocomplete="off"><label for="dOyun">Oyun</label><select id="dOyun"></select>
-  <button class="btn" id="dBtn" style="width:100%;margin-top:16px">Deneme linkimi oluştur</button><div class="sonuc" id="dSonuc"></div></div></div></section>
+  <div class="secim"><label><input type="checkbox" id="dYanit" checked><span>Otomatik sesli yanıt<small>Yapay zekâ sunucu yorumları okur, sesli cevap verir</small></span></label>
+   <label><input type="checkbox" id="dYuz" checked><span>Yüz kamerası<small>Sunucu ekranda yüzüyle görünür</small></span></label></div>
+  <button class="btn on" id="dOn" type="button" style="width:100%;margin-top:14px">Ön izle</button>
+  <button class="btn" id="dBtn" style="width:100%;margin-top:10px">Deneme linkimi oluştur</button><div class="sonuc" id="dSonuc"></div></div></div></section>
 
 <section id="siparis"><div class="kap ikili">
  <div class="form-y"><div class="ust-y">Sipariş</div><h2>Oyununu kirala</h2><p>Formu gönder, ödeme bilgilerini sana iletelim. Ödeme sonrası lisansın hemen açılır.</p><p style="font-size:14px;margin-top:18px">İletişim: bilesikyatirim@gmail.com · TikTok @bilesikyatirim</p></div>
@@ -379,7 +388,8 @@ const sayiF=n=>n>=1e6?(n/1e6).toFixed(1).replace('.',',')+'M':n>=1e4?(n/1e3).toF
 const benAd=()=>($('mAd').value.trim()||'Sen').slice(0,18);
 const zt=(f,ms)=>{const t=setTimeout(f,ms);zam.push(t);return t},zi=(f,ms)=>{const t=setInterval(f,ms);zam.push(t);return t};
 
-function ac(id){const o=O.find(x=>x.id===id);if(!o)return;if(o.canliYok){demoyaGit(o.id);return}
+let acAyar='';
+function ac(id,ayar){acAyar=ayar||'';const o=O.find(x=>x.id===id);if(!o)return;if(o.canliYok){demoyaGit(o.id);return}
  aktif=o;oyunOlay=0;gorulen=new Set;begTop=3000+Math.random()*9000|0;begBen=0;izSay=140+Math.random()*260|0;sonHd={};
  $('mBas').textContent=o.ad;$('mAc').textContent=o.d;$('ySure').textContent=o.k.toUpperCase()+' oyun · '+(o.k==='3b'?'350':'250')+'₺/ay';
  $('yAd').textContent=o.ad;$('yAv').style.backgroundImage=o.gorselYok?'linear-gradient(135deg,#7b6cff,#c06cff)':`url(img/${o.id}.jpg?v=4)`;
@@ -388,9 +398,10 @@ function ac(id){const o=O.find(x=>x.id===id);if(!o)return;if(o.canliYok){demoyaG
  $('mNas').textContent='Beğen, yorum yaz ya da hediye gönder.';hediyeCiz(HED);
  SOH.innerHTML='';$('hbant').innerHTML='';$('hpan').classList.remove('ac');$('ipucu').classList.remove('git');
  izleyiciCiz();sayacGuncel();
- F.src=`oyun/${o.id}.html?sim=1&demo=1&muzik=35&v=3`;
+ F.src=`oyun/${o.id}.html?sim=1&demo=1&muzik=35&v=4${acAyar}`;
  M.classList.add('ac');document.body.style.overflow='hidden';
  msj({sis:1,ad:'',metin:'Canlı yayına hoş geldin! Topluluk kurallarına uy, saygılı ol.'});
+ if(!acAyar.includes('sohbet=0'))zt(()=>msj({sis:1,ad:'',metin:'💬 Bir yorum yaz: yapay zekâ sunucu okuyup sesli cevap versin.'}),1800);
  zt(()=>$('ipucu').classList.add('git'),5200);
  zi(()=>{izSay=Math.max(60,izSay+((Math.random()*9|0)-3));sayacGuncel()},2600);
  zt(()=>{if(!oyunOlay)yedekSohbet()},4500); // oyundan olay gelmezse kendi akisimiz
@@ -478,7 +489,9 @@ $('sOyun').innerHTML=O.map(o=>`<option value="${o.id}">${o.ad} (${o.k.toUpperCas
 $('sOyun').onchange=()=>{const o=O.find(x=>x.id===$('sOyun').value);if(o)$('sPaket').value=o.k==='3b'?'Tek 3B oyun - 350 TL/ay':'Tek 2B oyun - 250 TL/ay'};$('sOyun').onchange();
 async function gonder(yol,v,k){k.style.display='block';k.textContent='Gönderiliyor…';try{const a=(await (await fetch('arena/adres.json?t='+Date.now(),{cache:'no-store'})).json()).adres.replace(/\/$/,'');
  return await (await fetch(a+yol,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(v)})).json()}catch(x){return{hata:'Sunucuya şu an ulaşılamıyor. Lütfen TikTok @bilesikyatirim üzerinden yazın.'}}}
-$('dBtn').onclick=async()=>{const k=$('dSonuc'),j=await gonder('/api/demo',{tiktok:$('dTik').value,oyun:$('dOyun').value},k);
+const dAyar=()=>(!$('dYanit').checked?'&sohbet=0':'')+(!$('dYuz').checked?'&yuz=0':'');
+$('dOn').onclick=()=>ac($('dOyun').value,dAyar());
+$('dBtn').onclick=async()=>{const k=$('dSonuc'),j=await gonder('/api/demo',{tiktok:$('dTik').value,oyun:$('dOyun').value,yanit:$('dYanit').checked,yuz:$('dYuz').checked},k);
  k.innerHTML=j.link?`Deneme linkin hazır (bitiş ${esc(j.bitis)}). Yayın programına ekle:<code>${esc(j.link)}</code>`:'⚠️ '+esc(j.hata||'Bir hata oluştu.')};
 $('sBtn').onclick=async()=>{const k=$('sSonuc'),v=i=>$(i).value,o=O.find(x=>x.id===v('sOyun'));
  const j=await gonder('/api/siparis',{ad:v('sAd'),tiktok:v('sTik'),paket:v('sPaket'),iletisim:v('sIlet'),not:(o?'Oyun: '+o.ad+(v('sNot')?' · ':''):'')+v('sNot')},k);

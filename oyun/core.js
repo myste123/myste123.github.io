@@ -109,7 +109,21 @@
   function demoDongu() { let n = 0; setInterval(() => { const u = OY.sahteKisi(Math.random() * 14 | 0), r = Math.random();
     if (r < .6) dagit({ t: 'begeni', ...u, adet: 1 + (Math.random() * 5 | 0) }); else if (r < .9) dagit({ t: 'yorum', ...u, metin: OY.demoYorum ? OY.demoYorum() : YORUM[Math.random() * YORUM.length | 0] });
     else if (r < .95) { const h = Math.random() < .7 ? HEDL[0] : HEDL[Math.random() * HEDL.length | 0]; dagit({ t: 'hediye', ...u, hediye: h[0], elmas: h[1], adet: 1 }) } else dagit({ t: Math.random() < .5 ? 'takip' : 'paylasim', ...u }); n++ }, 1700) }
-  addEventListener('message', m => { const e = m.data; if (e && e.oy) { delete e.oy; dagit(e) } });
+  // site denemesi: ziyaretcinin yazdigi yoruma yapay zeka sunucu sesli cevap verir (?sohbet=0 kapatir)
+  let sAdres = null, sMesgul = false; const sKuyruk = [];
+  async function siteSor(e) {
+    if (sMesgul) { if (sKuyruk.length < 3) sKuyruk.push(e); return } sMesgul = true;
+    try {
+      if (!sAdres) sAdres = (await (await fetch('../arena/adres.json?t=' + Date.now(), { cache: 'no-store' })).json()).adres.replace(/\/$/, '');
+      const kart = { ad: e.ad, foto: '', yorum: String(e.metin).slice(0, 80) }; dagit({ t: 'hazirlaniyor', ...kart });
+      const oyun = location.pathname.split('/').pop().replace('.html', '');
+      const j = await (await fetch(sAdres + '/api/sohbet', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oyun, ad: e.ad, metin: e.metin }) })).json();
+      if (j.cevap && j.ses) { const yol = sAdres + '/' + j.ses; dagit({ t: 'konus', ...kart, cevap: j.cevap, ses: yol }); sesCal(yol); await new Promise(r => setTimeout(r, Math.min(15000, 1500 + j.cevap.length * 75))) }
+      else dagit({ t: 'sustu' });
+    } catch (x) { dagit({ t: 'sustu' }) }
+    sMesgul = false; if (sKuyruk.length) siteSor(sKuyruk.shift());
+  }
+  addEventListener('message', m => { const e = m.data; if (e && e.oy) { delete e.oy; dagit(e); if (OY.sim && Q.get('sohbet') !== '0' && e.t === 'yorum' && String(e.id || '').startsWith('site-') && e.metin) siteSor(e) } });
 
   OY.basla = cfg => {
     OY.ayar = cfg; if (cfg.muzik) OY.muzikStil = cfg.muzik; if (cfg.olay) OY.on(cfg.olay);
