@@ -134,7 +134,7 @@
       fetch(yol).then(r => r.arrayBuffer()).then(b => new OfflineAudioContext(1, 1, 22050).decodeAudioData(b)).then(buf => {
         const d = buf.getChannelData(0), n = Math.floor(buf.sampleRate / 50), Z = [];
         for (let i = 0; i + n <= d.length; i += n) { let t = 0; for (let j = i; j < i + n; j++) t += d[j] * d[j]; Z.push(Math.sqrt(t / n)) }
-        const sr = Z.slice().sort((x, y) => x - y), ust = sr[Math.floor(sr.length * .95)] || 1; zarf = Z.map(v => Math.min(1, v / ust));
+        const sr = Z.slice().sort((x, y) => x - y), ust = sr[Math.floor(sr.length * .95)] || 1; const Y = Z.map((v, i) => ((Z[i - 2] || 0) + (Z[i - 1] || 0) + v + (Z[i + 1] || 0) + (Z[i + 2] || 0)) / 5); zarf = Y.map(v => Math.min(1, v / ust)); // hece hizina yumusat
       }).catch(() => { zarf = null });
     };
     function kur() {
@@ -142,7 +142,7 @@
       for (const x in k) kutu.style.setProperty(x.replace(/[A-Z]/g, c => '-' + c.toLowerCase()), k[x]);
       const ic = document.createElement('div'); ic.className = 'ic'; kutu.appendChild(ic);
       cv = document.createElement('canvas'); cv.width = TW; cv.height = TH; g = cv.getContext('2d'); ic.appendChild(cv);
-      v = document.createElement('video'); v.src = 'doku/sunucu_yuz6.mp4?v=3'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto'; v.setAttribute('muted', '');
+      v = document.createElement('video'); v.src = 'doku/sunucu_yuz6.mp4?v=4'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto'; v.setAttribute('muted', '');
       v.style.cssText = 'position:fixed;left:0;top:0;width:2px;height:2px;opacity:.01;pointer-events:none'; document.body.appendChild(v); v.play().catch(() => { });
       const ai = document.createElement('i'); ai.textContent = 'AI'; ic.appendChild(ai);
       const cn = document.createElement('b'); cn.textContent = '● CANLI'; ic.appendChild(cn); document.body.appendChild(kutu);
@@ -155,10 +155,10 @@
       if (!hazir) { hazir = true; kutu.style.opacity = '1' }
       let hedef = 0;
       if (el && !el.paused && !el.ended) {
-        if (zarf) { const i = Math.floor(el.currentTime * 50 + 1); const s = (zarf[i] || 0) * .6 + (zarf[i + 1] || 0) * .4; hedef = s < .1 ? 0 : Math.min(5, .6 + (s - .1) / .9 * 4.6) }
+        if (zarf) { const i = Math.floor(el.currentTime * 50 + 1); const s = (zarf[i] || 0) * .6 + (zarf[i + 1] || 0) * .4; hedef = s < .12 ? 0 : Math.min(4.6, .5 + (s - .12) / .88 * 4.4) }
         else { const h = el.currentTime * 4.6; hedef = Math.max(0, Math.sin(h * Math.PI * 2) * 2.2 + Math.sin(h * 2.3) * 1.2 + 1.4) }
       }
-      agiz += (hedef - agiz) * (hedef > agiz ? .5 : .32); window.__yuzAgiz = agiz;
+      agiz += (hedef - agiz) * (hedef > agiz ? .26 : .17); // yavas ve dogal: hece basina bir acilip kapanma window.__yuzAgiz = agiz;
       const i0 = Math.min(5, Math.floor(agiz)), fr = agiz - i0;
       kutuCiz(i0, 1); if (fr > .04 && i0 < 5) kutuCiz(i0 + 1, fr); g.globalAlpha = 1;
     }
