@@ -115,19 +115,20 @@
     OY.ayar = cfg; if (cfg.muzik) OY.muzikStil = cfg.muzik; if (cfg.olay) OY.on(cfg.olay);
     if (OY.kod && !OY.sim) bagla(); else { kalici(); if (OY.demo || (!OY.sim && !OY.kod)) demoDongu() }
   };
-  // ---- yapay zeka sunucu yuz kamerasi (her oyunda ayni; iki dongu video: bekleme = nefes/goz kirpma, konusma = agiz/kafa) ----
-  // ses calarken ve sesin siddeti yuksekken konusma videosu one gecer (capraz gecis), susunca beklemeye doner
+  // ---- yapay zeka sunucu yuz kamerasi: tek video, 3x2 izgarada ayni kafa hareketinin 6 agiz kademesi ----
+  // her karede ses siddetine gore kademe secilir (komsu iki kademe harmanlanir) -> kafa/nefes/goz kesintisiz, agiz sese oturur
   (() => {
-    if (Q.get('yuz') !== '1') return; // 15-11: kalite yetersiz, varsayilan KAPALI (?yuz=1 ile acilir)
+    if (Q.get('yuz') !== '1') return; // varsayilan KAPALI (?yuz=1 ile acilir)
     const st2 = document.createElement('style');
-    st2.textContent = '#oyYuz{position:fixed;z-index:18;height:var(--yuzB,20vh);aspect-ratio:300/372;border-radius:1.6vh;pointer-events:none;' +
+    st2.textContent = '#oyYuz{position:fixed;z-index:18;height:var(--yuz-b,20vh);aspect-ratio:300/372;border-radius:1.6vh;pointer-events:none;' +
       'padding:.4vh;background:linear-gradient(135deg,#ff3ad8,#7c5cff,#22e5ff);box-shadow:0 0 2.2vh rgba(255,58,216,.5),0 .8vh 2vh rgba(0,0,0,.45);opacity:0;transition:opacity .6s}' +
       '#oyYuz .ic{position:relative;width:100%;height:100%;border-radius:1.3vh;overflow:hidden;background:#2a1a3a}' +
-      '#oyYuz video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:cover;display:block!important;z-index:auto!important;filter:none!important;transition:opacity .22s linear}' +
+      '#oyYuz canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;display:block!important;z-index:auto!important;filter:none!important}' +
       '#oyYuz i{position:absolute;right:5%;top:4%;font:800 1.05vh/1 Nunito,Segoe UI,Arial;font-style:normal;color:#fff;background:rgba(0,0,0,.45);padding:.22vh .45vh;border-radius:.5vh;letter-spacing:.05vh}' +
       '#oyYuz b{position:absolute;left:6%;top:4%;font:800 1.05vh/1 Nunito,Segoe UI,Arial;color:#fff;background:#ff2d55;padding:.22vh .5vh;border-radius:.5vh;letter-spacing:.05vh}';
     document.head.appendChild(st2);
-    let kutu, vB, vK, zarf = null, el = null, kon = 0, sonKon = 0;
+    const TW = 300, TH = 372;
+    let kutu, v, cv, g, zarf = null, el = null, agiz = 0, hazir = false;
     OY.yuzKonus = a => {
       el = a; zarf = null; const yol = a.src;
       fetch(yol).then(r => r.arrayBuffer()).then(b => new OfflineAudioContext(1, 1, 22050).decodeAudioData(b)).then(buf => {
@@ -136,25 +137,30 @@
         const sr = Z.slice().sort((x, y) => x - y), ust = sr[Math.floor(sr.length * .95)] || 1; zarf = Z.map(v => Math.min(1, v / ust));
       }).catch(() => { zarf = null });
     };
-    const vid = src => { const v = document.createElement('video'); v.src = src; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto'; v.setAttribute('muted', ''); v.play().catch(() => { }); return v };
     function kur() {
       kutu = document.createElement('div'); kutu.id = 'oyYuz'; const k = OY.yuzKonum || { top: '24vh', right: 'calc(2.5*var(--vw,1vw))' };
-      for (const x in k) kutu.style.setProperty(x.replace(/[A-Z]/g, c => "-" + c.toLowerCase()), k[x]);
+      for (const x in k) kutu.style.setProperty(x.replace(/[A-Z]/g, c => '-' + c.toLowerCase()), k[x]);
       const ic = document.createElement('div'); ic.className = 'ic'; kutu.appendChild(ic);
-      vB = vid('doku/sunucu_bekle.mp4'); vK = vid('doku/sunucu_konus.mp4'); vK.style.opacity = '0'; ic.appendChild(vB); ic.appendChild(vK);
+      cv = document.createElement('canvas'); cv.width = TW; cv.height = TH; g = cv.getContext('2d'); ic.appendChild(cv);
+      v = document.createElement('video'); v.src = 'doku/sunucu_yuz6.mp4'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto'; v.setAttribute('muted', '');
+      v.style.cssText = 'position:fixed;left:0;top:0;width:2px;height:2px;opacity:.01;pointer-events:none'; document.body.appendChild(v); v.play().catch(() => { });
       const ai = document.createElement('i'); ai.textContent = 'AI'; ic.appendChild(ai);
       const cn = document.createElement('b'); cn.textContent = '● CANLI'; ic.appendChild(cn); document.body.appendChild(kutu);
-      vB.addEventListener('playing', () => { kutu.style.opacity = '1' }, { once: true }); setTimeout(() => { kutu.style.opacity = '1' }, 2500);
       requestAnimationFrame(ciz);
     }
+    const kutuCiz = (i, al) => { g.globalAlpha = al; g.drawImage(v, (i % 3) * TW, Math.floor(i / 3) * TH, TW, TH, 0, 0, TW, TH) };
     function ciz(t) {
       requestAnimationFrame(ciz);
-      if (vB.paused) vB.play().catch(() => { }); if (vK.paused) vK.play().catch(() => { });
-      // konusuyor mu: ses caliyorsa ve (zarf varsa) son 0,4 sn icinde ses yuksekse
-      let k = 0;
-      if (el && !el.paused && !el.ended) { if (zarf) { const i = Math.floor(el.currentTime * 50); for (let j = i - 4; j <= i + 8; j++) if ((zarf[j] || 0) > .14) { k = 1; break } } else k = 1 }
-      if (k) sonKon = t; const on = t - sonKon < 350 ? 1 : 0;
-      if (on !== kon) { kon = on; vK.style.opacity = on ? '1' : '0'; window.__yuzKon = on }
+      if (v.paused) v.play().catch(() => { }); if (v.readyState < 2) return;
+      if (!hazir) { hazir = true; kutu.style.opacity = '1' }
+      let hedef = 0;
+      if (el && !el.paused && !el.ended) {
+        if (zarf) { const i = Math.floor(el.currentTime * 50 + 1); const s = (zarf[i] || 0) * .6 + (zarf[i + 1] || 0) * .4; hedef = s < .1 ? 0 : Math.min(5, .6 + (s - .1) / .9 * 4.6) }
+        else { const h = el.currentTime * 4.6; hedef = Math.max(0, Math.sin(h * Math.PI * 2) * 2.2 + Math.sin(h * 2.3) * 1.2 + 1.4) }
+      }
+      agiz += (hedef - agiz) * (hedef > agiz ? .5 : .32); window.__yuzAgiz = agiz;
+      const i0 = Math.min(5, Math.floor(agiz)), fr = agiz - i0;
+      kutuCiz(i0, 1); if (fr > .04 && i0 < 5) kutuCiz(i0 + 1, fr); g.globalAlpha = 1;
     }
     if (document.readyState === 'loading') addEventListener('DOMContentLoaded', kur); else kur();
   })();
