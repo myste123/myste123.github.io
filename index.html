@@ -115,6 +115,7 @@ textarea{resize:vertical}
 .secim{margin-top:14px;display:grid;gap:10px}.secim label{display:flex;align-items:center;gap:10px;margin:0;font-size:15px;cursor:pointer;color:inherit}.secim input{width:20px;height:20px;margin:0;accent-color:var(--vurgu);flex:none}
 .secim small{display:block;color:var(--soluk);font-size:12.5px}
 .btn.on{background:transparent;border:1px solid var(--cz);color:inherit}
+.msj.sun .m{background:linear-gradient(135deg,#7b6cff,#c06cff)!important;color:#fff!important}.msj.sun .m b{color:#fff!important}
 .sonuc{margin-top:14px;font-size:14px;display:none;word-break:break-word;color:var(--soluk);background:var(--y2);border:1px solid var(--cz);border-radius:10px;padding:12px}.sonuc code{display:block;margin-top:8px;padding:8px}
 footer{border-top:1px solid var(--cz);padding:32px 0 40px;color:var(--soluk2);font-size:13px}
 footer .kap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
@@ -431,10 +432,10 @@ function hudOku(d){try{const bas=d.querySelector('.h-bas span');if(bas&&bas.text
  if(liste.length)hediyeCiz(HED.map(h=>{const m=liste.find(l=>l.ad.toLocaleLowerCase('tr')===h.ad.toLocaleLowerCase('tr'));return m&&m.et?{...h,et:m.et}:h}))}catch(x){}}
 
 /* ---- sohbet ---- */
-function msj(m){const d=document.createElement('div');d.className='msj'+(m.sen?' sen':'')+(m.hd?' hd':'')+(m.sis?' sis':'')+(m.oyn?' oyn':'');
+function msj(m){const d=document.createElement('div');d.className='msj'+(m.sen?' sen':'')+(m.hd?' hd':'')+(m.sis?' sis':'')+(m.oyn?' oyn':'')+(m.sun?' sun':'');
  const av=m.ad?`<span class="a" style="background:${m.sen?'var(--vurgu)':renk(m.ad)}">${esc(m.ad[0].toLocaleUpperCase('tr'))}</span>`:'';
  d.innerHTML=av+`<div class="m">${m.ad?`<b>${esc(m.ad)}</b>`:''}${esc(m.metin)}</div>`;SOH.appendChild(d);while(SOH.children.length>30)SOH.firstChild.remove()}
-function oyunOlayi(e){if(!aktif||!e||!e.t)return;if(String(e.id||'').startsWith('site-'))return;oyunOlay++;const ad=e.ad||'izleyici';
+function oyunOlayi(e){if(!aktif||!e||!e.t)return;if(e.t==='konus'&&e.cevap){msj({sun:1,ad:'Sunucu',metin:'@'+(e.ad||'')+' '+e.cevap});return}if(e.t==='hazirlaniyor'||e.t==='sustu')return;if(String(e.id||'').startsWith('site-'))return;oyunOlay++;const ad=e.ad||'izleyici';
  if(!gorulen.has(ad)&&e.t!=='hediye'){gorulen.add(ad);const t=Date.now();if(t-sonKatil>2400){sonKatil=t;izSay++;msj({sis:1,ad,metin:'katıldı'});return}}
  if(e.t==='begeni'){begTop+=e.adet||1;sayacGuncel()}
  else if(e.t==='yorum')msj({ad,metin:e.metin||''});
