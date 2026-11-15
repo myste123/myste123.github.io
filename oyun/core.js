@@ -118,7 +118,7 @@
   // ---- yapay zeka sunucu yuz kamerasi (her oyunda ayni; iki dongu video: bekleme = nefes/goz kirpma, konusma = agiz/kafa) ----
   // ses calarken ve sesin siddeti yuksekken konusma videosu one gecer (capraz gecis), susunca beklemeye doner
   (() => {
-    if (Q.get('yuz') === '0') return;
+    if (Q.get('yuz') !== '1') return; // 15-11: kalite yetersiz, varsayilan KAPALI (?yuz=1 ile acilir)
     const st2 = document.createElement('style');
     st2.textContent = '#oyYuz{position:fixed;z-index:18;height:var(--yuzB,20vh);aspect-ratio:300/372;border-radius:1.6vh;pointer-events:none;' +
       'padding:.4vh;background:linear-gradient(135deg,#ff3ad8,#7c5cff,#22e5ff);box-shadow:0 0 2.2vh rgba(255,58,216,.5),0 .8vh 2vh rgba(0,0,0,.45);opacity:0;transition:opacity .6s}' +
