@@ -437,10 +437,11 @@ const HQ=[];let hqBit=0;
 // hediye ANINDA uygulanir (bekletme yok); HQ sadece kameranin sirayla gosterecegi hediyeler
 function hediyeVer(u,h){if(!u.o)return;const t=now();KORNA(1,u);const kamBos=!SINE||t>SINE.bit;u.m=null;u.bek=null;const k0=u.o.kad,et=hediye(u,h),k=HED_K[h.sinif]||['🎁','Hediye'];const n=u.coinB||0;u.coinB=0;coinEkle(u,n);
  if(kamBos&&!(SINE&&SINE.u===u))aksiyon(u,u.o.kad>k0?4500:4000);
- if(!(SINE&&SINE.u===u))HQ.push({u,t,buyuk:h.sinif==='galaksi'||h.sinif==='sapka'});
+ if(!(SINE&&SINE.u===u)){const buyuk=h.sinif==='galaksi'||h.sinif==='sapka';if(HQ.length<16||buyuk)HQ.push({u,t,buyuk});}
  OY.vitrin(u,h.resim||h.sinif,k[1],et);OY.akis(`${k[0]} ${u.ad}: ${et}`,'#ffd84a')}
 function hediyeSirasi(t){if(!HQ.length||(SINE&&t<SINE.bit))return;
- while(HQ.length){const q=HQ.shift();if(!q.u.o||(!q.buyuk&&t-q.t>7000))continue;const u=q.u;if(!q.buyuk&&!u.m&&!u.tr&&t-q.t>4000)continue;aksiyon(u,u.m?Math.max(3000,Math.min(6000,u.m.bit-t+600)):4000);break}}
+ while(HQ.length){const q=HQ.shift();if(!q.u.o)continue;const u=q.u;// hediye atan HERKES kameraya cikar (gul bile); eskiyi ATLAMIYORUZ
+  const d=HQ.length>5?2600:(u.m?Math.max(3000,Math.min(6000,u.m.bit-t+600)):4000);aksiyon(u,d);break}}
 function aracGuncelle(t,dt){
  IZG.position.z+=VD*dt;LSK0+=(LSK-LSK0)*Math.min(1,dt*(LSK>LSK0?9:4));LASTIK.ayar(LSK0<.1?0:Math.min(.5,(LSK0-.1)*1.1),.88+Math.min(.3,LSK0*.35));LSK=0;
  for(const u of ARAC){const o=u.o;if(!o||!o.msh)continue;const p=o.g.position,dk=Math.hypot(K.position.x-p.x,K.position.z-p.z),yk=dk<(kalite<=1?14:30)+(o.yakin?4:0);if(o.yakin!==yk){o.yakin=yk;for(const m of o.msh)m.castShadow=yk;for(const m of o.det)m.visible=yk}}

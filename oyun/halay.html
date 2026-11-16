@@ -301,10 +301,10 @@ function hediye(u,h){const t=now(),ad=OY.kisaAd(u.ad,10);puanEkle(u,10*h.adet+h.
 // hediye ANINDA uygulanir; HQ sadece kameranin sirayla gosterecegi hediyeler
 function hediyeVer(u,h){if(!u.o)return;const t=now(),k=HED.find(x=>x[1].toLowerCase().startsWith((h.sinif||'').slice(0,3)))||['🎁','Hediye'];
  const et=hediye(u,h);OY.vitrin(u,h.resim||h.sinif||h.ikon||k[0],h.ad||k[1],et);OY.akis(`${h.ikon||k[0]} ${u.ad} → ${et}`,'#ffd84a');
- const buyuk=h.sinif==='sapka'||h.sinif==='galaksi';if(HQ.length<12||buyuk)HQ.push({u,h,t,buyuk})}
+ const buyuk=h.sinif==='sapka'||h.sinif==='galaksi';if(HQ.length<16||buyuk)HQ.push({u,h,t,buyuk})}
 function hediyeSirasi(t){if(!HQ.length||t<hqBit)return;
- while(HQ.length){const q=HQ.shift();if(!q.u.o||(!q.buyuk&&t-q.t>6000))continue;
-  if(q.buyuk){SINE=null;PLAN={tip:'cift',t0:t,sure:6000,y:1,a0:Math.random()*6.28};kes=true;hqBit=t+6000}else{aksiyon(q.u,3800);hqBit=t+3800}break}}
+ while(HQ.length){const q=HQ.shift();if(!q.u.o)continue;// hediye atan HERKES kameraya cikar (gul bile); eskiyi ATLAMIYORUZ
+  if(q.buyuk){SINE=null;PLAN={tip:'cift',t0:t,sure:6000,y:1,a0:Math.random()*6.28};kes=true;hqBit=t+6000}else{const d=HQ.length>5?2600:3800;aksiyon(q.u,d);hqBit=t+d}break}}
 
 /* ---------------- olaylar ---------------- */
 let bitis=0;
