@@ -303,7 +303,7 @@ footer b{color:var(--soluk);font-weight:600}
   <ul><li>Kart veya ödeme bilgisi istenmez</li><li>Her hesap için bir kez geçerlidir</li><li>Beğenirsen aynı oyunla devam edersin</li></ul></div>
  <div class="kutu"><label for="dTik">TikTok kullanıcı adı</label><input id="dTik" placeholder="@kullaniciadi" autocomplete="off"><label for="dOyun">Oyun</label><select id="dOyun"></select>
   <div class="secim"><label><input type="checkbox" id="dYanit" checked><span>Otomatik sesli yanıt<small>Yapay zekâ sunucu yorumları okur, sesli cevap verir</small></span></label>
-   <label><input type="checkbox" id="dYuz" checked><span>Yüz kamerası<small>Sunucu ekranda yüzüyle görünür</small></span></label></div>
+   <label><input type="checkbox" id="dYuz"><span>Yüz kamerası (opsiyonel)<small>Kapalıyken sunucu sadece sohbeti okuyup sesli yanıt verir. İstersen aç, ekranda yüzüyle görünsün</small></span></label></div>
   <button class="btn on" id="dOn" type="button" style="width:100%;margin-top:14px">Ön izle</button>
   <button class="btn" id="dBtn" style="width:100%;margin-top:10px">Deneme linkimi oluştur</button><div class="sonuc" id="dSonuc"></div></div></div></section>
 
@@ -490,7 +490,7 @@ $('sOyun').innerHTML=O.map(o=>`<option value="${o.id}">${o.ad} (${o.k.toUpperCas
 $('sOyun').onchange=()=>{const o=O.find(x=>x.id===$('sOyun').value);if(o)$('sPaket').value=o.k==='3b'?'Tek 3B oyun - 350 TL/ay':'Tek 2B oyun - 250 TL/ay'};$('sOyun').onchange();
 async function gonder(yol,v,k){k.style.display='block';k.textContent='Gönderiliyor…';try{const a=(await (await fetch('arena/adres.json?t='+Date.now(),{cache:'no-store'})).json()).adres.replace(/\/$/,'');
  return await (await fetch(a+yol,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(v)})).json()}catch(x){return{hata:'Sunucuya şu an ulaşılamıyor. Lütfen TikTok @bilesikyatirim üzerinden yazın.'}}}
-const dAyar=()=>(!$('dYanit').checked?'&sohbet=0':'')+(!$('dYuz').checked?'&yuz=0':'');
+const dAyar=()=>(!$('dYanit').checked?'&sohbet=0':'')+($('dYuz').checked?'&yuz=1':'');
 $('dOn').onclick=()=>ac($('dOyun').value,dAyar());
 $('dBtn').onclick=async()=>{const k=$('dSonuc'),j=await gonder('/api/demo',{tiktok:$('dTik').value,oyun:$('dOyun').value,yanit:$('dYanit').checked,yuz:$('dYuz').checked},k);
  k.innerHTML=j.link?`Deneme linkin hazır (bitiş ${esc(j.bitis)}). Yayın programına ekle:<code>${esc(j.link)}</code>`:'⚠️ '+esc(j.hata||'Bir hata oluştu.')};

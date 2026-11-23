@@ -132,7 +132,7 @@
   // ---- yapay zeka sunucu yuz kamerasi: tek video, 3x2 izgarada ayni kafa hareketinin 6 agiz kademesi ----
   // her karede ses siddetine gore kademe secilir (komsu iki kademe harmanlanir) -> kafa/nefes/goz kesintisiz, agiz sese oturur
   (() => {
-    if (Q.get('yuz') === '0') return; // ?yuz=0 kapatir
+    if (Q.get('yuz') !== '1') return; // varsayilan KAPALI; ?yuz=1 ile acilir (opsiyonel yuz kamerasi)
     const st2 = document.createElement('style');
     st2.textContent = '#oyYuz{position:fixed;z-index:18;height:var(--yuz-b,20vh);aspect-ratio:300/372;border-radius:1.6vh;pointer-events:none;' +
       'padding:.4vh;background:linear-gradient(135deg,#ff3ad8,#7c5cff,#22e5ff);box-shadow:0 0 2.2vh rgba(255,58,216,.5),0 .8vh 2vh rgba(0,0,0,.45);opacity:0;transition:opacity .6s}' +
